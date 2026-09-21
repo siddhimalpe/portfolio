@@ -1,0 +1,480 @@
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+
+:root { 
+  --bg-color: #CBECFF; 
+  --text-color: #009DBE; 
+  --white: #ffffff; 
+  --font-heading: 'Krona One', sans-serif; 
+  --font-body: 'Plus Jakarta Sans', sans-serif; 
+  --row-height: 129px; 
+  --nav-font-size: 64px; 
+  --expanded-pill-width: 440px; 
+  --ease-webflow: cubic-bezier(.16, 1, 0.3, 1); 
+}
+
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  -webkit-font-smoothing: antialiased; 
+}
+
+body { 
+  background: var(--bg-color); 
+  color: var(--text-color); 
+  font-family: var(--font-heading); 
+  min-height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  overflow-x: hidden; 
+  padding: 280px 0 120px; 
+  position: relative; 
+}
+
+a { color: inherit; text-decoration: none; }
+button { color: inherit; font: inherit; }
+
+/* -------------------------------------------
+   TOP-RIGHT RESUME BUTTON
+------------------------------------------- */
+.resume-btn { 
+  position: absolute; 
+  top: 40px; 
+  right: 60px; 
+  font-family: var(--font-body); 
+  font-weight: 400; 
+  font-size: 16px; 
+  border: 1.2px solid var(--text-color); 
+  border-radius: 9999px; 
+  padding: 10px 32px; 
+  background: transparent; 
+  transition: background-color .35s var(--ease-webflow), 
+              color .35s var(--ease-webflow), 
+              transform .35s var(--ease-webflow), 
+              box-shadow .35s var(--ease-webflow); 
+  z-index: 100; 
+}
+
+.resume-btn:hover { 
+  background: var(--text-color); 
+  color: var(--white); 
+  transform: translateY(-2px) scale(1.02); 
+  box-shadow: 0 8px 20px rgba(0, 157, 190, 0.25); 
+}
+
+/* -------------------------------------------
+   HERO TITLE: SIDDHI MALPE
+------------------------------------------- */
+.hero-name { 
+  font-size: clamp(72px, 14vw, 200px); 
+  line-height: 1.08; 
+  text-align: center; 
+  letter-spacing: -.04em; 
+  margin-bottom: 280px; 
+  user-select: none; 
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* -------------------------------------------
+   INTERACTIVE NAVIGATION ROWS
+------------------------------------------- */
+.nav-list { 
+  width: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+}
+
+.nav-row { 
+  width: 100%; 
+  min-height: var(--row-height); 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  border: 0; 
+  background: transparent; 
+  cursor: pointer; 
+  position: relative; 
+  transition: background-color .4s var(--ease-webflow), 
+              min-height .7s var(--ease-webflow), 
+              padding .7s var(--ease-webflow); 
+  user-select: none; 
+}
+
+.nav-row:hover, 
+.nav-row.is-active { 
+  background: var(--white); 
+}
+
+.row-header { 
+  min-height: var(--row-height); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: 100%; 
+}
+
+.row-content { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: var(--nav-font-size); 
+  letter-spacing: -.02em; 
+  position: relative; 
+}
+
+/* Solid Circle Dot */
+.nav-dot { 
+  background: var(--text-color); 
+  width: 64px; 
+  height: 64px; 
+  border-radius: 50%; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  margin: 0 6px; 
+  position: relative; 
+  overflow: hidden; 
+  flex-shrink: 0; 
+  transition: width .7s var(--ease-webflow), 
+              height .7s var(--ease-webflow), 
+              border-radius .7s var(--ease-webflow), 
+              margin .7s var(--ease-webflow); 
+}
+
+.dot-payload { 
+  opacity: 0; 
+  pointer-events: none; 
+  transition: opacity .25s ease; 
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+
+/* ===========================================
+   ABOUT ROW
+=========================================== */
+.about-row.is-active { 
+  min-height: 640px; 
+  padding: 50px 0; 
+}
+
+.about-row.is-active .nav-dot { 
+  width: 530px; 
+  height: 530px; 
+  border-radius: 50%;
+  margin: 0 32px; 
+}
+
+.about-row.is-active .dot-payload { 
+  opacity: 1; 
+  pointer-events: auto; 
+  transition: opacity .4s ease .3s; 
+}
+
+.about-text-content { 
+  font-family: var(--font-body) !important; 
+  text-align: center; 
+  color: var(--white); 
+  max-width: 400px; 
+  margin: 0 auto;
+  padding: 0 10px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 18px; 
+  letter-spacing: 0 !important; 
+}
+
+.about-text-content *,
+.about-text-content span,
+.about-text-content p {
+  font-family: var(--font-body) !important;
+  letter-spacing: 0 !important;
+  word-spacing: normal !important;
+}
+
+.about-text-content .about-greeting,
+.about-text-content span:first-child {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  color: var(--white);
+}
+
+.about-text-content .about-body,
+.about-text-content span:nth-child(2) {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 28px !important;
+  color: var(--white);
+}
+
+.about-text-content .about-footer,
+.about-text-content span:last-child {
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+/* ===========================================
+   WORK ROW & EXACT-WIDTH CAPSULE PILLS
+=========================================== */
+.work-row.is-active { 
+  min-height: 890px; 
+  padding: 30px 0 70px; 
+}
+
+.work-row.is-active .nav-dot { 
+  width: var(--expanded-pill-width); 
+  height: 64px; 
+  border-radius: 9999px; 
+  margin: 0 20px; 
+}
+
+.work-row.is-active .dot-payload { 
+  opacity: 1; 
+  pointer-events: auto; 
+  transition: opacity .35s ease .25s; 
+}
+
+.work-tagline { 
+  font-family: var(--font-body); 
+  font-weight: 400; 
+  font-size: 13px; 
+  letter-spacing: .12em; 
+  color: var(--white); 
+  text-transform: uppercase; 
+  white-space: nowrap; 
+}
+
+.work-gallery-wrapper { 
+  display: grid; 
+  grid-template-rows: 0fr; 
+  transition: grid-template-rows .7s var(--ease-webflow); 
+  width: 100%; 
+}
+
+.work-row.is-active .work-gallery-wrapper { 
+  grid-template-rows: 1fr; 
+}
+
+.work-gallery-inner { 
+  overflow: hidden; 
+  width: 100%; 
+  display: flex; 
+  justify-content: center; 
+}
+
+.work-cards-container { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 50px; 
+  padding: 40px 40px 10px; 
+  opacity: 0; 
+  transform: translateY(30px); 
+  transition: opacity .5s ease, transform .7s var(--ease-webflow); 
+}
+
+.work-row.is-active .work-cards-container { 
+  opacity: 1; 
+  transform: translateY(0); 
+  transition-delay: .15s; 
+}
+
+/* Card: 273px x 680px, 136.5px radius */
+.work-card { 
+  width: 273px; 
+  height: 680px; 
+  border: 1.2px solid #000000; 
+  border-radius: 136.5px; 
+  background: var(--white); 
+  overflow: hidden; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
+  padding: 56px 0 0; /* 0 side padding */
+  position: relative; 
+  flex-shrink: 0; 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: transform .4s var(--ease-webflow), box-shadow .4s var(--ease-webflow); 
+}
+
+.work-card:hover { 
+  transform: translateY(-8px); 
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12); 
+}
+
+.work-card strong { 
+  font-family: var(--font-body); 
+  font-weight: 600; 
+  font-size: 30px; 
+  line-height: 1.2; 
+  margin-bottom: 4px; 
+  padding: 0 20px; 
+  color: #000000; 
+}
+
+.work-card small { 
+  font-family: var(--font-body); 
+  font-weight: 400; 
+  font-size: 16px; 
+  line-height: 1.4; 
+  margin-bottom: 24px; 
+  padding: 0 20px; 
+  color: #444444; 
+}
+
+/* Image Wrapper: fills 100% of the pill width (273px) */
+.card-image-wrapper { 
+  width: 100%; 
+  flex: 1; 
+  display: flex; 
+  align-items: flex-end; 
+  justify-content: center; 
+  overflow: hidden; 
+  margin-top: auto; 
+  border-radius: 0 0 136.5px 136.5px;
+}
+
+/* Image: EXACT PILL WIDTH (no zoom/scale) */
+.card-image-wrapper img { 
+  width: 100%; 
+  height: auto; 
+  max-height: 100%;
+  object-fit: contain; 
+  object-position: bottom center; 
+  transform: none; 
+  display: block; 
+}
+
+/* ===========================================
+   CONTACT ROW
+=========================================== */
+.contact-row.is-active .nav-dot { 
+  width: var(--expanded-pill-width); 
+  height: 64px; 
+  border-radius: 9999px; 
+  margin: 0 20px; 
+}
+
+.contact-row.is-active .dot-payload { 
+  opacity: 1; 
+  pointer-events: auto; 
+  transition: opacity .35s ease .2s; 
+}
+
+.contact-links { 
+  font-family: var(--font-body); 
+  font-weight: 400; 
+  font-size: 16px; 
+  line-height: 28px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-around; 
+  width: 100%; 
+  padding: 0 24px; 
+  white-space: nowrap; 
+  gap: 18px; 
+}
+
+.contact-links a { 
+  color: var(--white); 
+  transition: opacity .2s ease; 
+}
+
+.contact-links a:hover { 
+  opacity: .7; 
+}
+
+/* Responsive */
+@media (max-width: 1280px) { 
+  .work-gallery-inner { 
+    overflow-x: auto; 
+    justify-content: flex-start; 
+    padding-bottom: 20px; 
+  }
+  .work-cards-container { 
+    padding: 30px 40px; 
+  } 
+}
+
+@media (max-width: 768px) { 
+  body { padding-top: 140px; }
+  .resume-btn { top: 24px; right: 24px; padding: 8px 20px; font-size: 14px; }
+  :root { 
+    --row-height: 90px; 
+    --nav-font-size: 40px; 
+    --expanded-pill-width: 290px; 
+  }
+  .nav-dot { width: 40px; height: 40px; }
+  .about-row.is-active { min-height: 420px; }
+  .about-row.is-active .nav-dot { width: 320px; height: 320px; margin: 0 12px; }
+  .about-text-content { padding: 0 20px; font-size: 13px; line-height: 22px; gap: 10px; }
+  .work-row.is-active .nav-dot,
+  .contact-row.is-active .nav-dot { height: 52px; }
+  .contact-links { font-size: 12px; padding: 0 12px; gap: 8px; }
+  .work-tagline { font-size: 11px; }
+  .work-cards-container { gap: 20px; } 
+}
+
+/* ===========================================
+   AUTO RICKSHAW CUSTOM CURSOR
+=========================================== */
+@media (pointer: fine) {
+  body, a, button, [role="button"] {
+    cursor: none !important;
+  }
+}
+
+.auto-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-30%, -65%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  user-select: none;
+}
+
+.auto-body-wrap {
+  display: inline-block;
+  transform-origin: 35% 65%;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rickshaw-svg {
+  width: 82px;
+  height: 60px;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.16));
+}
+
+.auto-cursor.facing-right .auto-body-wrap {
+  transform: scaleX(-1);
+}
+
+.auto-cursor.is-clicked .auto-body-wrap {
+  transform: scale(0.92) translateY(5px);
+}
+
+.auto-cursor.facing-right.is-clicked .auto-body-wrap {
+  transform: scaleX(-1) scale(0.92) translateY(5px);
+}
+
+@media (pointer: coarse), (hover: none) {
+  #auto-rickshaw-cursor {
+    display: none !important;
+  }
+}

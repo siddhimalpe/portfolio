@@ -1,0 +1,3826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Siddhi Malpe — UX Portfolio</title>
+
+  <!-- Load BBH Hegarty, IBM Plex Mono & Krona One from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=IBM+Plex+Mono:wght@400;500&family=Krona+One&display=swap" rel="stylesheet" />
+
+  <!-- Load GSAP 3.12.5 from cdnjs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: #F2E7D5;
+      color: #000000;
+      font-family: 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    }
+
+    body.scroll-locked {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Hide native pointer on fine-pointer desktops in favour of custom black dot cursor */
+    @media (pointer: fine) {
+      html, body, a, button, [role="button"], .work-img-box,
+      .corner-menu-trigger-shape, .corner-menu-piece, .corner-menu-scrim {
+        cursor: none !important;
+      }
+    }
+
+    /* Custom black circle cursor */
+    .custom-cursor {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #000000;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    @media (pointer: coarse) {
+      .custom-cursor {
+        display: none !important;
+      }
+    }
+
+    /* Full-bleed hero wrapper: layer (a) initial bg #F2E7D5 (inversed) */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: #F2E7D5;
+    }
+
+    /* Layer (b): full-bleed inverted home bg #BB211F revealed via diamond clip-path */
+    .home-bg {
+      position: absolute;
+      inset: 0;
+      background-color: #BB211F;
+      will-change: clip-path, opacity;
+      pointer-events: none;
+    }
+
+    /* 2212 x 1564 design stage, uniformly scaled (contain) and centred */
+    .stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2212px;
+      height: 1564px;
+      transform-origin: center center;
+      pointer-events: none;
+    }
+
+    /* Layer (c): tangram SVG container */
+    .tangram-wrap {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    .tangram-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Interactive 4-piece Bee navigation overlay */
+    .nav-layer {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .nav-layer.is-interactive {
+      pointer-events: auto;
+    }
+
+    .nav-btn {
+      outline: none;
+    }
+
+    .nav-btn .nav-shape {
+      fill: #000000;
+      stroke: #BB211F;
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      transition: fill 0.22s ease;
+    }
+
+    .nav-btn .nav-label {
+      fill: #BB211F;
+      font-family: 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      pointer-events: none;
+      user-select: none;
+      transition: fill 0.22s ease;
+    }
+
+    .nav-btn:hover .nav-shape,
+    .nav-btn:focus-visible .nav-shape {
+      fill: #F2E7D5;
+    }
+
+    .nav-btn:hover .nav-label,
+    .nav-btn:focus-visible .nav-label {
+      fill: #BB211F;
+    }
+
+    /* Layer (d): name text ("Siddhi Malpe") in BBH Hegarty & #F2E7D5 on #BB211F */
+    .hero-name {
+      position: absolute;
+      inset: 0;
+      margin: 0;
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: #F2E7D5;
+      white-space: nowrap;
+    }
+
+    .name-word {
+      position: absolute;
+      display: inline-block;
+      transform-origin: 0 0;
+      will-change: transform, opacity;
+    }
+
+    /* Beats 1 & 2 (B -> C): Rolling statement */
+    .hero-statement {
+      position: absolute;
+      left: 154px;
+      top: 230px;
+      width: 1551px;
+      height: 260px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .statement-roller {
+      display: flex;
+      flex-direction: column;
+      will-change: transform;
+    }
+
+    .statement-beat {
+      height: 260px;
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: 111px;
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: #F2E7D5;
+    }
+
+    /* Beat 3 (BEE): Left-side credentials vertically centred beside bigger right-aligned Bee */
+    .hero-creds {
+      position: absolute;
+      left: 185px;
+      top: 810px;
+      width: 940px;
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: 74px;
+      font-weight: 400;
+      line-height: 1.48;
+      letter-spacing: -0.015em;
+      color: #F2E7D5;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    /* Persistent top bar inside #hero intro/bee */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 55;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: clamp(20px, 2.5vw, 36px) clamp(20px, 4.86vw, 70px);
+      pointer-events: none;
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    .top-nav.is-active .top-nav-word {
+      pointer-events: auto;
+    }
+
+    .top-nav-word {
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: clamp(20px, 2.5vw, 36px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #F2E7D5;
+      text-decoration: none;
+      text-transform: lowercase;
+      pointer-events: none;
+      transition: color 0.35s ease;
+    }
+
+    .top-nav.is-on-light .top-nav-word {
+      color: #BB211F;
+    }
+
+    .top-nav-word:hover,
+    .top-nav-word:focus-visible {
+      color: #000000 !important;
+    }
+
+    /* Scroll to Explore prompt (#F2E7D5 on #BB211F Home, crisp across all 3 devices) */
+    .scroll-cue {
+      position: absolute;
+      right: clamp(20px, 4.4vw, 64px);
+      bottom: clamp(24px, 4.2vh, 48px);
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      gap: clamp(10px, 1.1vw, 16px);
+      font-family: 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(12px, 1.1vw, 17px);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #F2E7D5;
+      background: transparent;
+      border: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .scroll-cue.is-visible {
+      pointer-events: auto;
+    }
+
+    .scroll-cue:hover {
+      color: #000000;
+      transform: translateY(3px);
+    }
+
+    .scroll-cue svg {
+      width: clamp(22px, 2vw, 32px);
+      height: clamp(10px, 0.9vw, 15px);
+      stroke: currentColor;
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke;
+      fill: none;
+    }
+
+    /* =========================================================================
+       CORNER TANGRAM MENU (Work / About / Contact only)
+       ========================================================================= */
+    .corner-menu-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 64;
+      background: rgba(0, 0, 0, 0.62);
+      backdrop-filter: blur(2.5px);
+      -webkit-backdrop-filter: blur(2.5px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .corner-menu-scrim.is-open {
+      pointer-events: auto;
+    }
+
+    .corner-menu {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 65;
+      pointer-events: none;
+      opacity: 0;
+      will-change: opacity;
+    }
+
+    .corner-menu.is-visible {
+      opacity: 1;
+    }
+
+    /* Initial 89 x 89 state (pointer-events only on the polygon itself) */
+    .corner-menu-trigger {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 89px;
+      height: 89px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      pointer-events: none;
+      outline: none;
+    }
+
+    .corner-menu-trigger-svg {
+      display: block;
+      width: 89px;
+      height: 89px;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-trigger-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      pointer-events: none;
+      transition: fill 0.22s ease, stroke 0.25s ease;
+    }
+
+    .corner-menu.is-visible:not(.is-open) .corner-menu-trigger-shape {
+      pointer-events: auto;
+    }
+
+    .corner-menu-trigger-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 53.93px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-trigger:hover .corner-menu-trigger-shape,
+    .corner-menu-trigger:focus-visible .corner-menu-trigger-shape {
+      fill: #BB211F;
+    }
+
+    /* Auto-invert in About section (#BB211F) */
+    .corner-menu.is-inverted .corner-menu-trigger-shape {
+      fill: #F2E7D5;
+      stroke: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger-label {
+      fill: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger:hover .corner-menu-trigger-shape,
+    .corner-menu.is-inverted .corner-menu-trigger:focus-visible .corner-menu-trigger-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger:hover .corner-menu-trigger-label,
+    .corner-menu.is-inverted .corner-menu-trigger:focus-visible .corner-menu-trigger-label {
+      fill: #F2E7D5;
+    }
+
+    /* Clicked / Open 2 x 178 (356 x 356 tangram; gaps pass clicks through to scrim) */
+    .corner-menu-panel {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 356px;
+      height: 356px;
+      transform-origin: 0 0;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .corner-menu-open-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-piece {
+      outline: none;
+      pointer-events: none;
+    }
+
+    .corner-menu.is-open .corner-menu-piece {
+      pointer-events: auto;
+    }
+
+    .corner-menu-piece-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      transition: fill 0.22s ease, stroke 0.22s ease;
+    }
+
+    .corner-menu-piece-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 20.225px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-piece:hover .corner-menu-piece-shape,
+    .corner-menu-piece:focus-visible .corner-menu-piece-shape {
+      fill: #BB211F;
+    }
+
+    .corner-menu-piece:hover .corner-menu-piece-label,
+    .corner-menu-piece:focus-visible .corner-menu-piece-label {
+      fill: #F2E7D5;
+    }
+
+    /* Auto-invert open menu in About section (#BB211F) */
+    .corner-menu.is-inverted .corner-menu-piece-shape {
+      fill: #F2E7D5;
+      stroke: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece-label {
+      fill: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece:hover .corner-menu-piece-shape,
+    .corner-menu.is-inverted .corner-menu-piece:focus-visible .corner-menu-piece-shape {
+      fill: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece:hover .corner-menu-piece-label,
+    .corner-menu.is-inverted .corner-menu-piece:focus-visible .corner-menu-piece-label {
+      fill: #F2E7D5;
+    }
+
+    /* Viewport-fixed overlay used solely while the 4 blocks travel between Bee and Work corners */
+    .travel-layer {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 60;
+      display: none;
+    }
+
+    .travel-layer.is-active {
+      display: block;
+    }
+
+    /* =========================================================================
+       REST OF SITE: WORK -> ABOUT -> CONTACT
+       ========================================================================= */
+    .site-sections {
+      background: #F2E7D5;
+      color: #000000;
+      display: none;
+    }
+
+    body.sections-unlocked .site-sections {
+      display: block;
+    }
+
+    .work-section {
+      width: 100%;
+      overflow: hidden;
+      background: #F2E7D5;
+    }
+
+    .work-stage-wrap {
+      position: relative;
+      width: 100%;
+      height: 1500px;
+    }
+
+    .work-canvas {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 1440px;
+      height: 1500px;
+      transform-origin: top center;
+    }
+
+    .work-heading {
+      position: absolute;
+      left: 622px;
+      top: 96px;
+      font-family: 'BBH Hegarty', 'AppleGothic', sans-serif;
+      font-size: 46px;
+      font-weight: 400;
+      line-height: 1.1;
+      color: #BB211F;
+    }
+
+    .work-card {
+      position: static;
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Transparent on desktop so Figma absolute coordinates remain direct children of .work-canvas */
+    .work-card-meta {
+      display: contents;
+    }
+
+    .work-img-box {
+      position: absolute;
+      background: #E5D9C5;
+      overflow: hidden;
+    }
+
+    .work-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Cursor-following VIEW CASE circle (#BB211F bg + #F2E7D5 text) */
+    .work-hover-badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #BB211F;
+      color: #F2E7D5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: 'AppleGothic', 'Apple Gothic', sans-serif;
+      font-size: 11px;
+      line-height: 1.25;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      z-index: 3;
+    }
+
+    /* Resting black tangram blocks with 2px #F2E7D5 stroke at bottom-right of each image */
+    .corner-piece {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: block;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      overflow: visible;
+    }
+
+    .corner-piece.is-landed {
+      opacity: 1;
+    }
+
+    .corner-piece--50 {
+      width: 50px;
+      height: 50px;
+    }
+
+    .corner-piece--100 {
+      width: 100px;
+      height: 100px;
+    }
+
+    /* Project titles in 26px BBH Hegarty & #BB211F */
+    .work-card-title {
+      position: absolute;
+      font-family: 'BBH Hegarty', 'AppleGothic', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: #BB211F;
+    }
+
+    .work-card-tags {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: #696969;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .work-card-desc {
+      position: absolute;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: #696969;
+    }
+
+    /* Exact Figma positions on 1440px canvas */
+    .card-nexus .work-img-box    { left: 70px;  top: 218px; width: 402px; height: 227px; }
+    .card-nexus .work-card-title { left: 70px;  top: 469px; max-width: 285px; }
+    .card-nexus .work-card-tags  { right: 968px; top: 472px; }
+    .card-nexus .work-card-desc  { left: 70px;  top: 515px; width: 402px; }
+
+    .card-together .work-img-box    { left: 622px; top: 218px; width: 747px; height: 422px; }
+    .card-together .work-card-title { left: 622px; top: 664px; max-width: 560px; }
+    .card-together .work-card-tags  { right: 71px; top: 669px; }
+    .card-together .work-card-desc  { left: 622px; top: 712px; width: 747px; }
+
+    .card-byw .work-img-box    { left: 70px;  top: 799px;  width: 747px; height: 422px; }
+    .card-byw .work-card-title { left: 70px;  top: 1245px; max-width: 580px; }
+    .card-byw .work-card-tags  { right: 623px; top: 1250px; }
+    .card-byw .work-card-desc  { left: 70px;  top: 1293px; width: 747px; }
+
+    .card-aris .work-img-box    { left: 967px; top: 799px;  width: 402px; height: 227px; }
+    .card-aris .work-card-title { left: 967px; top: 1050px; max-width: 285px; }
+    .card-aris .work-card-tags  { right: 71px;  top: 1053px; }
+    .card-aris .work-card-desc  { left: 967px; top: 1120px; width: 402px; }
+
+    /* =========================================================================
+       ABOUT SECTION (1440 x 720 canvas, bg #BB211F, exact Figma coordinates)
+       ========================================================================= */
+    .about-section {
+      width: 100%;
+      overflow: hidden;
+      background: #BB211F;
+      padding-top: clamp(44px, 4vw, 60px);
+    }
+
+    .about-stage-wrap {
+      position: relative;
+      width: 100%;
+      height: 720px;
+    }
+
+    .about-canvas {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 1440px;
+      height: 720px;
+      transform-origin: top center;
+      background: #BB211F;
+    }
+
+    .about-heading {
+      position: absolute;
+      left: 100px;
+      top: 48px;
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1;
+      color: #F2E7D5;
+    }
+
+    /* Transparent on desktop so Figma absolute coordinates work unchanged */
+    .about-tabs-group,
+    .drawn-cols,
+    .drawn-logos {
+      display: contents;
+    }
+
+    /* 3 Bread Tabs at x:1194 (bread icons stay 100% solid; only text dims to 50%) */
+    .about-tab {
+      position: absolute;
+      left: 1194px;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      background: transparent;
+      border: none;
+      padding: 0;
+      height: 24px;
+    }
+
+    .about-tab:focus-visible {
+      outline: none;
+    }
+
+    .about-tab--1 { top: 50px; }
+    .about-tab--2 { top: 81.44px; }
+    .about-tab--3 { top: 112.87px; }
+
+    .about-tab-icon {
+      display: block;
+      width: 24px;
+      height: 23.44px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .about-tab-label {
+      margin-left: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      white-space: nowrap;
+      opacity: 0.5;
+      transition: opacity 0.22s ease;
+    }
+
+    .about-tab.is-active .about-tab-label,
+    .about-tab:hover .about-tab-label,
+    .about-tab:focus-visible .about-tab-label {
+      opacity: 1;
+    }
+
+    /* Toast base, spreads & Tab 3 headphones inside desktop-aligned 520x580 stage */
+    .about-bread-stage {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 520px;
+      height: 580px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .about-bread {
+      position: absolute;
+      left: 100px;
+      top: 191.96px;
+      width: 356.41px;
+      height: 348.04px;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+    }
+
+    .about-spread {
+      position: absolute;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0;
+      z-index: 2;
+      will-change: transform, opacity;
+    }
+
+    .about-spread.is-active {
+      opacity: 1;
+    }
+
+    .about-spread--1 {
+      left: 117.93px;
+      top: 180px;
+      width: 356.27px;
+      height: 357.53px;
+    }
+
+    .about-spread--2 {
+      left: 117.95px;
+      top: 220.71px;
+      width: 356.06px;
+      height: 355.81px;
+    }
+
+    .about-spread--3 {
+      left: 77px;
+      top: 258.89px;
+      width: 358.23px;
+      height: 318.03px;
+    }
+
+    .about-headphones {
+      position: absolute;
+      left: 63.95px;
+      top: 158px;
+      width: 426.88px;
+      height: 222.43px;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0;
+      z-index: 3;
+      will-change: transform, opacity;
+    }
+
+    /* Swappable About panels (animated smoothly by GSAP) */
+    .about-panel {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .about-panel.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Tab 1 copy */
+    .about-payoff {
+      position: absolute;
+      left: 522.2px;
+      top: 190px;
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 48px;
+      color: #F2E7D5;
+    }
+
+    .about-bio {
+      position: absolute;
+      left: 522px;
+      top: 324px;
+      width: 760px;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.32;
+      color: #F2E7D5;
+    }
+
+    /* Tab 2 copy */
+    .drawn-heading {
+      position: absolute;
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #F2E7D5;
+    }
+
+    .drawn-copy {
+      position: absolute;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.32;
+      color: #F2E7D5;
+    }
+
+    .drawn-heading--behav { left: 551px; top: 180px; }
+    .drawn-copy--behav    { left: 551px; top: 229px; width: 750px; }
+
+    .drawn-heading--sys   { left: 551px; top: 361px; }
+    .drawn-copy--sys      { left: 551px; top: 410px; width: 307px; }
+
+    .drawn-heading--ai    { left: 942px; top: 361px; }
+    .drawn-copy--ai       { left: 942px; top: 410px; width: 359px; }
+
+    .drawn-logo {
+      position: absolute;
+      display: block;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .drawn-logo--deloitte { left: 204px;     top: 610px; width: 192.78px; height: 36px; }
+    .drawn-logo--icord    { left: 476.79px;  top: 610px; width: 67.32px;  height: 36px; }
+    .drawn-logo--samsung  { left: 624.11px;  top: 610px; width: 372.76px; height: 36px; }
+    .drawn-logo--kidzania { left: 1076.87px; top: 620px; width: 160.07px; height: 36px; }
+
+    /* Tab 3 copy (exact Figma coordinates) */
+    .offclock-heading {
+      position: absolute;
+      left: 539px;
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: #F2E7D5;
+    }
+
+    .offclock-copy {
+      position: absolute;
+      left: 539px;
+      width: 750px;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.32;
+      color: #F2E7D5;
+    }
+
+    .offclock-heading--1 { top: 160px; }
+    .offclock-copy--1    { top: 209px; }
+
+    .offclock-heading--2 { top: 309px; }
+    .offclock-copy--2    { top: 358px; }
+
+    .offclock-heading--3 { top: 458px; }
+    .offclock-copy--3    { top: 507px; }
+
+    /* =========================================================================
+       CONTACT SECTION (LET'S CONNECT + 3 Apple Symbols no-fill pills + 36x16 chevron)
+       ========================================================================= */
+    .contact-section {
+      background: #F2E7D5;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding: clamp(44px, 5.5vw, 76px) 0 clamp(36px, 4.5vw, 60px);
+      overflow: hidden;
+    }
+
+    .connect-marquee {
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: clamp(28px, 3.5vw, 46px);
+      user-select: none;
+    }
+
+    .connect-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: connectMarquee 22s linear infinite;
+      will-change: transform;
+    }
+
+    .connect-marquee-item {
+      font-family: 'BBH Hegarty', 'Krona One', sans-serif;
+      font-size: clamp(34px, 5.4vw, 78px);
+      font-weight: 400;
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+      color: #BB211F;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding-right: 0.45em;
+    }
+
+    @keyframes connectMarquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .contact-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4.86vw, 70px);
+    }
+
+    .contact-pills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(14px, 2.2vw, 28px);
+    }
+
+    .contact-pill {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: clamp(42px, 3.6vw, 48px);
+      border: 1.5px solid #000000;
+      border-radius: 999px;
+      background: transparent;
+      color: #000000;
+      text-decoration: none;
+      overflow: hidden;
+      padding: 0 14px;
+      transition: border-color 0.28s ease;
+    }
+
+    .contact-pill:hover,
+    .contact-pill:focus-visible,
+    .contact-pill.is-copied {
+      background: transparent;
+      border-color: #BB211F;
+      outline: none;
+    }
+
+    .pill-window {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 1.35em;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(13.5px, 1.15vw, 17px);
+      line-height: 1.35em;
+      letter-spacing: 0.08em;
+      overflow: hidden;
+    }
+
+    .pill-roller {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateY(0);
+      transition: transform 0.28s cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    .contact-pill:hover .pill-roller,
+    .contact-pill:focus-visible .pill-roller,
+    .contact-pill.is-copied .pill-roller {
+      transform: translateY(-50%);
+    }
+
+    .pill-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 1.35em;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .pill-line--hover {
+      color: #BB211F;
+      text-transform: none;
+      letter-spacing: 0.02em;
+    }
+
+    .pill-line--hover.is-upper {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .copy-icon {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    .contact-bottom-row {
+      margin-top: clamp(22px, 2.5vw, 34px);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .back-top-cue {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #000000;
+      background: transparent;
+      border: none;
+      padding: 6px 2px;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-top-cue:hover,
+    .back-top-cue:focus-visible {
+      color: #BB211F;
+      transform: translateY(-3px);
+      outline: none;
+    }
+
+    .back-top-cue svg {
+      width: 36px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    /* =========================================================================
+       TABLET & MOBILE SHARED RESPONSIVE LAYOUT (<= 1024px)
+       ========================================================================= */
+    @media (max-width: 1024px) {
+      /* WORK: 2-column Tablet grid */
+      .work-stage-wrap {
+        height: auto !important;
+        padding: 100px 40px 72px;
+      }
+
+      .work-canvas {
+        position: static;
+        width: 100%;
+        height: auto;
+        transform: none !important;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 44px 28px;
+      }
+
+      .work-heading {
+        position: static;
+        grid-column: 1 / -1;
+        font-size: 36px;
+        margin-bottom: 4px;
+      }
+
+      .work-card {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .work-img-box {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+        margin-bottom: 14px;
+      }
+
+      .corner-piece--100 {
+        width: 72px;
+        height: 72px;
+      }
+
+      .corner-piece--50 {
+        width: 40px;
+        height: 40px;
+      }
+
+      .work-card-meta {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+
+      .work-card-title {
+        position: static !important;
+        font-size: 22px;
+        max-width: none !important;
+      }
+
+      .work-card-tags {
+        position: static !important;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      .work-card-desc {
+        position: static !important;
+        width: 100% !important;
+        font-size: 17px;
+        line-height: 1.4;
+      }
+
+      /* ABOUT: Responsive 2-column Tablet layout */
+      .about-section {
+        padding-top: 24px;
+      }
+
+      .about-stage-wrap {
+        height: auto !important;
+        padding: 64px 40px 72px;
+      }
+
+      .about-canvas {
+        position: static;
+        width: 100%;
+        height: auto;
+        transform: none !important;
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 28px 40px;
+        align-items: start;
+      }
+
+      .about-heading {
+        position: static;
+        grid-column: 1;
+        font-size: 54px;
+      }
+
+      .about-tabs-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        grid-column: 2;
+        justify-self: end;
+        align-self: center;
+      }
+
+      .about-tab {
+        position: static !important;
+        height: auto;
+      }
+
+      .about-bread-stage {
+        position: relative;
+        left: auto;
+        top: auto;
+        grid-column: 1;
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+        aspect-ratio: 520 / 580;
+        margin: 0 auto;
+      }
+
+      .about-bread {
+        left: 19.23%;
+        top: 33.10%;
+        width: 68.54%;
+        height: auto;
+      }
+
+      .about-spread--1 {
+        left: 22.68%;
+        top: 31.03%;
+        width: 68.51%;
+        height: auto;
+      }
+
+      .about-spread--2 {
+        left: 22.68%;
+        top: 38.05%;
+        width: 68.47%;
+        height: auto;
+      }
+
+      .about-spread--3 {
+        left: 14.81%;
+        top: 44.64%;
+        width: 68.89%;
+        height: auto;
+      }
+
+      .about-headphones {
+        left: 12.30%;
+        top: 27.24%;
+        width: 82.09%;
+        height: auto;
+      }
+
+      .about-panel {
+        position: static !important;
+        grid-column: 2;
+        display: none;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .about-panel.is-active {
+        display: flex;
+      }
+
+      .about-payoff,
+      .about-bio,
+      .drawn-heading,
+      .drawn-copy,
+      .offclock-heading,
+      .offclock-copy {
+        position: static !important;
+        width: 100% !important;
+      }
+
+      .about-payoff {
+        font-size: 24px;
+        line-height: 1.45;
+      }
+
+      .about-bio,
+      .drawn-copy,
+      .offclock-copy {
+        font-size: 18px;
+        line-height: 1.42;
+      }
+
+      .drawn-heading,
+      .offclock-heading {
+        font-size: 22px;
+        margin-bottom: 6px;
+      }
+
+      .drawn-cols {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 24px;
+        margin-top: 4px;
+      }
+
+      .drawn-col {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .drawn-logos {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 18px 28px;
+        margin-top: 12px;
+      }
+
+      .drawn-logo {
+        position: static !important;
+        width: auto !important;
+        max-width: 170px;
+        height: 26px !important;
+      }
+
+      .contact-inner {
+        padding: 0 40px;
+      }
+
+      .contact-pills {
+        gap: 14px;
+      }
+    }
+
+    /* =========================================================================
+       MOBILE RESPONSIVE LAYOUT (<= 767px)
+       ========================================================================= */
+    @media (max-width: 767px) {
+      /* Larger statement & credentials inside stage on narrow mobile */
+      .hero-statement {
+        left: 140px;
+        top: 195px;
+        width: 1900px;
+      }
+
+      .statement-beat {
+        font-size: 132px;
+        line-height: 1.1;
+      }
+
+      .hero-creds {
+        left: 145px;
+        top: 810px;
+        width: 1000px;
+        font-size: 94px;
+        line-height: 1.5;
+      }
+
+      /* WORK: 1-column Mobile stack */
+      .work-stage-wrap {
+        padding: 112px 20px 64px;
+      }
+
+      .work-canvas {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .work-heading {
+        font-size: 30px;
+      }
+
+      .work-card-meta {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .work-card-tags {
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .corner-piece--100 {
+        width: 60px;
+        height: 60px;
+      }
+
+      .corner-piece--50 {
+        width: 34px;
+        height: 34px;
+      }
+
+      /* ABOUT: 1-column Mobile stack */
+      .about-stage-wrap {
+        padding: 96px 20px 64px;
+      }
+
+      .about-canvas {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .about-heading,
+      .about-tabs-group,
+      .about-bread-stage,
+      .about-panel {
+        grid-column: 1;
+      }
+
+      .about-heading {
+        font-size: 44px;
+      }
+
+      .about-tabs-group {
+        justify-self: start;
+        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px 20px;
+      }
+
+      .about-bread-stage {
+        max-width: 220px;
+        margin: 4px auto;
+      }
+
+      .about-payoff {
+        font-size: 21px;
+        line-height: 1.38;
+      }
+
+      .about-bio,
+      .drawn-copy,
+      .offclock-copy {
+        font-size: 17px;
+      }
+
+      .drawn-cols {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .drawn-logos {
+        gap: 16px 24px;
+      }
+
+      .drawn-logo {
+        max-width: 150px;
+        height: 24px !important;
+      }
+
+      /* CONTACT: 1-column Mobile stack */
+      .contact-inner {
+        padding: 0 20px;
+      }
+
+      .contact-pills {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .corner-menu-panel {
+        width: min(320px, calc(100vw - 16px));
+        height: min(320px, calc(100vw - 16px));
+      }
+    }
+  </style>
+</head>
+<body class="scroll-locked">
+  <!-- Custom black dot cursor -->
+  <div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
+
+  <!-- Persistent Top Nav (Hero / Bee only; hides once corner menu takes over) -->
+  <header class="top-nav" id="top-nav">
+    <a class="top-nav-word" id="top-nav-siddhi" href="#hero">siddhi</a>
+    <a class="top-nav-word" id="top-nav-malpe" href="#hero">malpe</a>
+  </header>
+
+  <!-- Corner Tangram Menu Scrim + Menu (Work / About / Contact only) -->
+  <div class="corner-menu-scrim" id="corner-menu-scrim" aria-hidden="true"></div>
+
+  <nav class="corner-menu" id="corner-menu" aria-label="Section navigation">
+    <!-- Initial State: x:0, y:0, w:89, h:89 (half of 178) -->
+    <button
+      class="corner-menu-trigger"
+      id="corner-menu-trigger"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="corner-menu-panel"
+    >
+      <svg class="corner-menu-trigger-svg" viewBox="0 0 400 400" overflow="visible" aria-hidden="true">
+        <polygon
+          class="corner-menu-trigger-shape"
+          shape-rendering="geometricPrecision"
+          points="0,0 100,0 200,100 200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 100,200 0,100"
+        />
+        <text
+          class="corner-menu-trigger-label"
+          x="142"
+          y="142"
+          text-anchor="middle"
+          dominant-baseline="central"
+          transform="rotate(45 142 142)"
+        >MENU</text>
+      </svg>
+    </button>
+
+    <!-- Clicked State: x:0, y:0, 356 x 356 tangram (2 x 178) with transparent triangle gaps -->
+    <div class="corner-menu-panel" id="corner-menu-panel" aria-hidden="true">
+      <svg class="corner-menu-open-svg" viewBox="0 0 400 400" overflow="visible">
+        <!-- CONTACT (top-left small triangle) -->
+        <g class="corner-menu-piece" data-corner-nav="contact" role="button" tabindex="0" aria-label="Contact">
+          <polygon
+            class="corner-menu-piece-shape"
+            shape-rendering="geometricPrecision"
+            points="0,0 100,0 100,100"
+          />
+          <text
+            class="corner-menu-piece-label"
+            x="64"
+            y="36"
+            text-anchor="middle"
+            dominant-baseline="central"
+            transform="rotate(45 64 36)"
+          >CONTACT</text>
+        </g>
+
+        <!-- ABOUT (left parallelogram) -->
+        <g class="corner-menu-piece" data-corner-nav="about" role="button" tabindex="0" aria-label="About">
+          <polygon
+            class="corner-menu-piece-shape"
+            shape-rendering="geometricPrecision"
+            points="0,0 100,100 100,200 0,100"
+          />
+          <text
+            class="corner-menu-piece-label"
+            x="50"
+            y="100"
+            text-anchor="middle"
+            dominant-baseline="central"
+            transform="rotate(45 50 100)"
+          >ABOUT</text>
+        </g>
+
+        <!-- RESUME (top-middle small triangle) -->
+        <g class="corner-menu-piece" data-corner-nav="resume" role="button" tabindex="0" aria-label="Resume">
+          <polygon
+            class="corner-menu-piece-shape"
+            shape-rendering="geometricPrecision"
+            points="100,0 200,100 100,100"
+          />
+          <text
+            class="corner-menu-piece-label"
+            x="136"
+            y="64"
+            text-anchor="middle"
+            dominant-baseline="central"
+            transform="rotate(45 136 64)"
+          >RESUME</text>
+        </g>
+
+        <!-- WORK (center square) -->
+        <g class="corner-menu-piece" data-corner-nav="work" role="button" tabindex="0" aria-label="Work">
+          <polygon
+            class="corner-menu-piece-shape"
+            shape-rendering="geometricPrecision"
+            points="100,100 200,100 200,200 100,200"
+          />
+          <text
+            class="corner-menu-piece-label"
+            x="150"
+            y="150"
+            text-anchor="middle"
+            dominant-baseline="central"
+            transform="rotate(45 150 150)"
+          >WORK</text>
+        </g>
+
+        <!-- HOME (outer L/wing tangram piece) -->
+        <g class="corner-menu-piece" data-corner-nav="home" role="button" tabindex="0" aria-label="Home">
+          <polygon
+            class="corner-menu-piece-shape"
+            shape-rendering="geometricPrecision"
+            points="200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 200,200"
+          />
+          <text
+            class="corner-menu-piece-label"
+            x="266"
+            y="66"
+            text-anchor="middle"
+            dominant-baseline="central"
+            transform="rotate(45 266 66)"
+          >HOME</text>
+        </g>
+      </svg>
+    </div>
+  </nav>
+
+  <!-- 1. HOME (inversed: #BB211F bg, #F2E7D5 tangram & text) -->
+  <section class="hero" id="hero" aria-label="Portfolio intro">
+    <div class="home-bg" id="home-bg" aria-hidden="true"></div>
+
+    <div class="stage" id="stage">
+      <div class="tangram-wrap" id="tangram-wrap">
+        <svg
+          class="tangram-svg"
+          id="tangram"
+          viewBox="0 0 1000 1000"
+          overflow="visible"
+          aria-label="Portfolio navigation"
+        >
+          <!-- Animated 7-piece tangram layer -->
+          <g id="pieces-layer" aria-hidden="true">
+            <g id="wing-hinge-1">
+              <g id="piece-large-1">
+                <polygon
+                  class="tangram-poly"
+                  points="0,0 1000,0 500,500"
+                  transform="translate(-500, -166.667)"
+                  fill="#BB211F"
+                  stroke="#F2E7D5"
+                  stroke-width="2"
+                  vector-effect="non-scaling-stroke"
+                  stroke-linejoin="round"
+                  shape-rendering="geometricPrecision"
+                />
+              </g>
+            </g>
+
+            <g id="wing-hinge-2">
+              <g id="piece-large-2">
+                <polygon
+                  class="tangram-poly"
+                  points="1000,0 1000,1000 500,500"
+                  transform="translate(-833.333, -500)"
+                  fill="#BB211F"
+                  stroke="#F2E7D5"
+                  stroke-width="2"
+                  vector-effect="non-scaling-stroke"
+                  stroke-linejoin="round"
+                  shape-rendering="geometricPrecision"
+                />
+              </g>
+            </g>
+
+            <g id="piece-medium">
+              <polygon
+                class="tangram-poly"
+                points="0,500 500,1000 0,1000"
+                transform="translate(-166.667, -833.333)"
+                fill="#BB211F"
+                stroke="#F2E7D5"
+                stroke-width="2"
+                vector-effect="non-scaling-stroke"
+                stroke-linejoin="round"
+                shape-rendering="geometricPrecision"
+              />
+            </g>
+
+            <g id="piece-square">
+              <polygon
+                class="tangram-poly"
+                points="500,500 750,750 500,1000 250,750"
+                transform="translate(-500, -750)"
+                fill="#BB211F"
+                stroke="#F2E7D5"
+                stroke-width="2"
+                vector-effect="non-scaling-stroke"
+                stroke-linejoin="round"
+                shape-rendering="geometricPrecision"
+              />
+            </g>
+
+            <g id="piece-parallelogram">
+              <polygon
+                class="tangram-poly"
+                points="0,0 250,250 250,750 0,500"
+                transform="translate(-125, -375)"
+                fill="#BB211F"
+                stroke="#F2E7D5"
+                stroke-width="2"
+                vector-effect="non-scaling-stroke"
+                stroke-linejoin="round"
+                shape-rendering="geometricPrecision"
+              />
+            </g>
+
+            <g id="piece-small-1">
+              <polygon
+                class="tangram-poly"
+                points="250,250 500,500 250,750"
+                transform="translate(-333.333, -500)"
+                fill="#BB211F"
+                stroke="#F2E7D5"
+                stroke-width="2"
+                vector-effect="non-scaling-stroke"
+                stroke-linejoin="round"
+                shape-rendering="geometricPrecision"
+              />
+            </g>
+
+            <g id="piece-small-2">
+              <polygon
+                class="tangram-poly"
+                points="750,750 1000,1000 500,1000"
+                transform="translate(-750, -916.667)"
+                fill="#BB211F"
+                stroke="#F2E7D5"
+                stroke-width="2"
+                vector-effect="non-scaling-stroke"
+                stroke-linejoin="round"
+                shape-rendering="geometricPrecision"
+              />
+            </g>
+          </g>
+
+          <!-- Interactive 4-piece Bee navigation overlay -->
+          <g class="nav-layer" id="nav-layer">
+            <g class="nav-btn" id="nav-work" role="button" tabindex="0" aria-label="Work">
+              <polygon
+                class="nav-shape"
+                shape-rendering="geometricPrecision"
+                points="176.777,-500 676.777,0 426.777,250 676.777,500 426.777,750 676.777,1000 176.777,1500 176.777,853.553 -176.777,500 176.777,146.447"
+              />
+              <text class="nav-label" x="426.8" y="500" text-anchor="middle" dominant-baseline="central">WORK</text>
+            </g>
+
+            <g class="nav-btn" id="nav-resume" role="button" tabindex="0" aria-label="Resume">
+              <polygon
+                class="nav-shape"
+                shape-rendering="geometricPrecision"
+                points="426.777,250 926.777,250 676.777,500"
+              />
+              <text class="nav-label" x="676.8" y="338" text-anchor="middle" dominant-baseline="central">RESUME</text>
+            </g>
+
+            <g class="nav-btn" id="nav-contact" role="button" tabindex="0" aria-label="Contact">
+              <polygon
+                class="nav-shape"
+                shape-rendering="geometricPrecision"
+                points="926.777,250 1176.777,500 676.777,500"
+              />
+              <text class="nav-label" x="926.8" y="422" text-anchor="middle" dominant-baseline="central">CONTACT</text>
+            </g>
+
+            <g class="nav-btn" id="nav-about" role="button" tabindex="0" aria-label="About">
+              <polygon
+                class="nav-shape"
+                shape-rendering="geometricPrecision"
+                points="676.777,500 1176.777,500 926.777,750 426.777,750"
+              />
+              <text class="nav-label" x="801.8" y="625" text-anchor="middle" dominant-baseline="central">ABOUT</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Layer (d): accessible single <h1> with two positioned spans -->
+      <h1 class="hero-name" id="hero-name">
+        <span class="name-word" id="word-siddhi">Siddhi</span>
+        <span class="name-word" id="word-malpe">Malpe</span>
+      </h1>
+
+      <!-- Beats 1 & 2 (B -> C): Rolling statement -->
+      <div class="hero-statement" id="hero-statement" aria-live="polite">
+        <div class="statement-roller" id="statement-roller">
+          <div class="statement-beat">Most problems are<br />people problems first</div>
+          <div class="statement-beat">I build products around<br />what they actually do</div>
+        </div>
+      </div>
+
+      <!-- Beat 3 (BEE): Left-side credentials beside bigger right-aligned Bee -->
+      <div class="hero-creds" id="hero-creds" aria-live="polite">
+        &middot; Previously Deloitte<br />
+        &middot; ICoRD &rsquo;27 paper<br />
+        &middot; Samsung PRISM (2nd)
+      </div>
+    </div>
+
+    <!-- Scroll to explore cue (viewport-anchored for legibility on all 3 devices) -->
+    <button class="scroll-cue" id="scroll-cue" type="button" aria-label="Scroll to explore">
+      <span>Scroll to explore</span>
+      <svg viewBox="0 0 36 16" aria-hidden="true">
+        <path d="M2 2L18 14L34 2" stroke-linecap="square" stroke-linejoin="miter" />
+      </svg>
+    </button>
+  </section>
+
+  <!-- Fixed overlay SVG for the 4 WORK pieces visibly travelling to the 4 project corners -->
+  <svg class="travel-layer" id="travel-layer" aria-hidden="true">
+    <polygon
+      id="fly-medium"
+      points="-0.6667,0.3333 0.3333,-0.6667 0.3333,0.3333"
+      fill="#000000"
+      stroke="#BB211F"
+      stroke-width="2"
+      stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+      shape-rendering="geometricPrecision"
+    />
+    <polygon
+      id="fly-large1"
+      points="-0.6667,0.3333 0.3333,-0.6667 0.3333,0.3333"
+      fill="#000000"
+      stroke="#BB211F"
+      stroke-width="2"
+      stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+      shape-rendering="geometricPrecision"
+    />
+    <polygon
+      id="fly-large2"
+      points="-0.6667,0.3333 0.3333,-0.6667 0.3333,0.3333"
+      fill="#000000"
+      stroke="#BB211F"
+      stroke-width="2"
+      stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+      shape-rendering="geometricPrecision"
+    />
+    <polygon
+      id="fly-square"
+      points="-0.5,-0.5 0.5,-0.5 0.5,0.5 -0.5,0.5"
+      fill="#000000"
+      stroke="#BB211F"
+      stroke-width="2"
+      stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
+      shape-rendering="geometricPrecision"
+    />
+  </svg>
+
+  <!-- 2. WORK -> 3. ABOUT -> 4. CONTACT -->
+  <div class="site-sections" id="site-sections">
+    <!-- 2. WORK -->
+    <main id="work" class="work-section">
+      <div class="work-stage-wrap" id="work-stage-wrap">
+        <div class="work-canvas" id="work-canvas">
+          <h2 class="work-heading">Selected case studies</h2>
+
+          <a class="work-card card-nexus" href="nexus.html">
+            <div class="work-img-box">
+              <img class="work-img" src="src/nexushomeimg.png" alt="Deloitte Feature Directory" />
+              <span class="work-hover-badge">View<br />Case</span>
+              <svg class="corner-piece corner-piece--50" id="corner-medium" viewBox="0 0 50 50" aria-hidden="true">
+                <polygon points="0,50 50,0 50,50" fill="#000000" stroke="#F2E7D5" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" shape-rendering="geometricPrecision" />
+              </svg>
+            </div>
+            <div class="work-card-meta">
+              <h3 class="work-card-title">Please wait.</h3>
+              <div class="work-card-tags">
+                <span>B2B SaaS</span>
+                <span>Interaction design</span>
+              </div>
+            </div>
+            <p class="work-card-desc">
+              Adding a feature, or changing who can use it, meant asking a developer and waiting. The more features, the longer the wait.
+            </p>
+          </a>
+
+          <a class="work-card card-together" href="together.html">
+            <div class="work-img-box">
+              <img class="work-img" src="src/togertherhomeimg.png" alt="Together! packaging and cards" />
+              <span class="work-hover-badge">View<br />Case</span>
+              <svg class="corner-piece corner-piece--100" id="corner-large1" viewBox="0 0 100 100" aria-hidden="true">
+                <polygon points="0,100 100,0 100,100" fill="#000000" stroke="#F2E7D5" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" shape-rendering="geometricPrecision" />
+              </svg>
+            </div>
+            <div class="work-card-meta">
+              <h3 class="work-card-title">Boys here, girls there.</h3>
+              <div class="work-card-tags">
+                <span>Social psychology</span>
+                <span>Behavioural research</span>
+              </div>
+            </div>
+            <p class="work-card-desc">
+              Nobody tells them where to sit. They already know. Across 59 participants, kids turned out not to be rejecting each other at all. They were avoiding the teasing.
+            </p>
+          </a>
+
+          <a class="work-card card-byw" href="broke-ya-woke.html">
+            <div class="work-img-box">
+              <img class="work-img" src="src/bywhomeimg.png" alt="Broke ya Woke? Jenga tower" />
+              <span class="work-hover-badge">View<br />Case</span>
+              <svg class="corner-piece corner-piece--100" id="corner-large2" viewBox="0 0 100 100" aria-hidden="true">
+                <polygon points="0,100 100,0 100,100" fill="#000000" stroke="#F2E7D5" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" shape-rendering="geometricPrecision" />
+              </svg>
+            </div>
+            <div class="work-card-meta">
+              <h3 class="work-card-title">Taxes are important, apparently.</h3>
+              <div class="work-card-tags">
+                <span>Phygital experience</span>
+                <span>Financial literacy</span>
+              </div>
+            </div>
+            <p class="work-card-desc">
+              A game where bad money decisions make your tower wobble. Of 23 teens and 7 parents interviewed, the teens could tell a want from a need. Taxes sounded like something for later.
+            </p>
+          </a>
+
+          <a class="work-card card-aris" href="aris.html">
+            <div class="work-img-box">
+              <img class="work-img" src="src/arishomeimg.png" alt="Aris conversational interface" />
+              <span class="work-hover-badge">View<br />Case</span>
+              <svg class="corner-piece corner-piece--50" id="corner-square" viewBox="0 0 50 50" aria-hidden="true">
+                <polygon points="0,0 50,0 50,50 0,50" fill="#000000" stroke="#F2E7D5" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" shape-rendering="geometricPrecision" />
+              </svg>
+            </div>
+            <div class="work-card-meta">
+              <h3 class="work-card-title">A reunion planned by AI.</h3>
+              <div class="work-card-tags">
+                <span>Agentic AI</span>
+                <span>Interaction design</span>
+              </div>
+            </div>
+            <p class="work-card-desc">
+              Sonia says “look for flights for this.” She never says where or when. Aris reads the group chat to work out what “this” means.
+            </p>
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- 3. ABOUT (bg #BB211F, 1440 x 720 desktop / responsive tablet & mobile) -->
+    <section id="about" class="about-section" aria-label="About">
+      <div class="about-stage-wrap" id="about-stage-wrap">
+        <div class="about-canvas" id="about-canvas">
+          <h2 class="about-heading">About</h2>
+
+          <!-- 3 Bread Tabs -->
+          <div class="about-tabs-group">
+            <button class="about-tab about-tab--1 is-active" type="button" data-about-tab="1" aria-pressed="true">
+              <img class="about-tab-icon" src="src/greenbread.png" alt="" />
+              <span class="about-tab-label">WHO I AM</span>
+            </button>
+
+            <button class="about-tab about-tab--2" type="button" data-about-tab="2" aria-pressed="false">
+              <img class="about-tab-icon" src="src/yellowbread.png" alt="" />
+              <span class="about-tab-label">WHAT I AM DRAWN TO</span>
+            </button>
+
+            <button class="about-tab about-tab--3" type="button" data-about-tab="3" aria-pressed="false">
+              <img class="about-tab-icon" src="src/maroonbread.png" alt="" />
+              <span class="about-tab-label">OFF THE CLOCK</span>
+            </button>
+          </div>
+
+          <!-- Toast slice base + spreads + Tab 3 headphones -->
+          <div class="about-bread-stage" aria-hidden="true">
+            <img class="about-bread" src="src/bread.png" alt="" />
+            <img class="about-spread about-spread--1 is-active" data-about-spread="1" src="src/chutney.png" alt="" />
+            <img class="about-spread about-spread--2" data-about-spread="2" src="src/butter.png" alt="" />
+            <img class="about-spread about-spread--3" data-about-spread="3" src="src/jam.png" alt="" />
+            <img class="about-headphones" id="about-headphones" src="src/headphones.png" alt="" />
+          </div>
+
+          <!-- Tab 1: WHO I AM -->
+          <div class="about-panel is-active" data-about-panel="1">
+            <h3 class="about-payoff">
+              Most problems are people problems first.<br />
+              I design around what they actually do.
+            </h3>
+            <p class="about-bio">
+              People say “it’s fine” and “oh, it’s nothing” all day, and it’s almost never nothing. Everyone edits themselves, for friends and for whoever might be watching, and screens are one more place it happens: the message typed and deleted, the tab opened and closed. One edit is easy to ignore. The same edit made by a lot of people in the same place says something about the place. Thinking in systems is mostly noticing that very little of what anyone does stays where it started. I like following an action until it ends up somewhere that looks nothing like where it began.
+            </p>
+          </div>
+
+          <!-- Tab 2: WHAT I AM DRAWN TO -->
+          <div class="about-panel" data-about-panel="2">
+            <h3 class="drawn-heading drawn-heading--behav">Behavioural UX</h3>
+            <p class="drawn-copy drawn-copy--behav">
+              When someone agrees to do something, there’s usually a small worry between saying yes and following through: looking foolish, or getting it wrong. I find that worry first and design around it.
+            </p>
+
+            <div class="drawn-cols">
+              <div class="drawn-col">
+                <h3 class="drawn-heading drawn-heading--sys">Systems &amp; workflows</h3>
+                <p class="drawn-copy drawn-copy--sys">
+                  The person who asks for something is rarely the person who approves it. Before I draw a single screen, I map the whole chain of people involved.
+                </p>
+              </div>
+              <div class="drawn-col">
+                <h3 class="drawn-heading drawn-heading--ai">AI Interactions</h3>
+                <p class="drawn-copy drawn-copy--ai">
+                  People talk to AI assistants in fragments. When the assistant isn’t sure what someone means, it asks or makes its best guess, and fixing a wrong guess takes one tap.
+                </p>
+              </div>
+            </div>
+
+            <div class="drawn-logos">
+              <img class="drawn-logo drawn-logo--deloitte" src="src/deloitte.png" alt="Deloitte" />
+              <img class="drawn-logo drawn-logo--icord" src="src/icord.png" alt="ICoRD '27" />
+              <img class="drawn-logo drawn-logo--samsung" src="src/samsungprism.png" alt="Samsung PRISM" />
+              <img class="drawn-logo drawn-logo--kidzania" src="src/kidzania.png" alt="KidZania" />
+            </div>
+          </div>
+
+          <!-- Tab 3: OFF THE CLOCK -->
+          <div class="about-panel" data-about-panel="3">
+            <h3 class="offclock-heading offclock-heading--1">In my ears &amp; on the road</h3>
+            <p class="offclock-copy offclock-copy--1">
+              A bike, a new stretch of road, a true crime podcast, and a warm meal waiting somewhere at the end of it.
+            </p>
+
+            <h3 class="offclock-heading offclock-heading--2">On the table</h3>
+            <p class="offclock-copy offclock-copy--2">
+              I’ll take a quiet table over a scoreboard any day. Tangrams, Jenga, and anything else that rewards patience right up until your hand slips.
+            </p>
+
+            <h3 class="offclock-heading offclock-heading--3">In my browser tabs</h3>
+            <p class="offclock-copy offclock-copy--3">
+              Lately it’s financial literacy, slowly demystifying the parts of adulthood nobody bothers to explain properly. Half the confusion is just terrible jargon.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CONTACT -->
+    <footer id="contact" class="contact-section">
+      <div class="connect-marquee" aria-hidden="true">
+        <div class="connect-marquee-track">
+          <span class="connect-marquee-item">LET'S CONNECT &nbsp; LET'S CONNECT &nbsp; LET'S CONNECT &nbsp; LET'S CONNECT &nbsp;</span>
+          <span class="connect-marquee-item">LET'S CONNECT &nbsp; LET'S CONNECT &nbsp; LET'S CONNECT &nbsp; LET'S CONNECT &nbsp;</span>
+        </div>
+      </div>
+
+      <div class="contact-inner">
+        <div class="contact-pills">
+          <button
+            class="contact-pill"
+            id="copy-email-pill"
+            type="button"
+            aria-label="Copy email siddhimalpe@gmail.com"
+          >
+            <span class="pill-window">
+              <span class="pill-roller">
+                <span class="pill-line">EMAIL</span>
+                <span class="pill-line pill-line--hover">
+                  <span id="email-copy-text">siddhimalpe@gmail.com</span>
+                  <svg class="copy-icon" id="email-copy-svg" viewBox="0 0 16 16" aria-hidden="true">
+                    <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+                    <path d="M10.5 5.5V3.5A1.5 1.5 0 0 0 9 2H3.5A1.5 1.5 0 0 0 2 3.5V9a1.5 1.5 0 0 0 1.5 1.5h2" stroke-linecap="round" />
+                  </svg>
+                  <svg class="copy-icon" id="email-check-svg" viewBox="0 0 16 16" aria-hidden="true" style="display:none;">
+                    <path d="M3 8.5l3.2 3.2L13 4.8" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </span>
+            </span>
+          </button>
+
+          <a
+            class="contact-pill"
+            href="https://drive.google.com/drive/folders/1Cnc7uw2BrQGdqj-LFANdcJFBHuYpXxxG"
+            target="_blank"
+            rel="noopener noreferrer"
+            id="contact-resume-link"
+            aria-label="Resume"
+          >
+            <span class="pill-window">
+              <span class="pill-roller">
+                <span class="pill-line">RESUME</span>
+                <span class="pill-line pill-line--hover is-upper">RESUME &#8599;</span>
+              </span>
+            </span>
+          </a>
+
+          <a
+            class="contact-pill"
+            href="https://www.linkedin.com/in/siddhi-malpe-334547304/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <span class="pill-window">
+              <span class="pill-roller">
+                <span class="pill-line">LINKEDIN</span>
+                <span class="pill-line pill-line--hover is-upper">LINKEDIN &#8599;</span>
+              </span>
+            </span>
+          </a>
+        </div>
+
+        <div class="contact-bottom-row">
+          <button class="back-top-cue" id="back-top-cue" type="button" aria-label="Back to top">
+            <svg viewBox="0 0 36 16" aria-hidden="true">
+              <path d="M2 14L18 2L34 14" stroke-linecap="square" stroke-linejoin="miter" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const RESUME_URL = 'https://drive.google.com/drive/folders/1Cnc7uw2BrQGdqj-LFANdcJFBHuYpXxxG';
+    const STATE_STORAGE_KEY = 'portfolioNavState';
+
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    const CONFIG = {
+      stageWidth: 2212,
+      stageHeight: 1564,
+
+      introBg: '#F2E7D5',
+      homeBg: '#BB211F',
+      creamColor: '#F2E7D5',
+      redColor: '#BB211F',
+      strokeWidth: 2,
+
+      squareStartSize: 152,
+      squareStartRotation: 45,
+      introSpinTurns: 4,
+      introSpinMs: 1800,
+      introSpinEase: 'power3.inOut',
+
+      revealStartHalfSide: 74,
+      revealMs: 450,
+      revealEase: 'power2.in',
+
+      squareEndSize: 840,
+      squareEndX: 686,
+      squareEndY: 540,
+      squareEndRotation: 0,
+      morphMs: 700,
+      morphEase: 'power3.inOut',
+
+      nameDelayAfterRevealMs: 500,
+      nameDurationMs: 600,
+      nameStaggerMs: 120,
+      nameRisePx: 40,
+      nameEase: 'power3.out',
+      nameFontSize: 215,
+      siddhiX: 165,
+      siddhiY: 145,
+      malpeX: 1175,
+      malpeY: 145,
+
+      initialSquareHoldMs: 1000,
+
+      statementBeatHeight: 260,
+      statementRollMs: 420,
+      statementRollEase: 'power3.inOut',
+
+      tumbleMs: 450,
+      tumbleMaxStaggerMs: 60,
+      tumbleEase: 'power2.inOut',
+      tumbleClusterWidthRatio: 0.45,
+      tumbleMinSpinDeg: 90,
+      tumbleMaxSpinDeg: 270,
+      tumbleSeed: 42,
+
+      formationHoldMs: 1600,
+      movingPartSettleMs: 350,
+      movingPartFlapMs: 350,
+      movingPartCount: 2,
+      movingPartEase: 'sine.inOut',
+
+      beeWingFlapDeg: 25,
+      beeWingFlapMs: 350,
+      beeWingFlapCount: 2,
+      beeWingFlapEase: 'sine.inOut',
+
+      navBeeScale: 0.86,
+      navBeeCenterY: 790,
+      navTextSvgFontSize: 44,
+
+      scrollMorphMs: 650,
+      scrollDivideMs: 450,
+      scrollEase: 'power3.inOut',
+
+      workUnmergeMs: 320,
+      workTravelMs: 1450,
+      workTravelEase: 'power2.inOut',
+      gestureCooldownMs: 350
+    };
+
+    const SHAPES = {
+      square: {
+        fitScale: 1.0,
+        xCenter: 1106,
+        yCenter: 960,
+        width: 1000,
+        center: { x: 500, y: 500 },
+        pieces: {
+          large1:        { x: 500.0,   y: 166.667, rotation: 0 },
+          large2:        { x: 833.333, y: 500.0,   rotation: 0 },
+          medium:        { x: 166.667, y: 833.333, rotation: 0 },
+          square:        { x: 500.0,   y: 750.0,   rotation: 0 },
+          parallelogram: { x: 125.0,   y: 375.0,   rotation: 0 },
+          small1:        { x: 333.333, y: 500.0,   rotation: 0 },
+          small2:        { x: 750.0,   y: 916.667, rotation: 0 }
+        }
+      },
+
+      B: {
+        fitScale: 0.82,
+        xCenter: 1106,
+        yCenter: 980,
+        width: 1914,
+        center: { x: 500, y: 500 },
+        pieces: {
+          large1:        { x:  514.3, y: 794.6, rotation:  -45 },
+          large2:        { x:  278.6, y: 558.9, rotation:   45 },
+          medium:        { x: -290.4, y: 489.9, rotation:   90 },
+          square:        { x: 1280.3, y: 500.0, rotation:   45 },
+          parallelogram: { x:  926.8, y: 676.8, rotation:   45 },
+          small1:        { x:  160.7, y:  87.5, rotation: -135 },
+          small2:        { x:  867.9, y: 441.1, rotation:  -45 }
+        },
+        movingPart: {
+          piece: 'small1',
+          pose2: { x: 82.09, y: 62.63, rotation: -153 }
+        }
+      },
+
+      C: {
+        fitScale: 0.80,
+        xCenter: 1106,
+        yCenter: 980,
+        width: 1768,
+        center: { x: 500, y: 500 },
+        pieces: {
+          large1:        { x:  794.6, y: 367.9, rotation:  -45 },
+          large2:        { x:  205.4, y: 485.7, rotation:   45 },
+          medium:        { x:  863.7, y: 770.2, rotation:  180 },
+          square:        { x: 1207.1, y:  73.2, rotation:   45 },
+          parallelogram: { x: -207.1, y: 603.6, rotation:   45 },
+          small1:        { x:   87.5, y:  14.3, rotation: -135 },
+          small2:        { x: 1148.2, y: 985.7, rotation: -135 }
+        },
+        movingPart: {
+          piece: 'small1',
+          pose2: { x: 8.91, y: -10.59, rotation: -153 }
+        }
+      },
+
+      BEE: {
+        fitScale: 0.74,
+        xCenter: 1600,
+        yCenter: 810,
+        width: 1354,
+        center: { x: 500, y: 500 },
+        wingHinge: { x: 176.777, y: 500.0 },
+        pieces: {
+          large1:        { x: 343.443, y:    0.0,   rotation: -90 },
+          large2:        { x: 343.443, y: 1000.0,   rotation: 180 },
+          medium:        { x:  58.926, y:  500.0,   rotation:  45 },
+          square:        { x: 426.777, y:  500.0,   rotation:   0 },
+          parallelogram: { x: 801.777, y:  625.0,   rotation:  90 },
+          small1:        { x: 926.777, y:  416.667, rotation: -90 },
+          small2:        { x: 676.777, y:  333.333, rotation: 180 }
+        }
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const heroEl = document.getElementById('hero');
+      const homeBgEl = document.getElementById('home-bg');
+      const stageEl = document.getElementById('stage');
+      const tangramWrapEl = document.getElementById('tangram-wrap');
+      const tangramSvgEl = document.getElementById('tangram');
+      const heroNameEl = document.getElementById('hero-name');
+      const siddhiEl = document.getElementById('word-siddhi');
+      const malpeEl = document.getElementById('word-malpe');
+      const statementEl = document.getElementById('hero-statement');
+      const statementRollerEl = document.getElementById('statement-roller');
+      const credsEl = document.getElementById('hero-creds');
+      const topNavEl = document.getElementById('top-nav');
+      const topNavSiddhiEl = document.getElementById('top-nav-siddhi');
+      const topNavMalpeEl = document.getElementById('top-nav-malpe');
+      const cornerMenuEl = document.getElementById('corner-menu');
+      const cornerMenuTriggerEl = document.getElementById('corner-menu-trigger');
+      const cornerMenuPanelEl = document.getElementById('corner-menu-panel');
+      const cornerMenuScrimEl = document.getElementById('corner-menu-scrim');
+      const cornerMenuPieces = document.querySelectorAll('.corner-menu-piece');
+      const wingHinge1El = document.getElementById('wing-hinge-1');
+      const wingHinge2El = document.getElementById('wing-hinge-2');
+      const navLayerEl = document.getElementById('nav-layer');
+      const navWorkEl = document.getElementById('nav-work');
+      const scrollCueEl = document.getElementById('scroll-cue');
+      const backTopCueEl = document.getElementById('back-top-cue');
+      const workSectionEl = document.getElementById('work');
+      const workStageWrapEl = document.getElementById('work-stage-wrap');
+      const workCanvasEl = document.getElementById('work-canvas');
+      const aboutSectionEl = document.getElementById('about');
+      const aboutStageWrapEl = document.getElementById('about-stage-wrap');
+      const aboutCanvasEl = document.getElementById('about-canvas');
+      const aboutTabs = document.querySelectorAll('.about-tab');
+      const aboutPanels = document.querySelectorAll('.about-panel');
+      const aboutSpreads = document.querySelectorAll('.about-spread');
+      const aboutHeadphonesEl = document.getElementById('about-headphones');
+      const travelLayerEl = document.getElementById('travel-layer');
+      const cursorEl = document.getElementById('custom-cursor');
+      const copyEmailPill = document.getElementById('copy-email-pill');
+      const emailCopyText = document.getElementById('email-copy-text');
+      const emailCopySvg = document.getElementById('email-copy-svg');
+      const emailCheckSvg = document.getElementById('email-check-svg');
+
+      const pieceKeys = ['large1', 'large2', 'medium', 'square', 'parallelogram', 'small1', 'small2'];
+
+      const pieceEls = {
+        large1: document.getElementById('piece-large-1'),
+        large2: document.getElementById('piece-large-2'),
+        medium: document.getElementById('piece-medium'),
+        square: document.getElementById('piece-square'),
+        parallelogram: document.getElementById('piece-parallelogram'),
+        small1: document.getElementById('piece-small-1'),
+        small2: document.getElementById('piece-small-2')
+      };
+
+      const polyEls = {};
+      pieceKeys.forEach((key) => {
+        polyEls[key] = pieceEls[key].querySelector('.tangram-poly');
+      });
+
+      const travelSpecs = [
+        { key: 'medium', beeLegSvg: 500,     beeRot: 135, isTriangle: true,  arcX: -90, flyEl: document.getElementById('fly-medium'), cornerEl: document.getElementById('corner-medium') },
+        { key: 'large1', beeLegSvg: 707.107, beeRot: -45, isTriangle: true,  arcX:  70, flyEl: document.getElementById('fly-large1'), cornerEl: document.getElementById('corner-large1') },
+        { key: 'large2', beeLegSvg: 707.107, beeRot: -45, isTriangle: true,  arcX: -70, flyEl: document.getElementById('fly-large2'), cornerEl: document.getElementById('corner-large2') },
+        { key: 'square', beeLegSvg: 353.553, beeRot:  45, isTriangle: false, arcX:  90, flyEl: document.getElementById('fly-square'), cornerEl: document.getElementById('corner-square') }
+      ];
+
+      const navLabelEls = document.querySelectorAll('.nav-label');
+      const navBtnEls = document.querySelectorAll('.nav-btn');
+
+      const pieceStates = {};
+      const wingState = { w1: 0, w2: 0 };
+      const revealState = { halfSide: 0, active: false, done: false };
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let masterTl = null;
+      let scrollTl = null;
+      let travelTl = null;
+      let currentScale = 1;
+      let currentAboutTab = 1;
+      let isAboutAnimating = false;
+      let isIntroComplete = false;
+      let isNavOpen = false;
+      let isNavAnimating = false;
+      let hasEnteredWork = false;
+      let isTraveling = false;
+      let isInsideWorkImg = false;
+      let isCornerMenuOpen = false;
+      let wasInAboutZone = false;
+      let cooldownUntil = 0;
+      let aboutCooldownUntil = 0;
+      let aboutGestureLocked = false;
+      let lastWheelTimestamp = 0;
+      let lastWheelAbsDelta = 0;
+      let touchStartY = null;
+      let copyResetTimer = null;
+
+      function armCooldown() {
+        cooldownUntil = performance.now() + CONFIG.gestureCooldownMs;
+      }
+
+      function getNavBeeScale() {
+        return window.innerWidth < 768 ? 1.06 : CONFIG.navBeeScale;
+      }
+
+      function getNavLabelFontSize() {
+        return window.innerWidth < 768 ? 52 : CONFIG.navTextSvgFontSize;
+      }
+
+      function saveLeaveState() {
+        if (!hasEnteredWork) return;
+        const snapshot = {
+          enteredWork: true,
+          scrollY: window.scrollY,
+          aboutTab: currentAboutTab,
+          leftToCaseStudy: true
+        };
+        try {
+          sessionStorage.setItem(STATE_STORAGE_KEY, JSON.stringify(snapshot));
+        } catch (_) {}
+        try {
+          history.replaceState(snapshot, '', '#work');
+        } catch (_) {}
+      }
+
+      function getRestoreState() {
+        const navEntry = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        const navType = navEntry ? navEntry.type : '';
+        const hash = window.location.hash;
+        const hState = history.state && history.state.enteredWork ? history.state : null;
+
+        let sState = null;
+        try {
+          const raw = sessionStorage.getItem(STATE_STORAGE_KEY);
+          if (raw) sState = JSON.parse(raw);
+        } catch (_) {}
+
+        if (hState) return hState;
+        if (sState && sState.leftToCaseStudy) return sState;
+        if (navType === 'back_forward' && sState && sState.enteredWork) return sState;
+        if (hash === '#work' || hash === '#about' || hash === '#contact') {
+          return {
+            enteredWork: true,
+            scrollY: null,
+            aboutTab: hash === '#contact' ? 3 : 1,
+            hashTarget: hash.slice(1)
+          };
+        }
+        return null;
+      }
+
+      function clearLeaveFlag() {
+        try {
+          const raw = sessionStorage.getItem(STATE_STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            parsed.leftToCaseStudy = false;
+            sessionStorage.setItem(STATE_STORAGE_KEY, JSON.stringify(parsed));
+          }
+        } catch (_) {}
+        if (window.location.hash === '#work') {
+          try {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          } catch (_) {}
+        }
+      }
+
+      function syncCornerMenuContrast() {
+        if (!hasEnteredWork) {
+          cornerMenuEl.classList.remove('is-inverted');
+          return;
+        }
+        const aboutRect = aboutSectionEl.getBoundingClientRect();
+        const probeY = isCornerMenuOpen ? 160 : 44;
+        const overAbout = aboutRect.top <= probeY && aboutRect.bottom >= probeY;
+        cornerMenuEl.classList.toggle('is-inverted', overAbout);
+      }
+
+      function setCornerMenuVisible(visible, instant = false) {
+        if (visible) {
+          cornerMenuEl.classList.add('is-visible');
+          if (instant) {
+            gsap.set(cornerMenuEl, { opacity: 1 });
+            gsap.set(topNavEl, { opacity: 0 });
+          } else {
+            gsap.to(cornerMenuEl, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+            gsap.to(topNavEl, { opacity: 0, duration: 0.22, ease: 'power2.out' });
+          }
+          topNavEl.classList.remove('is-active');
+          syncCornerMenuContrast();
+        } else {
+          closeCornerMenu(true);
+          cornerMenuEl.classList.remove('is-visible', 'is-inverted');
+          gsap.set(cornerMenuEl, { opacity: 0 });
+          if (isIntroComplete) {
+            topNavEl.classList.add('is-active');
+            gsap.to(topNavEl, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+          }
+        }
+      }
+
+      function openCornerMenu() {
+        if (!hasEnteredWork || isTraveling || isCornerMenuOpen) return;
+        isCornerMenuOpen = true;
+        cornerMenuEl.classList.add('is-open');
+        cornerMenuScrimEl.classList.add('is-open');
+        cornerMenuTriggerEl.setAttribute('aria-expanded', 'true');
+        cornerMenuPanelEl.setAttribute('aria-hidden', 'false');
+        syncCornerMenuContrast();
+
+        gsap.killTweensOf([cornerMenuScrimEl, cornerMenuTriggerEl, cornerMenuPanelEl]);
+        gsap.to(cornerMenuScrimEl, { opacity: 1, duration: 0.32, ease: 'power2.out' });
+        gsap.to(cornerMenuTriggerEl, { opacity: 0, duration: 0.16, ease: 'power2.out' });
+        gsap.fromTo(
+          cornerMenuPanelEl,
+          { opacity: 0, scale: 0.25 },
+          { opacity: 1, scale: 1, duration: 0.36, ease: 'power3.out' }
+        );
+      }
+
+      function closeCornerMenu(instant = false) {
+        if (!isCornerMenuOpen && !instant) return;
+        isCornerMenuOpen = false;
+        cornerMenuEl.classList.remove('is-open');
+        cornerMenuScrimEl.classList.remove('is-open');
+        cornerMenuTriggerEl.setAttribute('aria-expanded', 'false');
+        cornerMenuPanelEl.setAttribute('aria-hidden', 'true');
+        syncCornerMenuContrast();
+
+        gsap.killTweensOf([cornerMenuScrimEl, cornerMenuTriggerEl, cornerMenuPanelEl]);
+        if (instant) {
+          gsap.set(cornerMenuScrimEl, { opacity: 0 });
+          gsap.set(cornerMenuPanelEl, { opacity: 0, scale: 0.25 });
+          gsap.set(cornerMenuTriggerEl, { opacity: 1 });
+          return;
+        }
+        gsap.to(cornerMenuScrimEl, { opacity: 0, duration: 0.25, ease: 'power2.in' });
+        gsap.to(cornerMenuPanelEl, { opacity: 0, scale: 0.25, duration: 0.24, ease: 'power2.in' });
+        gsap.to(cornerMenuTriggerEl, { opacity: 1, duration: 0.22, delay: 0.08, ease: 'power2.out' });
+      }
+
+      function scrollToPortfolioSection(sectionId) {
+        const target = document.getElementById(sectionId);
+        if (!target) return;
+        if (sectionId === 'about') {
+          setAboutTabInstant(1);
+          wasInAboutZone = true;
+          aboutGestureLocked = false;
+          aboutCooldownUntil = performance.now() + 450;
+        } else {
+          wasInAboutZone = false;
+        }
+        const proxy = { y: window.scrollY };
+        gsap.to(proxy, {
+          y: target.offsetTop,
+          duration: 0.72,
+          ease: 'power3.inOut',
+          onUpdate: () => {
+            window.scrollTo(0, proxy.y);
+            syncCornerMenuContrast();
+          },
+          onComplete: () => {
+            syncCornerMenuContrast();
+            armCooldown();
+          }
+        });
+      }
+
+      function setupCornerMenu() {
+        gsap.set(cornerMenuPanelEl, { opacity: 0, scale: 0.25 });
+        gsap.set(cornerMenuScrimEl, { opacity: 0 });
+
+        cornerMenuTriggerEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openCornerMenu();
+        });
+
+        cornerMenuScrimEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeCornerMenu(false);
+        });
+
+        cornerMenuPieces.forEach((piece) => {
+          const activate = () => {
+            const dest = piece.dataset.cornerNav;
+            closeCornerMenu(false);
+            if (dest === 'home') {
+              returnToBee();
+            } else if (dest === 'work' || dest === 'about' || dest === 'contact') {
+              scrollToPortfolioSection(dest);
+            } else if (dest === 'resume') {
+              window.open(RESUME_URL, '_blank', 'noopener,noreferrer');
+            }
+          };
+
+          piece.addEventListener('click', (e) => {
+            e.stopPropagation();
+            activate();
+          });
+
+          piece.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              activate();
+            }
+          });
+        });
+      }
+
+      function switchAboutTab(nextNum, snapScroll = false) {
+        if (nextNum < 1 || nextNum > 3 || nextNum === currentAboutTab || isAboutAnimating) return;
+
+        const prevNum = currentAboutTab;
+        currentAboutTab = nextNum;
+        isAboutAnimating = true;
+        aboutGestureLocked = true;
+        aboutCooldownUntil = performance.now() + 650;
+
+        aboutTabs.forEach((t) => {
+          const active = Number(t.dataset.aboutTab) === nextNum;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        const prevPanel = document.querySelector(`.about-panel[data-about-panel="${prevNum}"]`);
+        const nextPanel = document.querySelector(`.about-panel[data-about-panel="${nextNum}"]`);
+        const prevSpread = document.querySelector(`.about-spread[data-about-spread="${prevNum}"]`);
+        const nextSpread = document.querySelector(`.about-spread[data-about-spread="${nextNum}"]`);
+
+        gsap.killTweensOf([prevPanel, nextPanel, prevSpread, nextSpread, aboutHeadphonesEl].filter(Boolean));
+
+        if (snapScroll) {
+          const proxy = { y: window.scrollY };
+          gsap.to(proxy, {
+            y: aboutSectionEl.offsetTop,
+            duration: 0.35,
+            ease: 'power2.out',
+            onUpdate: () => {
+              window.scrollTo(0, proxy.y);
+              syncCornerMenuContrast();
+            }
+          });
+        }
+
+        const dir = nextNum > prevNum ? 1 : -1;
+
+        if (prevPanel) {
+          gsap.to(prevPanel, {
+            opacity: 0,
+            y: -14 * dir,
+            duration: 0.2,
+            ease: 'power2.in',
+            onComplete: () => prevPanel.classList.remove('is-active')
+          });
+        }
+
+        if (nextPanel) {
+          nextPanel.classList.add('is-active');
+          gsap.fromTo(
+            nextPanel,
+            { opacity: 0, y: 18 * dir },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.36,
+              delay: 0.12,
+              ease: 'power3.out',
+              onComplete: () => {
+                isAboutAnimating = false;
+                armCooldown();
+              }
+            }
+          );
+        } else {
+          isAboutAnimating = false;
+        }
+
+        if (prevSpread) {
+          gsap.to(prevSpread, {
+            opacity: 0,
+            scale: 0.95,
+            y: -8 * dir,
+            duration: 0.2,
+            ease: 'power2.in',
+            onComplete: () => prevSpread.classList.remove('is-active')
+          });
+        }
+
+        if (nextSpread) {
+          nextSpread.classList.add('is-active');
+          gsap.fromTo(
+            nextSpread,
+            { opacity: 0, scale: 0.95, y: 10 * dir },
+            { opacity: 1, scale: 1, y: 0, duration: 0.36, delay: 0.1, ease: 'power3.out' }
+          );
+        }
+
+        if (aboutHeadphonesEl) {
+          if (prevNum === 3) {
+            gsap.to(aboutHeadphonesEl, {
+              opacity: 0,
+              y: -16,
+              duration: 0.2,
+              ease: 'power2.in'
+            });
+          } else if (nextNum === 3) {
+            gsap.fromTo(
+              aboutHeadphonesEl,
+              { opacity: 0, y: -26, scale: 1.03 },
+              { opacity: 1, y: 0, scale: 1, duration: 0.42, delay: 0.44, ease: 'power2.out' }
+            );
+          }
+        }
+      }
+
+      function setAboutTabInstant(num) {
+        currentAboutTab = num;
+        aboutTabs.forEach((t) => {
+          const active = Number(t.dataset.aboutTab) === num;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        aboutPanels.forEach((p) => {
+          const active = Number(p.dataset.aboutPanel) === num;
+          p.classList.toggle('is-active', active);
+          gsap.set(p, { opacity: active ? 1 : 0, y: 0 });
+        });
+        aboutSpreads.forEach((s) => {
+          const active = Number(s.dataset.aboutSpread) === num;
+          s.classList.toggle('is-active', active);
+          gsap.set(s, { opacity: active ? 1 : 0, scale: 1, y: 0 });
+        });
+        if (aboutHeadphonesEl) {
+          gsap.set(aboutHeadphonesEl, { opacity: num === 3 ? 1 : 0, y: 0, scale: 1 });
+        }
+      }
+
+      function setupAboutTabs() {
+        aboutTabs.forEach((tab) => {
+          tab.addEventListener('click', () => {
+            switchAboutTab(Number(tab.dataset.aboutTab), false);
+          });
+        });
+      }
+
+      function setupCustomCursor() {
+        if (!window.matchMedia('(pointer: fine)').matches) return;
+        gsap.set(cursorEl, { xPercent: -50, yPercent: -50, scale: 1, opacity: 0 });
+        const cxTo = gsap.quickTo(cursorEl, 'x', { duration: 0.14, ease: 'power3.out' });
+        const cyTo = gsap.quickTo(cursorEl, 'y', { duration: 0.14, ease: 'power3.out' });
+
+        let hasMoved = false;
+        window.addEventListener('mousemove', (e) => {
+          if (!hasMoved) {
+            hasMoved = true;
+            gsap.set(cursorEl, { x: e.clientX, y: e.clientY });
+            if (!isInsideWorkImg) gsap.to(cursorEl, { opacity: 1, duration: 0.18 });
+          }
+          cxTo(e.clientX);
+          cyTo(e.clientY);
+        });
+
+        document.addEventListener('mouseleave', () => gsap.to(cursorEl, { opacity: 0, duration: 0.18 }));
+        document.addEventListener('mouseenter', () => {
+          if (hasMoved && !isInsideWorkImg) gsap.to(cursorEl, { opacity: 1, duration: 0.18 });
+        });
+
+        const interactiveSel = 'a:not(.contact-pill), button:not(.contact-pill), .nav-btn, .corner-menu-trigger-shape, .corner-menu-piece';
+        document.addEventListener('mouseover', (e) => {
+          if (isInsideWorkImg || e.target.closest('.contact-pill')) return;
+          if (e.target.closest(interactiveSel)) gsap.to(cursorEl, { scale: 2.1, duration: 0.2, ease: 'power2.out' });
+        });
+        document.addEventListener('mouseout', (e) => {
+          if (isInsideWorkImg || e.target.closest('.contact-pill')) {
+            if (!isInsideWorkImg) gsap.to(cursorEl, { scale: 1, duration: 0.2, ease: 'power2.out' });
+            return;
+          }
+          if (e.target.closest(interactiveSel)) gsap.to(cursorEl, { scale: 1, duration: 0.2, ease: 'power2.out' });
+        });
+      }
+
+      function setupCopyEmailPill() {
+        if (!copyEmailPill) return;
+        const email = 'siddhimalpe@gmail.com';
+        copyEmailPill.addEventListener('click', (e) => {
+          e.preventDefault();
+          const showCopied = () => {
+            copyEmailPill.classList.add('is-copied');
+            emailCopyText.textContent = 'Copied!';
+            emailCopySvg.style.display = 'none';
+            emailCheckSvg.style.display = 'block';
+            clearTimeout(copyResetTimer);
+            copyResetTimer = setTimeout(() => {
+              copyEmailPill.classList.remove('is-copied');
+              emailCopyText.textContent = email;
+              emailCopySvg.style.display = 'block';
+              emailCheckSvg.style.display = 'none';
+            }, 1600);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(showCopied, () => { fallbackCopy(email); showCopied(); });
+          } else {
+            fallbackCopy(email); showCopied();
+          }
+        });
+        function fallbackCopy(text) {
+          const ta = document.createElement('textarea');
+          ta.value = text; ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); } catch (_) {}
+          document.body.removeChild(ta);
+        }
+      }
+
+      function renderTangram() {
+        for (let i = 0; i < pieceKeys.length; i++) {
+          const key = pieceKeys[i];
+          const s = pieceStates[key];
+          pieceEls[key].setAttribute('transform', `translate(${s.x.toFixed(3)}, ${s.y.toFixed(3)}) rotate(${s.rotation.toFixed(3)})`);
+        }
+        const h = SHAPES.BEE.wingHinge;
+        wingHinge1El.setAttribute('transform', `rotate(${wingState.w1.toFixed(3)}, ${h.x}, ${h.y})`);
+        wingHinge2El.setAttribute('transform', `rotate(${wingState.w2.toFixed(3)}, ${h.x}, ${h.y})`);
+      }
+
+      function renderRevealClip() {
+        if (revealState.done) {
+          homeBgEl.style.opacity = '1';
+          homeBgEl.style.clipPath = 'none';
+          return;
+        }
+        if (!revealState.active) {
+          homeBgEl.style.opacity = '0';
+          homeBgEl.style.clipPath = 'polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)';
+          return;
+        }
+        homeBgEl.style.opacity = '1';
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        const deg = Number(gsap.getProperty(tangramWrapEl, 'rotation')) || 0;
+        const rad = (deg * Math.PI) / 180;
+        const r = revealState.halfSide * Math.SQRT2;
+        const pts = [-135, -45, 45, 135].map((cornerDeg) => {
+          const theta = rad + (cornerDeg * Math.PI) / 180;
+          return `${(cx + r * Math.cos(theta)).toFixed(1)}px ${(cy + r * Math.sin(theta)).toFixed(1)}px`;
+        });
+        homeBgEl.style.clipPath = `polygon(${pts.join(', ')})`;
+      }
+
+      function createRng(seed) {
+        let a = seed >>> 0;
+        return function next() {
+          a |= 0; a = (a + 0x6D2B79F5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function nearestAngle(fromDeg, baseDeg) {
+        return fromDeg + (((((baseDeg - fromDeg) % 360) + 540) % 360) - 180);
+      }
+
+      function applyStaticLayout() {
+        stageEl.style.width = `${CONFIG.stageWidth}px`;
+        stageEl.style.height = `${CONFIG.stageHeight}px`;
+        tangramWrapEl.style.width = `${CONFIG.squareEndSize}px`;
+        tangramWrapEl.style.height = `${CONFIG.squareEndSize}px`;
+        heroNameEl.style.fontSize = `${CONFIG.nameFontSize}px`;
+        siddhiEl.style.left = `${CONFIG.siddhiX}px`;
+        siddhiEl.style.top = `${CONFIG.siddhiY}px`;
+        malpeEl.style.left = `${CONFIG.malpeX}px`;
+        malpeEl.style.top = `${CONFIG.malpeY}px`;
+        const navFontSize = getNavLabelFontSize();
+        navLabelEls.forEach((el) => el.setAttribute('font-size', `${navFontSize}`));
+      }
+
+      function updateWorkCanvasScale() {
+        const vw = window.innerWidth;
+        if (vw < 1025) {
+          workCanvasEl.style.transform = 'none';
+          workStageWrapEl.style.height = 'auto';
+          aboutCanvasEl.style.transform = 'none';
+          aboutStageWrapEl.style.height = 'auto';
+          return;
+        }
+        const scale = vw / 1440;
+        workCanvasEl.style.transform = `translateX(-50%) scale(${scale})`;
+        workStageWrapEl.style.height = `${Math.ceil(1500 * scale)}px`;
+        aboutCanvasEl.style.transform = `translateX(-50%) scale(${scale})`;
+        aboutStageWrapEl.style.height = `${Math.ceil(720 * scale)}px`;
+      }
+
+      function updateStageScale() {
+        currentScale = Math.min(window.innerWidth / CONFIG.stageWidth, window.innerHeight / CONFIG.stageHeight);
+        stageEl.style.transform = `translate(-50%, -50%) scale(${currentScale})`;
+        const navFontSize = getNavLabelFontSize();
+        navLabelEls.forEach((el) => el.setAttribute('font-size', `${navFontSize}`));
+        if (masterTl) {
+          const revealStart = masterTl.labels.reveal;
+          const revealEnd = revealStart + CONFIG.revealMs / 1000;
+          const t = masterTl.time();
+          revealState.active = t >= revealStart && t < revealEnd;
+          revealState.done = t >= revealEnd;
+          renderRevealClip();
+        }
+        updateWorkCanvasScale();
+      }
+
+      function setupWorkImageHoverBadges() {
+        if (!window.matchMedia('(pointer: fine)').matches) return;
+        document.querySelectorAll('.work-img-box').forEach((box) => {
+          const badge = box.querySelector('.work-hover-badge');
+          if (!badge) return;
+          gsap.set(badge, { xPercent: -50, yPercent: -50, scale: 0.75, opacity: 0 });
+          const xTo = gsap.quickTo(badge, 'x', { duration: 0.25, ease: 'power3.out' });
+          const yTo = gsap.quickTo(badge, 'y', { duration: 0.25, ease: 'power3.out' });
+
+          function getLocalPos(e) {
+            const rect = box.getBoundingClientRect();
+            return {
+              x: (e.clientX - rect.left) / (rect.width / (box.offsetWidth || rect.width)),
+              y: (e.clientY - rect.top) / (rect.height / (box.offsetHeight || rect.height))
+            };
+          }
+
+          box.addEventListener('mouseenter', (e) => {
+            isInsideWorkImg = true;
+            gsap.to(cursorEl, { opacity: 0, scale: 0.5, duration: 0.15, overwrite: 'auto' });
+            const pos = getLocalPos(e);
+            gsap.set(badge, { x: pos.x, y: pos.y });
+            gsap.to(badge, { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.out', overwrite: 'auto' });
+          });
+          box.addEventListener('mousemove', (e) => {
+            const pos = getLocalPos(e);
+            xTo(pos.x); yTo(pos.y);
+          });
+          box.addEventListener('mouseleave', () => {
+            isInsideWorkImg = false;
+            gsap.to(cursorEl, { opacity: 1, scale: 1, duration: 0.18, overwrite: 'auto' });
+            gsap.to(badge, { opacity: 0, scale: 0.75, duration: 0.2, ease: 'power2.in', overwrite: 'auto' });
+          });
+        });
+      }
+
+      function getRevealHalfSides() {
+        return {
+          startHalfSide: CONFIG.revealStartHalfSide * currentScale,
+          endHalfSide: Math.hypot(window.innerWidth / 2, window.innerHeight / 2) + 24
+        };
+      }
+
+      function getTopNavTargetInStage(wordEl, targetEl) {
+        const sRect = wordEl.getBoundingClientRect();
+        const tRect = targetEl.getBoundingClientRect();
+        return {
+          dx: (tRect.left - sRect.left) / currentScale,
+          dy: (tRect.top - sRect.top) / currentScale,
+          scale: (tRect.height / (sRect.height || 1))
+        };
+      }
+
+      function addTumble(tl, labelName, targetShapeName, curState, rng) {
+        const targetShape = SHAPES[targetShapeName];
+        const totalSec = CONFIG.tumbleMs / 1000;
+        const maxStaggerSec = CONFIG.tumbleMaxStaggerMs / 1000;
+        const halfSec = (totalSec - maxStaggerSec) / 2;
+        const clusterRadius = (targetShape.width * CONFIG.tumbleClusterWidthRatio) / 2;
+
+        tl.addLabel(labelName);
+        const startTime = tl.duration();
+        tl.to(tangramWrapEl, {
+          scale: targetShape.fitScale,
+          x: targetShape.xCenter,
+          y: targetShape.yCenter,
+          duration: totalSec,
+          ease: CONFIG.tumbleEase
+        }, startTime);
+
+        const staggers = pieceKeys.map((_, idx) => (idx / (pieceKeys.length - 1)) * maxStaggerSec);
+        for (let i = staggers.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          [staggers[i], staggers[j]] = [staggers[j], staggers[i]];
+        }
+
+        pieceKeys.forEach((key, idx) => {
+          const stateObj = pieceStates[key];
+          const cur = curState[key];
+          const targetPose = targetShape.pieces[key];
+          const stagger = staggers[idx];
+          const angle = rng() * Math.PI * 2;
+          const dist = Math.sqrt(rng()) * clusterRadius * 0.65;
+          const clusterX = targetShape.center.x + Math.cos(angle) * dist;
+          const clusterY = targetShape.center.y + Math.sin(angle) * dist;
+          const spinSign = rng() < 0.5 ? -1 : 1;
+          const spinMag = CONFIG.tumbleMinSpinDeg + rng() * (CONFIG.tumbleMaxSpinDeg - CONFIG.tumbleMinSpinDeg);
+          const midRot = cur.rotation + spinSign * spinMag;
+          const endRot = nearestAngle(midRot, targetPose.rotation);
+
+          tl.to(stateObj, { x: clusterX, y: clusterY, rotation: midRot, duration: halfSec, ease: CONFIG.tumbleEase }, startTime + stagger);
+          tl.to(stateObj, { x: targetPose.x, y: targetPose.y, rotation: endRot, duration: halfSec, ease: CONFIG.tumbleEase }, startTime + stagger + halfSec);
+          curState[key] = { x: targetPose.x, y: targetPose.y, rotation: endRot };
+        });
+
+        tl.set({}, {}, startTime + totalSec);
+      }
+
+      function addFormationHold(tl, labelName, shapeName, curState) {
+        const shape = SHAPES[shapeName];
+        const holdSec = CONFIG.formationHoldMs / 1000;
+        const settleSec = CONFIG.movingPartSettleMs / 1000;
+        tl.addLabel(labelName);
+        const holdStart = tl.duration();
+
+        if (shape.movingPart) {
+          const { piece, pose2 } = shape.movingPart;
+          const stateObj = pieceStates[piece];
+          const pose1 = curState[piece];
+          const rot2 = nearestAngle(pose1.rotation, pose2.rotation);
+          const halfMoveSec = CONFIG.movingPartFlapMs / 2000;
+          let cursor = holdStart + settleSec;
+
+          for (let c = 0; c < CONFIG.movingPartCount; c++) {
+            tl.to(stateObj, { x: pose2.x, y: pose2.y, rotation: rot2, duration: halfMoveSec, ease: CONFIG.movingPartEase }, cursor);
+            tl.to(stateObj, { x: pose1.x, y: pose1.y, rotation: pose1.rotation, duration: halfMoveSec, ease: CONFIG.movingPartEase }, cursor + halfMoveSec);
+            cursor += halfMoveSec * 2;
+          }
+        }
+        tl.set({}, {}, holdStart + holdSec);
+      }
+
+      function setPageScrollUnlocked(unlocked) {
+        if (unlocked) {
+          document.body.classList.remove('scroll-locked');
+          document.body.classList.add('sections-unlocked');
+          updateWorkCanvasScale();
+        } else {
+          document.body.classList.add('scroll-locked');
+          document.body.classList.remove('sections-unlocked');
+          window.scrollTo(0, 0);
+        }
+      }
+
+      function setCornerPiecesLanded(landed) {
+        travelSpecs.forEach((spec) => spec.cornerEl.classList.toggle('is-landed', landed));
+      }
+
+      function setBeeWorkPiecesVisible(visible) {
+        travelSpecs.forEach((spec) => gsap.set(pieceEls[spec.key], { opacity: visible ? 1 : 0 }));
+      }
+
+      function resetColorsAndNav() {
+        if (travelTl) { travelTl.kill(); travelTl = null; }
+        travelLayerEl.classList.remove('is-active');
+        setCornerPiecesLanded(false);
+        setBeeWorkPiecesVisible(true);
+
+        pieceKeys.forEach((key) => {
+          gsap.set(polyEls[key], {
+            attr: { fill: CONFIG.redColor, stroke: CONFIG.creamColor, 'stroke-width': CONFIG.strokeWidth }
+          });
+        });
+        gsap.set(navLayerEl, { opacity: 0 });
+        gsap.set(navWorkEl, { opacity: 1 });
+        navLayerEl.classList.remove('is-interactive');
+        scrollCueEl.classList.remove('is-visible');
+        gsap.set(scrollCueEl, { opacity: 0 });
+        topNavEl.classList.remove('is-active', 'is-on-light');
+        gsap.set(topNavEl, { opacity: 0 });
+        setCornerMenuVisible(false);
+        gsap.set(statementEl, { opacity: 0, y: 30 });
+        gsap.set(statementRollerEl, { y: 0 });
+        gsap.set(credsEl, { opacity: 0, y: 36, yPercent: -50 });
+        setAboutTabInstant(1);
+        isAboutAnimating = false;
+        wasInAboutZone = false;
+        aboutGestureLocked = false;
+        isNavOpen = false;
+        isNavAnimating = false;
+        hasEnteredWork = false;
+        isTraveling = false;
+        setPageScrollUnlocked(false);
+      }
+
+      function getBeePieceScreenAnchor(spec) {
+        const pt = tangramSvgEl.createSVGPoint();
+        const pose = SHAPES.BEE.pieces[spec.key];
+        pt.x = pose.x; pt.y = pose.y;
+        const screenPt = pt.matrixTransform(tangramSvgEl.getScreenCTM());
+        const svgToScreen = tangramWrapEl.getBoundingClientRect().width / 1000;
+        return { cx: screenPt.x, cy: screenPt.y, sizePx: spec.beeLegSvg * svgToScreen };
+      }
+
+      function getCornerScreenAnchor(spec) {
+        const rect = spec.cornerEl.getBoundingClientRect();
+        return {
+          cx: spec.isTriangle ? rect.left + rect.width * (2 / 3) : rect.left + rect.width * 0.5,
+          cy: spec.isTriangle ? rect.top + rect.height * (2 / 3) : rect.top + rect.height * 0.5,
+          sizePx: rect.height
+        };
+      }
+
+      function applyFlightTransform(spec, cx, cy, rot, size) {
+        spec.flyEl.setAttribute(
+          'transform',
+          `translate(${cx.toFixed(2)}, ${cy.toFixed(2)}) rotate(${rot.toFixed(2)}) scale(${size.toFixed(2)})`
+        );
+      }
+
+      function setFlyingStroke(isRedStroke) {
+        const stroke = isRedStroke ? CONFIG.redColor : CONFIG.creamColor;
+        travelSpecs.forEach((spec) => {
+          gsap.set(spec.flyEl, { attr: { fill: '#000000', stroke } });
+        });
+      }
+
+      function enterWork(targetSectionId = 'work') {
+        if (!isIntroComplete || !isNavOpen || isNavAnimating || isTraveling || hasEnteredWork) return;
+        isTraveling = true;
+        setPageScrollUnlocked(true);
+        setCornerPiecesLanded(false);
+
+        if (targetSectionId === 'contact') {
+          setAboutTabInstant(3);
+          wasInAboutZone = false;
+        } else if (targetSectionId === 'about') {
+          setAboutTabInstant(1);
+          wasInAboutZone = true;
+        } else {
+          setAboutTabInstant(1);
+          wasInAboutZone = false;
+        }
+
+        const anchors = travelSpecs.map((spec) => ({ spec, from: getBeePieceScreenAnchor(spec) }));
+        const unmergeSec = CONFIG.workUnmergeMs / 1000;
+        const travelSec = CONFIG.workTravelMs / 1000;
+        const scrollProxy = { y: window.scrollY };
+        const flight = { p: 0 };
+        const destScrollY = document.getElementById(targetSectionId).offsetTop;
+
+        if (travelTl) travelTl.kill();
+
+        travelTl = gsap.timeline({
+          onComplete: () => {
+            travelLayerEl.classList.remove('is-active');
+            setCornerPiecesLanded(true);
+            hasEnteredWork = true;
+            isTraveling = false;
+            setCornerMenuVisible(true);
+            syncCornerMenuContrast();
+            armCooldown();
+          }
+        });
+
+        travelTl.to(navWorkEl, {
+          opacity: 0,
+          duration: unmergeSec,
+          ease: 'power2.out'
+        }, 0);
+
+        travelTl.add(() => {
+          anchors.forEach((a) => {
+            a.from = getBeePieceScreenAnchor(a.spec);
+            applyFlightTransform(a.spec, a.from.cx, a.from.cy, a.spec.beeRot, a.from.sizePx);
+          });
+          setFlyingStroke(true);
+          setBeeWorkPiecesVisible(false);
+          travelLayerEl.classList.add('is-active');
+          gsap.to(topNavEl, { opacity: 0, duration: 0.25, ease: 'power2.out' });
+          topNavEl.classList.remove('is-active');
+        }, unmergeSec);
+
+        travelTl.to(scrollProxy, {
+          y: destScrollY,
+          duration: travelSec,
+          ease: CONFIG.workTravelEase,
+          onUpdate: () => window.scrollTo(0, scrollProxy.y)
+        }, unmergeSec);
+
+        travelSpecs.forEach((spec) => {
+          travelTl.to(spec.flyEl, {
+            attr: { stroke: CONFIG.creamColor },
+            duration: travelSec * 0.7,
+            ease: 'power2.inOut'
+          }, unmergeSec + travelSec * 0.15);
+        });
+
+        travelTl.to(flight, {
+          p: 1,
+          duration: travelSec,
+          ease: CONFIG.workTravelEase,
+          onUpdate: () => {
+            const p = flight.p;
+            const arc = Math.sin(p * Math.PI);
+            for (let i = 0; i < anchors.length; i++) {
+              const { spec, from } = anchors[i];
+              const to = getCornerScreenAnchor(spec);
+              const cx = from.cx + (to.cx - from.cx) * p + spec.arcX * arc;
+              const cy = from.cy + (to.cy - from.cy) * p;
+              const size = from.sizePx + (to.sizePx - from.sizePx) * p;
+              const rot = spec.beeRot * (1 - p);
+              applyFlightTransform(spec, cx, cy, rot, size);
+            }
+          }
+        }, unmergeSec);
+      }
+
+      function returnToBee() {
+        if (!hasEnteredWork || isTraveling) return;
+        isTraveling = true;
+        wasInAboutZone = false;
+        clearLeaveFlag();
+        setCornerMenuVisible(false);
+        setCornerPiecesLanded(false);
+
+        const unmergeSec = CONFIG.workUnmergeMs / 1000;
+        const travelSec = CONFIG.workTravelMs / 1000;
+        const scrollProxy = { y: window.scrollY };
+        const flight = { p: 0 };
+
+        travelSpecs.forEach((spec) => {
+          const from = getCornerScreenAnchor(spec);
+          applyFlightTransform(spec, from.cx, from.cy, 0, from.sizePx);
+        });
+        setFlyingStroke(false);
+        travelLayerEl.classList.add('is-active');
+        setBeeWorkPiecesVisible(false);
+
+        if (travelTl) travelTl.kill();
+
+        travelTl = gsap.timeline({
+          onComplete: () => {
+            travelLayerEl.classList.remove('is-active');
+            hasEnteredWork = false;
+            isTraveling = false;
+            setPageScrollUnlocked(false);
+            armCooldown();
+          }
+        });
+
+        travelTl.to(scrollProxy, {
+          y: 0,
+          duration: travelSec,
+          ease: CONFIG.workTravelEase,
+          onUpdate: () => window.scrollTo(0, scrollProxy.y)
+        }, 0);
+
+        travelTl.add(() => {
+          topNavEl.classList.remove('is-on-light');
+          topNavEl.classList.add('is-active');
+          gsap.to(topNavEl, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+        }, travelSec * 0.45);
+
+        travelSpecs.forEach((spec) => {
+          travelTl.to(spec.flyEl, {
+            attr: { stroke: CONFIG.redColor },
+            duration: travelSec * 0.7,
+            ease: 'power2.inOut'
+          }, travelSec * 0.15);
+        });
+
+        travelTl.to(flight, {
+          p: 1,
+          duration: travelSec,
+          ease: CONFIG.workTravelEase,
+          onUpdate: () => {
+            const p = flight.p;
+            const arc = Math.sin(p * Math.PI);
+            for (let i = 0; i < travelSpecs.length; i++) {
+              const spec = travelSpecs[i];
+              const from = getCornerScreenAnchor(spec);
+              const to = getBeePieceScreenAnchor(spec);
+              const cx = from.cx + (to.cx - from.cx) * p + spec.arcX * arc;
+              const cy = from.cy + (to.cy - from.cy) * p;
+              const size = from.sizePx + (to.sizePx - from.sizePx) * p;
+              const rot = spec.beeRot * p;
+              applyFlightTransform(spec, cx, cy, rot, size);
+            }
+          }
+        }, 0);
+
+        travelTl.add(() => {
+          setBeeWorkPiecesVisible(true);
+          travelLayerEl.classList.remove('is-active');
+        }, travelSec);
+
+        travelTl.to(navWorkEl, {
+          opacity: 1,
+          duration: unmergeSec,
+          ease: 'power2.inOut'
+        }, travelSec + 0.08);
+      }
+
+      function buildScrollTimeline() {
+        if (scrollTl) scrollTl.kill();
+
+        const morphSec = CONFIG.scrollMorphMs / 1000;
+        const divideSec = CONFIG.scrollDivideMs / 1000;
+
+        scrollTl = gsap.timeline({
+          paused: true,
+          onStart: () => {
+            isNavAnimating = true;
+            navLayerEl.classList.remove('is-interactive');
+          },
+          onComplete: () => {
+            isNavAnimating = false;
+            navLayerEl.classList.add('is-interactive');
+            armCooldown();
+          },
+          onReverseComplete: () => {
+            isNavAnimating = false;
+            navLayerEl.classList.remove('is-interactive');
+            armCooldown();
+          }
+        });
+
+        scrollTl.addLabel('turnBlack');
+
+        scrollTl.to(credsEl, {
+          opacity: 0,
+          y: -28,
+          duration: morphSec * 0.55,
+          ease: 'power2.in'
+        }, 'turnBlack');
+
+        scrollTl.to(tangramWrapEl, {
+          x: CONFIG.stageWidth / 2,
+          y: CONFIG.navBeeCenterY,
+          scale: getNavBeeScale(),
+          duration: morphSec,
+          ease: CONFIG.scrollEase
+        }, 'turnBlack');
+
+        pieceKeys.forEach((key) => {
+          scrollTl.to(polyEls[key], {
+            attr: { fill: '#000000', stroke: CONFIG.redColor, 'stroke-width': CONFIG.strokeWidth },
+            duration: morphSec,
+            ease: CONFIG.scrollEase
+          }, 'turnBlack');
+        });
+
+        scrollTl.addLabel('divideIntoFour');
+        scrollTl.to(navLayerEl, {
+          opacity: 1,
+          duration: divideSec,
+          ease: 'power2.out'
+        }, 'divideIntoFour');
+
+        return scrollTl;
+      }
+
+      function buildTimeline() {
+        if (masterTl) masterTl.kill();
+        if (scrollTl) { scrollTl.kill(); scrollTl = null; }
+        isIntroComplete = false;
+        resetColorsAndNav();
+
+        gsap.set([siddhiEl, malpeEl], { x: 0, y: 0, scale: 1 });
+        const siddhiTopTarget = getTopNavTargetInStage(siddhiEl, topNavSiddhiEl);
+        const malpeTopTarget = getTopNavTargetInStage(malpeEl, topNavMalpeEl);
+
+        const rng = createRng(CONFIG.tumbleSeed);
+        const { startHalfSide, endHalfSide } = getRevealHalfSides();
+        const startScale = CONFIG.squareStartSize / CONFIG.squareEndSize;
+        const startCenterX = CONFIG.stageWidth / 2;
+        const startCenterY = CONFIG.stageHeight / 2;
+        const endCenterX = CONFIG.squareEndX + CONFIG.squareEndSize / 2;
+        const endCenterY = SHAPES.square.yCenter;
+        const spinEndRotation = CONFIG.squareStartRotation + CONFIG.introSpinTurns * 360;
+        const morphEndRotation = spinEndRotation - CONFIG.squareStartRotation + CONFIG.squareEndRotation;
+
+        gsap.set(tangramWrapEl, {
+          x: startCenterX, y: startCenterY,
+          xPercent: -50, yPercent: -50,
+          scale: startScale, rotation: CONFIG.squareStartRotation
+        });
+
+        revealState.halfSide = startHalfSide;
+        revealState.active = false;
+        revealState.done = false;
+        renderRevealClip();
+
+        gsap.set([siddhiEl, malpeEl], { x: 0, y: CONFIG.nameRisePx, scale: 1, opacity: 0 });
+
+        const curState = {};
+        pieceKeys.forEach((key) => {
+          const p = SHAPES.square.pieces[key];
+          pieceStates[key] = { x: p.x, y: p.y, rotation: p.rotation };
+          curState[key] = { x: p.x, y: p.y, rotation: p.rotation };
+        });
+        wingState.w1 = 0; wingState.w2 = 0;
+        renderTangram();
+
+        masterTl = gsap.timeline({
+          paused: true,
+          onUpdate: renderTangram,
+          onComplete: () => {
+            isIntroComplete = true;
+            topNavEl.classList.add('is-active');
+            buildScrollTimeline();
+            scrollCueEl.classList.add('is-visible');
+            gsap.to(scrollCueEl, { opacity: 1, duration: 0.45, ease: 'power2.out' });
+          }
+        });
+
+        masterTl.addLabel('introSpin');
+        masterTl.to(tangramWrapEl, {
+          rotation: spinEndRotation,
+          duration: CONFIG.introSpinMs / 1000,
+          ease: CONFIG.introSpinEase
+        }, 'introSpin');
+
+        masterTl.addLabel('reveal');
+        masterTl.to(revealState, {
+          halfSide: endHalfSide,
+          duration: CONFIG.revealMs / 1000,
+          ease: CONFIG.revealEase,
+          onStart: () => { revealState.active = true; revealState.done = false; renderRevealClip(); },
+          onUpdate: renderRevealClip,
+          onComplete: () => { revealState.active = false; revealState.done = true; renderRevealClip(); }
+        }, 'reveal');
+
+        masterTl.to(tangramWrapEl, {
+          x: endCenterX, y: endCenterY,
+          scale: SHAPES.square.fitScale,
+          rotation: morphEndRotation,
+          duration: CONFIG.morphMs / 1000,
+          ease: CONFIG.morphEase
+        }, 'reveal');
+
+        pieceKeys.forEach((key) => {
+          masterTl.to(polyEls[key], {
+            attr: { fill: CONFIG.creamColor, stroke: CONFIG.redColor, 'stroke-width': CONFIG.strokeWidth },
+            duration: CONFIG.morphMs / 1000,
+            ease: CONFIG.morphEase
+          }, 'reveal');
+        });
+
+        masterTl.addLabel('name', `reveal+=${CONFIG.nameDelayAfterRevealMs / 1000}`);
+        masterTl.to([siddhiEl, malpeEl], {
+          opacity: 1, y: 0,
+          duration: CONFIG.nameDurationMs / 1000,
+          ease: CONFIG.nameEase,
+          stagger: CONFIG.nameStaggerMs / 1000
+        }, 'name');
+
+        masterTl.addLabel('squareHold');
+        masterTl.set({}, {}, `+=${CONFIG.initialSquareHoldMs / 1000}`);
+
+        addTumble(masterTl, 'tumbleToB', 'B', curState, rng);
+        const tumbleBStart = masterTl.labels.tumbleToB;
+
+        masterTl.to(siddhiEl, {
+          x: siddhiTopTarget.dx, y: siddhiTopTarget.dy, scale: siddhiTopTarget.scale, opacity: 0,
+          duration: 0.45, ease: 'power3.inOut'
+        }, tumbleBStart);
+        masterTl.to(malpeEl, {
+          x: malpeTopTarget.dx, y: malpeTopTarget.dy, scale: malpeTopTarget.scale, opacity: 0,
+          duration: 0.45, ease: 'power3.inOut'
+        }, tumbleBStart);
+        masterTl.to(topNavEl, {
+          opacity: 1,
+          duration: 0.35, ease: 'power2.out'
+        }, tumbleBStart + 0.18);
+
+        masterTl.to(statementEl, {
+          opacity: 1, y: 0,
+          duration: 0.45, ease: 'power3.out'
+        }, tumbleBStart + 0.15);
+
+        addFormationHold(masterTl, 'holdB', 'B', curState);
+
+        addTumble(masterTl, 'tumbleToC', 'C', curState, rng);
+        masterTl.to(statementRollerEl, {
+          y: -CONFIG.statementBeatHeight,
+          duration: CONFIG.statementRollMs / 1000,
+          ease: CONFIG.statementRollEase
+        }, masterTl.labels.tumbleToC);
+
+        addFormationHold(masterTl, 'holdC', 'C', curState);
+
+        addTumble(masterTl, 'tumbleToBee', 'BEE', curState, rng);
+        const tumbleBeeStart = masterTl.labels.tumbleToBee;
+
+        masterTl.to(statementEl, {
+          opacity: 0, y: -32,
+          duration: 0.35, ease: 'power2.in'
+        }, tumbleBeeStart);
+
+        masterTl.to(credsEl, {
+          opacity: 1, y: 0,
+          duration: 0.48, ease: 'power3.out'
+        }, tumbleBeeStart + 0.18);
+
+        masterTl.addLabel('beeFlap');
+        const halfFlapSec = CONFIG.beeWingFlapMs / 2000;
+        let flapCursor = masterTl.duration();
+        for (let f = 0; f < CONFIG.beeWingFlapCount; f++) {
+          masterTl.to(wingState, { w1: CONFIG.beeWingFlapDeg, w2: -CONFIG.beeWingFlapDeg, duration: halfFlapSec, ease: CONFIG.beeWingFlapEase }, flapCursor);
+          masterTl.to(wingState, { w1: 0, w2: 0, duration: halfFlapSec, ease: CONFIG.beeWingFlapEase }, flapCursor + halfFlapSec);
+          flapCursor += halfFlapSec * 2;
+        }
+        masterTl.addLabel('end', flapCursor);
+        return masterTl;
+      }
+
+      function restoreToWorkState(saved) {
+        masterTl.progress(1).pause();
+        revealState.active = false;
+        revealState.done = true;
+        renderRevealClip();
+        renderTangram();
+        isIntroComplete = true;
+
+        buildScrollTimeline();
+        scrollTl.progress(1).pause();
+        isNavOpen = true;
+        isNavAnimating = false;
+        navLayerEl.classList.add('is-interactive');
+        gsap.set(navWorkEl, { opacity: 0 });
+        setBeeWorkPiecesVisible(false);
+
+        setPageScrollUnlocked(true);
+        setCornerPiecesLanded(true);
+        hasEnteredWork = true;
+        isTraveling = false;
+
+        if (saved.aboutTab) {
+          setAboutTabInstant(saved.aboutTab);
+        }
+        setCornerMenuVisible(true, true);
+
+        let destY = workSectionEl.offsetTop;
+        if (typeof saved.scrollY === 'number' && saved.scrollY >= workSectionEl.offsetTop - 10) {
+          destY = saved.scrollY;
+        } else if (saved.hashTarget) {
+          const targetEl = document.getElementById(saved.hashTarget);
+          if (targetEl) destY = targetEl.offsetTop;
+        }
+
+        window.scrollTo(0, destY);
+        syncCornerMenuContrast();
+        clearLeaveFlag();
+
+        requestAnimationFrame(() => {
+          updateWorkCanvasScale();
+          window.scrollTo(0, destY);
+          syncCornerMenuContrast();
+        });
+      }
+
+      function skipToEnd() {
+        if (!masterTl || isIntroComplete) return;
+        masterTl.progress(1).pause();
+        revealState.active = false; revealState.done = true;
+        renderRevealClip(); renderTangram();
+        isIntroComplete = true;
+        topNavEl.classList.add('is-active');
+        buildScrollTimeline();
+        scrollCueEl.classList.add('is-visible');
+        gsap.set(scrollCueEl, { opacity: 1 });
+      }
+
+      function openNav() {
+        if (!isIntroComplete || isNavOpen || isNavAnimating || isTraveling) return;
+        if (!scrollTl) buildScrollTimeline();
+        isNavOpen = true;
+        isNavAnimating = true;
+        scrollTl.play();
+      }
+
+      function closeNav() {
+        if (!isIntroComplete || !isNavOpen || isNavAnimating || !scrollTl || isTraveling || hasEnteredWork) return;
+        isNavOpen = false;
+        isNavAnimating = true;
+        scrollTl.reverse();
+      }
+
+      function handleAboutWheelHijack(deltaY, now, isNewWheelGesture) {
+        if (!hasEnteredWork || isTraveling || window.innerWidth < 768) return false;
+        const rect = aboutSectionEl.getBoundingClientRect();
+        const isAboutPinnedZone = rect.top <= 120 && rect.bottom >= window.innerHeight * 0.45;
+        if (!isAboutPinnedZone) {
+          wasInAboutZone = false;
+          return false;
+        }
+
+        if (!wasInAboutZone) {
+          wasInAboutZone = true;
+          if (deltaY > 0.5 && rect.top > 35 && currentAboutTab === 1) {
+            aboutGestureLocked = true;
+            aboutCooldownUntil = now + 480;
+            const proxy = { y: window.scrollY };
+            gsap.to(proxy, {
+              y: aboutSectionEl.offsetTop,
+              duration: 0.35,
+              ease: 'power2.out',
+              onUpdate: () => {
+                window.scrollTo(0, proxy.y);
+                syncCornerMenuContrast();
+              }
+            });
+            return true;
+          }
+        }
+
+        if (deltaY > 0.5 && currentAboutTab === 3) {
+          if (aboutGestureLocked && (!isNewWheelGesture || now < aboutCooldownUntil)) return true;
+          return false;
+        }
+        if (deltaY < -0.5 && currentAboutTab === 1) {
+          if (aboutGestureLocked && (!isNewWheelGesture || now < aboutCooldownUntil)) return true;
+          return false;
+        }
+
+        if (aboutGestureLocked) {
+          if (now >= aboutCooldownUntil && isNewWheelGesture) {
+            aboutGestureLocked = false;
+          } else {
+            return true;
+          }
+        }
+        if (now < aboutCooldownUntil) return true;
+
+        if (deltaY > 0.5 && currentAboutTab < 3) {
+          switchAboutTab(currentAboutTab + 1, true);
+          return true;
+        }
+        if (deltaY < -0.5 && currentAboutTab > 1 && rect.top >= -120) {
+          switchAboutTab(currentAboutTab - 1, true);
+          return true;
+        }
+        return false;
+      }
+
+      window.addEventListener('wheel', (event) => {
+        const now = performance.now();
+        const absDelta = Math.abs(event.deltaY);
+        const gap = now - lastWheelTimestamp;
+        const isNewWheelGesture = gap > 120 || (absDelta > lastWheelAbsDelta + 16 && absDelta > 14);
+        lastWheelTimestamp = now;
+        lastWheelAbsDelta = absDelta;
+
+        if (!isIntroComplete || isNavAnimating || isTraveling || isAboutAnimating || isCornerMenuOpen) {
+          event.preventDefault();
+          return;
+        }
+        if (now < cooldownUntil && (!hasEnteredWork || window.scrollY <= workSectionEl.offsetTop + 8)) {
+          event.preventDefault();
+          return;
+        }
+        if (!isNavOpen) {
+          event.preventDefault();
+          if (event.deltaY > 0.5) openNav();
+          return;
+        }
+        if (!hasEnteredWork) {
+          event.preventDefault();
+          if (event.deltaY > 0.5) enterWork('work');
+          else if (event.deltaY < -0.5) closeNav();
+          return;
+        }
+        if (hasEnteredWork && window.scrollY <= workSectionEl.offsetTop + 6 && event.deltaY < -0.5) {
+          event.preventDefault();
+          returnToBee();
+          return;
+        }
+        if (handleAboutWheelHijack(event.deltaY, now, isNewWheelGesture)) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      window.addEventListener('scroll', () => {
+        if (hasEnteredWork && !isTraveling) {
+          syncCornerMenuContrast();
+          if (window.scrollY < workSectionEl.offsetTop - 24) {
+            returnToBee();
+          }
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchstart', (event) => {
+        if (event.touches.length === 1) touchStartY = event.touches[0].clientY;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (event) => {
+        if (!isIntroComplete || isNavAnimating || isTraveling || isAboutAnimating || isCornerMenuOpen) { event.preventDefault(); return; }
+        if (touchStartY === null || event.touches.length !== 1) return;
+        const deltaY = touchStartY - event.touches[0].clientY;
+
+        if (!isNavOpen) {
+          event.preventDefault();
+          if (deltaY > 18) { openNav(); touchStartY = null; }
+          return;
+        }
+        if (!hasEnteredWork) {
+          event.preventDefault();
+          if (deltaY > 18) { enterWork('work'); touchStartY = null; }
+          else if (deltaY < -18) { closeNav(); touchStartY = null; }
+          return;
+        }
+        if (hasEnteredWork && window.scrollY <= workSectionEl.offsetTop + 6 && deltaY < -18) {
+          event.preventDefault();
+          returnToBee();
+          touchStartY = null;
+          return;
+        }
+        if (Math.abs(deltaY) > 18 && handleAboutWheelHijack(deltaY, performance.now(), true)) {
+          event.preventDefault();
+          touchStartY = null;
+        }
+      }, { passive: false });
+
+      scrollCueEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!isNavOpen) openNav();
+        else enterWork('work');
+      });
+
+      backTopCueEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (hasEnteredWork) returnToBee();
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      [topNavSiddhiEl, topNavMalpeEl].forEach((link) => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (hasEnteredWork) returnToBee();
+          else if (isNavOpen) closeNav();
+        });
+      });
+
+      navBtnEls.forEach((btn) => {
+        const activate = () => {
+          const target = btn.id.replace('nav-', '');
+          if (target === 'work' || target === 'about' || target === 'contact') enterWork(target);
+          else if (target === 'resume') window.open(RESUME_URL, '_blank', 'noopener,noreferrer');
+        };
+        btn.addEventListener('click', (e) => { e.stopPropagation(); activate(); });
+        btn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+      });
+
+      document.querySelectorAll('.work-card').forEach((card) => {
+        card.addEventListener('click', () => {
+          saveLeaveState();
+        });
+      });
+
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted && hasEnteredWork) {
+          closeCornerMenu(true);
+          syncCornerMenuContrast();
+          clearLeaveFlag();
+        }
+      });
+
+      window.replayIntro = function replayIntro() {
+        updateStageScale();
+        buildTimeline();
+        if (prefersReducedMotion.matches) skipToEnd();
+        else masterTl.play(0);
+      };
+
+      heroEl.addEventListener('click', () => { if (!isIntroComplete) skipToEnd(); });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          if (isCornerMenuOpen) closeCornerMenu(false);
+          else skipToEnd();
+        }
+        else if ((event.key === 'ArrowDown' || event.key === 'PageDown') && isIntroComplete && !isNavOpen && !isNavAnimating) { event.preventDefault(); openNav(); }
+        else if ((event.key === 'ArrowDown' || event.key === 'PageDown') && isNavOpen && !isNavAnimating && !hasEnteredWork) { event.preventDefault(); enterWork('work'); }
+        else if ((event.key === 'ArrowUp' || event.key === 'PageUp') && hasEnteredWork && window.scrollY <= workSectionEl.offsetTop + 6) { event.preventDefault(); returnToBee(); }
+        else if ((event.key === 'ArrowUp' || event.key === 'PageUp') && isIntroComplete && isNavOpen && !isNavAnimating && !hasEnteredWork) { event.preventDefault(); closeNav(); }
+      });
+
+      window.addEventListener('resize', () => {
+        updateStageScale();
+        if (isIntroComplete) {
+          const wasOpen = isNavOpen;
+          buildScrollTimeline();
+          if (wasOpen) {
+            scrollTl.progress(1).pause();
+            navLayerEl.classList.add('is-interactive');
+            if (hasEnteredWork) {
+              setPageScrollUnlocked(true);
+              setCornerMenuVisible(true, true);
+              syncCornerMenuContrast();
+              gsap.set(navWorkEl, { opacity: 0 });
+              setBeeWorkPiecesVisible(false);
+              setCornerPiecesLanded(true);
+            } else {
+              topNavEl.classList.add('is-active');
+            }
+          }
+        }
+      });
+
+      applyStaticLayout();
+      setupCornerMenu();
+      setupAboutTabs();
+      setupCustomCursor();
+      setupCopyEmailPill();
+      setupWorkImageHoverBadges();
+      updateStageScale();
+      buildTimeline();
+
+      const restoredState = getRestoreState();
+      if (restoredState) {
+        restoreToWorkState(restoredState);
+      } else {
+        const start = () => {
+          if (prefersReducedMotion.matches) skipToEnd();
+          else masterTl.play(0);
+        };
+
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(start);
+        } else {
+          start();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

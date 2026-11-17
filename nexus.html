@@ -1,116 +1,2519 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nexus — Siddhi Malpe</title>
-  
+  <title>Nexus Feature Directory — Case Study</title>
+
+  <!-- DM Sans + BBH Hegarty (for Other Projects footer titles) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- GSAP 3.12.5 for Corner Menu & View Case hover badge -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+
   <style>
     :root {
-      --brand-teal: #79d7c6;
-      --bg-canvas: #f5f6f8;
-      --text-dark: #000000;
-      --border-stroke: 1.2px solid #000000;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-    body { background: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-dark); overflow-x: hidden; min-height: 100vh; }
-
-    #progress-bar {
-      position: fixed; top: 0; left: 0; height: 2px; width: 0%; background: var(--brand-teal); z-index: 2000; transition: width 0.1s ease-out;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .top-nav {
-      position: sticky; top: 0; left: 0; width: 100%; padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; background: rgba(245, 246, 248, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1000;
+    html {
+      background-color: #0E0E10;
+      overflow-x: clip;
     }
 
-    .nav-pill {
-      display: inline-flex; align-items: center; gap: 6px; color: var(--text-dark); text-decoration: none; font-size: 14px; font-weight: 500; border: var(--border-stroke); border-radius: 9999px; padding: 8px 22px; background: #ffffff; transition: all 0.25s var(--ease); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    body {
+      background-color: #FFFFFF;
+      color: #000000;
+      font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      width: 100%;
+      overflow-x: clip;
+      min-height: 100vh;
     }
 
-    .nav-pill:hover {
-      background: #000000; color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    /* ─── CORNER TANGRAM MENU (Auto-inverts on dark Hero/Retrospective vs light sections) ─── */
+    .corner-menu-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 1090;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(2.5px);
+      -webkit-backdrop-filter: blur(2.5px);
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .nav-right-group { display: flex; align-items: center; gap: 12px; }
-
-    .case-container {
-      width: 100%; max-width: 1040px; margin: 40px auto 100px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); overflow: hidden; display: flex; flex-direction: column; align-items: center;
+    .corner-menu-scrim.is-open {
+      pointer-events: auto;
     }
 
-    .case-container img { width: 100%; height: auto; display: block; }
-
-    .other-work-section { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px 120px; display: flex; flex-direction: column; align-items: center; }
-    .other-work-title { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 48px; text-align: center; }
-    .cards-row { display: flex; align-items: center; justify-content: center; gap: 40px; width: 100%; flex-wrap: wrap; }
-
-    .work-card {
-      width: 273px; height: 680px; border: var(--border-stroke); border-radius: 136.5px; background-color: #ffffff; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); padding: 56px 0 0; position: relative; flex-shrink: 0; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    .corner-menu {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1100;
+      pointer-events: none;
     }
 
-    .work-card:hover { transform: translateY(-8px); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12); }
-    .card-title { font-size: 30px; font-weight: 600; line-height: 1.2; text-align: center; margin-bottom: 4px; padding: 0 20px; }
-    .card-subtitle { font-size: 16px; font-weight: 400; line-height: 1.4; text-align: center; color: #333333; margin-bottom: 24px; padding: 0 20px; }
-    .card-image-wrapper { width: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; margin-top: auto; }
-    .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+    .corner-menu-trigger {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 89px;
+      height: 89px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      pointer-events: none;
+      outline: none;
+    }
 
-    @media (max-width: 960px) {
-      .top-nav { padding: 16px 20px; }
-      .case-container { margin: 20px 16px 60px; border-radius: 12px; }
-      .cards-row { gap: 30px; }
+    .corner-menu-trigger-svg {
+      display: block;
+      width: 89px;
+      height: 89px;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-trigger-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      pointer-events: auto;
+      cursor: pointer;
+      transition: fill 0.22s ease, stroke 0.22s ease;
+    }
+
+    .corner-menu.is-open .corner-menu-trigger-shape {
+      pointer-events: none;
+    }
+
+    .corner-menu-trigger-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 53.93px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-trigger:hover .corner-menu-trigger-shape,
+    .corner-menu-trigger:focus-visible .corner-menu-trigger-shape {
+      fill: #BB211F;
+    }
+
+    /* Inverted state on dark Hero (#0E0E10) & Retrospective (#000000) */
+    .corner-menu.is-inverted .corner-menu-trigger-shape {
+      fill: #F2E7D5;
+      stroke: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger-label {
+      fill: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger:hover .corner-menu-trigger-shape,
+    .corner-menu.is-inverted .corner-menu-trigger:focus-visible .corner-menu-trigger-shape {
+      fill: #BB211F;
+      stroke: #F2E7D5;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger:hover .corner-menu-trigger-label,
+    .corner-menu.is-inverted .corner-menu-trigger:focus-visible .corner-menu-trigger-label {
+      fill: #F2E7D5;
+    }
+
+    .corner-menu-panel {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 356px;
+      height: 356px;
+      transform-origin: 0 0;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .corner-menu-open-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-piece {
+      outline: none;
+      pointer-events: none;
+      cursor: pointer;
+    }
+
+    .corner-menu.is-open .corner-menu-piece {
+      pointer-events: auto;
+    }
+
+    .corner-menu-piece-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      transition: fill 0.22s ease, stroke 0.22s ease;
+    }
+
+    .corner-menu-piece-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 20.225px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-piece:hover .corner-menu-piece-shape,
+    .corner-menu-piece:focus-visible .corner-menu-piece-shape {
+      fill: #BB211F;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece-shape {
+      fill: #F2E7D5;
+      stroke: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece-label {
+      fill: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece:hover .corner-menu-piece-shape,
+    .corner-menu.is-inverted .corner-menu-piece:focus-visible .corner-menu-piece-shape {
+      fill: #BB211F;
+      stroke: #F2E7D5;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece:hover .corner-menu-piece-label,
+    .corner-menu.is-inverted .corner-menu-piece:focus-visible .corner-menu-piece-label {
+      fill: #F2E7D5;
+    }
+
+    /* ─── BACK ARROW BUTTON (Flips between dark/light backgrounds) ─── */
+    .back-arrow-btn {
+      position: fixed;
+      left: 112px;
+      top: 28px;
+      z-index: 1050;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-arrow-btn:hover,
+    .back-arrow-btn:focus-visible {
+      color: #FF6D0F;
+      transform: translateX(-3px);
+      outline: none;
+    }
+
+    .back-arrow-btn.is-on-light {
+      color: #000000;
+    }
+
+    .back-arrow-btn.is-on-light:hover,
+    .back-arrow-btn.is-on-light:focus-visible {
+      color: #FF6D0F;
+    }
+
+    .back-arrow-btn.is-on-footer:hover,
+    .back-arrow-btn.is-on-footer:focus-visible {
+      color: #BB211F;
+    }
+
+    .back-arrow-btn svg {
+      width: 16px;
+      height: 36px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    /* ─── FLOATING JUMP NAV + COLLAPSIBLE TOC PILL (<= 1180px) ─── */
+    .jump-nav-wrapper {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: calc(100vw - 340px);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .jump-toc-toggle {
+      display: none;
+      pointer-events: auto;
+      align-items: center;
+      gap: 10px;
+      height: 44px;
+      padding: 0 18px;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, rgba(60, 60, 64, 0.80) 0%, rgba(24, 24, 26, 0.88) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      font-family: "DM Sans", sans-serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .jump-toc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #FF6D0F;
+      flex-shrink: 0;
+    }
+
+    .jump-toc-chevron {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.25s var(--ease-smooth);
+      flex-shrink: 0;
+    }
+
+    .jump-nav-wrapper.is-toc-open .jump-toc-chevron {
+      transform: rotate(180deg);
+    }
+
+    .jump-nav {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: clamp(2px, 0.5vw, 8px);
+      padding: 8px 10px;
+      border-radius: 50px;
+      background: linear-gradient(180deg, rgba(70, 70, 70, 0.75) 0%, rgba(28, 28, 30, 0.85) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .nav-item {
+      color: #FFFFFF;
+      font-family: "DM Sans", sans-serif;
+      font-size: clamp(13px, 1.15vw, 18px);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 10px clamp(11px, 1.3vw, 20px);
+      border-radius: 50px;
+      transition: all 0.25s ease;
+      opacity: 0.78;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-item.active {
+      background: #FFFFFF;
+      color: #0E0E10;
+      opacity: 1;
+      padding: 10px clamp(14px, 1.5vw, 24px);
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Light-surface glass inversion when over white Sections (01)-(05) or cream Footer */
+    .jump-nav-wrapper.is-on-light .jump-nav {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.80) 0%, rgba(255, 255, 255, 0.56) 100%);
+      border-color: rgba(14, 14, 16, 0.14);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+    }
+
+    .jump-nav-wrapper.is-on-light .nav-item {
+      color: #0E0E10;
+      opacity: 0.72;
+    }
+
+    .jump-nav-wrapper.is-on-light .nav-item:hover {
+      opacity: 1;
+      background: rgba(14, 14, 16, 0.06);
+    }
+
+    .jump-nav-wrapper.is-on-light .nav-item.active {
+      background: #0E0E10;
+      color: #FFFFFF;
+      opacity: 1;
+      box-shadow: 0 4px 14px rgba(14, 14, 16, 0.20);
+    }
+
+    .jump-nav-wrapper.is-on-light .jump-toc-toggle {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.84) 0%, rgba(255, 255, 255, 0.62) 100%);
+      border-color: rgba(14, 14, 16, 0.15);
+      color: #0E0E10;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+    }
+
+    /* ─── FULL-WIDTH SECTION BANDS FOR WIDE SCREENS ─── */
+    .band-dark-hero {
+      width: 100%;
+      background-color: #0E0E10;
+    }
+
+    .band-white {
+      width: 100%;
+      background-color: #FFFFFF;
+    }
+
+    .band-black-retro {
+      width: 100%;
+      background-color: #000000;
+    }
+
+    /* ─── 1440px CANVAS (Zoom-scaled on 1025-1439px) ─── */
+    .page-canvas {
+      width: 1440px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Transparent on desktop so Figma absolute coordinates remain direct children of each 1440px section */
+    .hero-top-row,
+    .hero-bg-stage,
+    .problem-grid,
+    .problem-right-col,
+    .problem-pills-row,
+    .solution-top-row,
+    .solution-media-row,
+    .solution-entry-box,
+    .entry-points-grid,
+    .entry-point-col,
+    .how-steps-grid,
+    .how-step-col,
+    .ui-block,
+    .ui-dual-grid,
+    .decision-row-grid,
+    .decision-col,
+    .retro-cols-grid,
+    .retro-col {
+      display: contents;
+    }
+
+    /* ─── SCROLL REVEAL UTILITIES ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delay-1 { transition-delay: 0.12s; }
+    .delay-2 { transition-delay: 0.24s; }
+    .delay-3 { transition-delay: 0.36s; }
+
+    /* ─── SECTION 1: HERO CANVAS (1440 x 1024) ─── */
+    .hero-canvas {
+      position: relative;
+      width: 1440px;
+      height: 1024px;
+      background-color: #0E0E10;
+      overflow: hidden;
+    }
+
+    .deloitte-logo {
+      position: absolute;
+      left: 100px;
+      top: 100px;
+      width: 230.15px;
+      height: 42.96px;
+      object-fit: contain;
+      z-index: 20;
+    }
+
+    .project-meta {
+      position: absolute;
+      left: 640px;
+      top: 106px;
+      color: #FFFFFF;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: normal;
+      white-space: nowrap;
+      z-index: 20;
+    }
+
+    .hero-bg-img {
+      position: absolute;
+      left: 145px;
+      top: 120px;
+      width: 1150px;
+      height: 856px;
+      border-radius: 20px;
+      object-fit: cover;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .hero-title-logo {
+      position: absolute;
+      left: 269px;
+      top: 375px;
+      width: 901.21px;
+      height: 255.86px;
+      object-fit: contain;
+      z-index: 20;
+      pointer-events: none;
+      animation: floatLogo 6s ease-in-out infinite;
+    }
+
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .hero-subtitle {
+      position: absolute;
+      top: 676.41px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #FFFFFF;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: normal;
+      z-index: 20;
+    }
+
+    .what-i-worked-on-pill {
+      position: absolute;
+      left: 313px;
+      top: 775px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 48px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: transparent;
+      white-space: nowrap;
+      z-index: 20;
+    }
+
+    .pill-tag {
+      color: #FF6D0F;
+      font-family: "DM Sans", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 30px;
+    }
+
+    .pill-details {
+      color: #FFFFFF;
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 30px;
+    }
+
+    /* ─── SECTION 2: THE PROBLEM (y: 1024 -> 1785) ─── */
+    .problem-section {
+      position: relative;
+      width: 1440px;
+      height: 761px;
+      background-color: #FFFFFF;
+      color: #000000;
+      overflow: hidden;
+    }
+
+    .section-label {
+      position: absolute;
+      left: 100px;
+      top: 120px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #000000;
+      text-transform: uppercase;
+    }
+
+    .problem-img {
+      position: absolute;
+      left: 100px;
+      top: 197px;
+      width: 459px;
+      height: 417px;
+      object-fit: contain;
+    }
+
+    .problem-heading {
+      position: absolute;
+      left: 607px;
+      top: 120px;
+      width: 583px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: #000000;
+    }
+
+    .problem-desc {
+      position: absolute;
+      left: 607px;
+      top: 230px;
+      width: 733px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #000000;
+    }
+
+    .problem-desc strong {
+      font-weight: 700;
+    }
+
+    .problem-pills {
+      position: absolute;
+      left: 607px;
+      top: 347px;
+      width: 384px;
+      height: 186px;
+      object-fit: contain;
+    }
+
+    .problem-bullets {
+      position: absolute;
+      left: 949px;
+      top: 347px;
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    .problem-bullets li {
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 30px;
+      color: #000000;
+    }
+
+    .hmw-statement {
+      position: absolute;
+      left: 607px;
+      top: 579px;
+      width: 678px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: #000000;
+    }
+
+    /* ─── SECTION 3: THE SOLUTION (y: 1785 -> 2686.36) ─── */
+    .solution-section {
+      position: relative;
+      width: 1440px;
+      height: 901.36px;
+      background-color: #FFFFFF;
+      color: #000000;
+      overflow: hidden;
+    }
+
+    .solution-label {
+      position: absolute;
+      left: 100px;
+      top: 0px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #000000;
+      text-transform: uppercase;
+    }
+
+    .solution-title {
+      position: absolute;
+      left: 100px;
+      top: 45px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 36px;
+      font-weight: 600;
+      line-height: normal;
+      color: #000000;
+    }
+
+    .solution-divider {
+      position: absolute;
+      left: 455px;
+      top: 48px;
+      width: 1px;
+      height: 42px;
+      background-color: #FF6D0F;
+      border-radius: 1px;
+    }
+
+    .solution-desc {
+      position: absolute;
+      left: 505px;
+      top: 48px;
+      width: 802px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: #000000;
+    }
+
+    .breadcrumbs-row {
+      position: absolute;
+      left: 100px;
+      top: 134px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .breadcrumb-item {
+      font-family: "DM Sans", sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #000000;
+      white-space: nowrap;
+    }
+
+    .breadcrumb-chevron {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .entry-points-pill {
+      position: absolute;
+      left: 985px;
+      top: 190px;
+      width: 133px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #000000;
+      border-radius: 50px;
+      background: transparent;
+      font-family: "DM Sans", sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #000000;
+    }
+
+    .laptop-img {
+      position: absolute;
+      left: -10px;
+      top: 190px;
+      width: 976.32px;
+      height: 591.36px;
+      object-fit: contain;
+      z-index: 5;
+    }
+
+    .card-popup-img {
+      position: absolute;
+      left: 784px;
+      top: 506px;
+      width: 414px;
+      height: auto;
+      object-fit: contain;
+      z-index: 10;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.35));
+      animation: floatCard 5s ease-in-out infinite;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
+
+    .solution-arrow {
+      position: absolute;
+      pointer-events: none;
+      z-index: 15;
+      animation: arrowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes arrowPulse {
+      0%, 100% { transform: translateX(0); opacity: 0.85; }
+      50% { transform: translateX(6px); opacity: 1; }
+    }
+
+    .arrow-create {
+      left: 852.5px;
+      top: 271px;
+      width: 114px;
+      height: 12px;
+    }
+
+    .arrow-manage {
+      left: 836.5px;
+      top: 411px;
+      width: 130px;
+      height: 12px;
+      animation-delay: 0.4s;
+    }
+
+    .annotation-create-title {
+      position: absolute;
+      left: 985px;
+      top: 255px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #FF6D0F;
+      line-height: normal;
+    }
+
+    .annotation-create-desc {
+      position: absolute;
+      left: 985px;
+      top: 286px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+      white-space: nowrap;
+    }
+
+    .annotation-manage-title {
+      position: absolute;
+      left: 985px;
+      top: 395px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #FF6D0F;
+      line-height: normal;
+    }
+
+    .annotation-manage-desc {
+      position: absolute;
+      left: 985px;
+      top: 426px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+      white-space: nowrap;
+    }
+
+    /* ─── SECTION 4: (03) HOW IT WORKS (y: 2686.36 -> 3327.36) ─── */
+    .how-it-works-section {
+      position: relative;
+      width: 1440px;
+      height: 641px;
+      background-color: #FFFFFF;
+      color: #000000;
+      overflow: hidden;
+    }
+
+    .how-label { position: absolute; left: 100px; top: 0px; font-family: "DM Sans", sans-serif; font-size: 16px; font-weight: 400; color: #000; text-transform: uppercase; }
+    .how-subhead { position: absolute; left: 100px; top: 45px; font-family: "DM Sans", sans-serif; font-size: 18px; font-weight: 400; color: #000; }
+
+    .step1-title { position: absolute; left: 100px; top: 89.64px; font-family: "DM Sans", sans-serif; font-size: 24px; font-weight: 600; color: #FF6D0F; }
+    .step1-desc { position: absolute; left: 100px; top: 120.64px; font-family: "DM Sans", sans-serif; font-size: 18px; font-weight: 400; color: #000; }
+
+    .step2-title { position: absolute; left: 472px; top: 89.64px; font-family: "DM Sans", sans-serif; font-size: 24px; font-weight: 600; color: #FF6D0F; }
+    .step2-desc { position: absolute; left: 472px; top: 120.64px; width: 440px; font-family: "DM Sans", sans-serif; font-size: 18px; font-weight: 400; line-height: 1.4; color: #000; }
+
+    .step3-title { position: absolute; left: 971px; top: 89.64px; font-family: "DM Sans", sans-serif; font-size: 24px; font-weight: 600; color: #FF6D0F; }
+    .step3-desc { position: absolute; left: 971px; top: 120.64px; width: 400px; font-family: "DM Sans", sans-serif; font-size: 18px; font-weight: 400; line-height: 1.4; color: #000; }
+
+    .workflow-img {
+      position: absolute;
+      left: 0px;
+      top: 158px;
+      width: 1440px;
+      height: 363px;
+      object-fit: contain;
+    }
+
+    /* ─── SECTION 5: (04) UI (y: 3327.36 -> 7273.16) ─── */
+    .ui-section {
+      position: relative;
+      width: 1440px;
+      height: 3945.8px;
+      background-color: #FFFFFF;
+      color: #000000;
+      overflow: hidden;
+    }
+
+    .ui-label { position: absolute; left: 100px; top: 0px; font-family: "DM Sans", sans-serif; font-size: 16px; font-weight: 400; color: #000; text-transform: uppercase; }
+
+    .ui-title-orange {
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #FF6D0F;
+      line-height: normal;
+    }
+
+    .ui-desc-regular {
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+    }
+
+    .ui-img-static {
+      border-radius: 12px;
+    }
+
+    .ui-create-title { position: absolute; left: 126px; top: 69px; }
+    .ui-create-desc { position: absolute; left: 126px; top: 100px; }
+    .ui-create-img { position: absolute; left: 126px; top: 141px; width: 1152px; height: 819.2px; object-fit: contain; }
+
+    .ui-rbac-title { position: absolute; left: 126px; top: 1024.2px; }
+    .ui-rbac-desc { position: absolute; left: 126px; top: 1055.2px; max-width: 569.6px; }
+    .ui-rbac-img { position: absolute; left: 126px; top: 1096.2px; width: 569.6px; height: 819.2px; object-fit: contain; }
+
+    .ui-newroles-title { position: absolute; left: 743.6px; top: 1024.2px; }
+    .ui-newroles-desc { position: absolute; left: 743.6px; top: 1055.2px; max-width: 569.6px; }
+    .ui-newroles-img { position: absolute; left: 743.6px; top: 1096.2px; width: 569.6px; height: 819.2px; object-fit: contain; }
+
+    .ui-review-title { position: absolute; left: 126px; top: 1979.4px; }
+    .ui-review-desc { position: absolute; left: 126px; top: 2010.4px; }
+    .ui-review-img { position: absolute; left: 126px; top: 2051.4px; width: 1152px; height: 819.2px; object-fit: contain; }
+
+    .ui-manage-title { position: absolute; left: 126px; top: 2934.6px; }
+    .ui-manage-desc { position: absolute; left: 126px; top: 2965.6px; max-width: 1152px; }
+    .ui-manage-img { position: absolute; left: 126px; top: 3006.6px; width: 1152px; height: 819.2px; object-fit: contain; }
+
+    /* ─── SECTION 6: (05) DESIGN DECISIONS (y: 7273.16 -> 9477.22) ─── */
+    .decisions-section {
+      position: relative;
+      width: 1440px;
+      height: 2204.06px;
+      background-color: #FFFFFF;
+      color: #000000;
+      overflow: hidden;
+    }
+
+    .decisions-label {
+      position: absolute;
+      left: 100px;
+      top: 0px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: #000000;
+      text-transform: uppercase;
+    }
+
+    .decision-text {
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: #000000;
+    }
+
+    .decision-img {
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    /* Row 1 */
+    .decision-row1-left-text { position: absolute; left: 154px; top: 69px; width: 496px; }
+    .decision-row1-right-text { position: absolute; left: 711.2px; top: 126.84px; width: 569px; }
+    .decision-img-h { position: absolute; left: 127px; top: 127px; width: 551.25px; height: 768px; }
+    .decision-img-i { position: absolute; left: 679px; top: 208px; width: 633.67px; height: 768px; }
+
+    /* Row 2 */
+    .decision-row2-left-text { position: absolute; left: 116px; top: 1040px; width: 580px; }
+    .decision-row2-right-text { position: absolute; left: 744.31px; top: 1126px; width: 580px; }
+    .decision-img-j { position: absolute; left: 116px; top: 1126px; width: 580.31px; height: 431.77px; }
+    .decision-img-k { position: absolute; left: 744.63px; top: 1212px; width: 579.82px; height: 428.14px; }
+
+    /* Row 3 */
+    .decision-row3-left-text { position: absolute; left: 125px; top: 1704.13px; width: 552px; }
+    .decision-row3-right-text { position: absolute; left: 728.09px; top: 1750.13px; width: 586px; }
+    .decision-img-l { position: absolute; left: 125px; top: 1790.13px; width: 551.91px; height: 170.03px; }
+    .decision-img-m { position: absolute; left: 725px; top: 1836.13px; width: 589.19px; height: 247.92px; }
+
+    /* ─── SECTION 7: (06) RETROSPECTIVE (y: 9477.22 -> 10072.22, Black BG) ─── */
+    .retrospective-section {
+      position: relative;
+      width: 1440px;
+      height: 595px;
+      background-color: #000000;
+      color: #FFFFFF;
+      overflow: hidden;
+    }
+
+    .retro-label {
+      position: absolute;
+      left: 80px;
+      top: 60px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+    }
+
+    .retro-svg-wrap {
+      position: absolute;
+      left: 491px;
+      top: 157px;
+      width: 400.71px;
+      height: 325.72px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: floatRetro 6s ease-in-out infinite;
+    }
+
+    @keyframes floatRetro {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-9px); }
+    }
+
+    .retro-svg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 0 35px rgba(255, 255, 255, 0.12));
+    }
+
+    .retro-left-title {
+      position: absolute;
+      left: 80px;
+      top: 254px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #FFFFFF;
+      line-height: normal;
+    }
+
+    .retro-left-desc {
+      position: absolute;
+      left: 80px;
+      top: 301px;
+      width: 361px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 28px;
+      color: #E0E0E0;
+    }
+
+    .retro-right-title {
+      position: absolute;
+      left: 941.71px;
+      top: 254px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #FFFFFF;
+      line-height: normal;
+    }
+
+    .retro-right-desc {
+      position: absolute;
+      left: 941.71px;
+      top: 301px;
+      width: 377px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 28px;
+      color: #E0E0E0;
+    }
+
+    /* ─── OTHER PROJECTS FOOTER SECTION (Matching Home Smaller Cards) ─── */
+    .other-projects-section {
+      width: 100%;
+      background: #F2E7D5;
+      padding: clamp(56px, 6.2vw, 96px) clamp(20px, 4.86vw, 70px) clamp(64px, 7vw, 110px);
+      position: relative;
+      z-index: 10;
+    }
+
+    .other-projects-grid {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(24px, 3.26vw, 47px);
+    }
+
+    .other-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .other-img-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 402 / 227;
+      background: #E5D9C5;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .other-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .work-hover-badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #BB211F;
+      color: #F2E7D5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: 'AppleGothic', 'Apple Gothic', sans-serif;
+      font-size: 11px;
+      line-height: 1.25;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      z-index: 3;
+    }
+
+    .other-card-meta {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .other-card-title {
+      font-family: 'BBH Hegarty', 'AppleGothic', sans-serif;
+      font-size: clamp(22px, 1.8vw, 26px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: #BB211F;
+      max-width: 265px;
+    }
+
+    .other-card-tags {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: #696969;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-top: 3px;
+    }
+
+    .other-card-desc {
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(17px, 1.38vw, 20px);
+      font-weight: 400;
+      line-height: 1.35;
+      color: #696969;
+    }
+
+    /* =========================================================================
+       RESPONSIVE BREAKPOINTS
+       ========================================================================= */
+
+    /* 1. Tablet & Mobile Top Sticky ToC Pill (<= 1180px) */
+    @media (max-width: 1180px) {
+      .back-arrow-btn {
+        left: 98px;
+        top: 24px;
+      }
+
+      .jump-nav-wrapper {
+        top: 22px;
+        left: 0;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 20px;
+        align-items: center;
+      }
+
+      .jump-toc-toggle {
+        display: inline-flex;
+      }
+
+      .jump-nav {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: 10px;
+        margin-top: 10px;
+        min-width: 220px;
+        border-radius: 22px;
+        background: linear-gradient(180deg, rgba(44, 44, 48, 0.92) 0%, rgba(20, 20, 22, 0.96) 100%);
+      }
+
+      .jump-nav-wrapper.is-on-light .jump-nav {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.78) 100%);
+      }
+
+      .jump-nav-wrapper.is-toc-open .jump-nav {
+        display: flex;
+        animation: tocDropIn 0.22s var(--ease-smooth);
+      }
+
+      .nav-item {
+        font-size: 14px;
+        padding: 11px 16px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    @keyframes tocDropIn {
+      from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* 2. Tablet & Below (<= 1024px): Reflow 1440px Canvas into Clean Fluid Layout */
+    @media (max-width: 1024px) {
+      .page-canvas {
+        width: 100%;
+        zoom: 1 !important;
+      }
+
+      /* Reset all absolute positions inside fluid mode */
+      .hero-canvas,
+      .deloitte-logo,
+      .project-meta,
+      .hero-bg-img,
+      .hero-title-logo,
+      .hero-subtitle,
+      .what-i-worked-on-pill,
+      .problem-section,
+      .section-label,
+      .problem-img,
+      .problem-heading,
+      .problem-desc,
+      .problem-pills,
+      .problem-bullets,
+      .hmw-statement,
+      .solution-section,
+      .solution-label,
+      .solution-title,
+      .solution-divider,
+      .solution-desc,
+      .breadcrumbs-row,
+      .entry-points-pill,
+      .laptop-img,
+      .card-popup-img,
+      .annotation-create-title,
+      .annotation-create-desc,
+      .annotation-manage-title,
+      .annotation-manage-desc,
+      .how-it-works-section,
+      .how-label,
+      .how-subhead,
+      .step1-title,
+      .step1-desc,
+      .step2-title,
+      .step2-desc,
+      .step3-title,
+      .step3-desc,
+      .workflow-img,
+      .ui-section,
+      .ui-label,
+      .ui-create-title,
+      .ui-create-desc,
+      .ui-create-img,
+      .ui-rbac-title,
+      .ui-rbac-desc,
+      .ui-rbac-img,
+      .ui-newroles-title,
+      .ui-newroles-desc,
+      .ui-newroles-img,
+      .ui-review-title,
+      .ui-review-desc,
+      .ui-review-img,
+      .ui-manage-title,
+      .ui-manage-desc,
+      .ui-manage-img,
+      .decisions-section,
+      .decisions-label,
+      .decision-row1-left-text,
+      .decision-row1-right-text,
+      .decision-img-h,
+      .decision-img-i,
+      .decision-row2-left-text,
+      .decision-row2-right-text,
+      .decision-img-j,
+      .decision-img-k,
+      .decision-row3-left-text,
+      .decision-row3-right-text,
+      .decision-img-l,
+      .decision-img-m,
+      .retrospective-section,
+      .retro-label,
+      .retro-svg-wrap,
+      .retro-left-title,
+      .retro-left-desc,
+      .retro-right-title,
+      .retro-right-desc {
+        position: static;
+        left: auto;
+        top: auto;
+        margin: 0;
+      }
+
+      .solution-arrow,
+      .solution-divider {
+        display: none;
+      }
+
+      /* Hero */
+      .hero-canvas {
+        width: 100%;
+        height: auto;
+        padding: 104px clamp(20px, 5vw, 48px) 56px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .hero-top-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .deloitte-logo {
+        width: clamp(140px, 20vw, 210px);
+        height: auto;
+      }
+
+      .project-meta {
+        font-size: clamp(14px, 1.9vw, 20px);
+        white-space: normal;
+      }
+
+      .hero-bg-stage {
+        position: relative;
+        width: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        padding: clamp(48px, 8vw, 96px) 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        text-align: center;
+      }
+
+      .hero-bg-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.78;
+        z-index: 1;
+      }
+
+      .hero-title-logo {
+        position: relative;
+        z-index: 2;
+        width: min(560px, 88%);
+        height: auto;
+      }
+
+      .hero-subtitle {
+        position: relative;
+        z-index: 2;
+        font-size: clamp(17px, 2.3vw, 24px);
+      }
+
+      .what-i-worked-on-pill {
+        width: auto;
+        max-width: 100%;
+        padding: 12px 24px;
+        border-radius: 28px;
+        flex-wrap: wrap;
+        white-space: normal;
+        text-align: center;
+        gap: 4px 10px;
+      }
+
+      .pill-tag,
+      .pill-details {
+        line-height: 1.45;
+        font-size: clamp(13px, 1.8vw, 16px);
+      }
+
+      /* Shared White Section Padding */
+      .problem-section,
+      .solution-section,
+      .how-it-works-section,
+      .ui-section,
+      .decisions-section {
+        width: 100%;
+        height: auto;
+        padding: 48px clamp(20px, 5vw, 48px);
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      /* Problem Section */
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 32px 40px;
+        align-items: center;
+      }
+
+      .problem-img {
+        width: 100%;
+        max-width: 380px;
+        height: auto;
+        justify-self: center;
+      }
+
+      .problem-right-col {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .problem-heading,
+      .problem-desc,
+      .hmw-statement {
+        width: 100%;
+      }
+
+      .problem-pills-row {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+
+      .problem-pills {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+      }
+
+      /* Solution Section */
+      .solution-top-row {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        border-left: 3px solid #FF6D0F;
+        padding-left: 18px;
+      }
+
+      .solution-title {
+        font-size: clamp(28px, 4vw, 36px);
+      }
+
+      .solution-desc {
+        width: 100%;
+      }
+
+      .breadcrumbs-row {
+        flex-wrap: wrap;
+        gap: 10px 14px;
+      }
+
+      .solution-media-row {
+        display: grid;
+        grid-template-columns: 1.35fr 0.65fr;
+        gap: 24px;
+        align-items: center;
+      }
+
+      .laptop-img {
+        width: 100%;
+        height: auto;
+      }
+
+      .card-popup-img {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+        justify-self: center;
+      }
+
+      .solution-entry-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 16px;
+      }
+
+      .entry-points-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .entry-point-col {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .annotation-create-desc,
+      .annotation-manage-desc {
+        white-space: normal;
+      }
+
+      /* How it works */
+      .how-steps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .how-step-col {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .step2-desc,
+      .step3-desc {
+        width: 100%;
+      }
+
+      .workflow-img {
+        width: 100%;
+        height: auto;
+      }
+
+      /* UI Section */
+      .ui-block {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .ui-dual-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px 24px;
+      }
+
+      .ui-create-img,
+      .ui-rbac-img,
+      .ui-newroles-img,
+      .ui-review-img,
+      .ui-manage-img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        margin-top: 8px;
+      }
+
+      .ui-rbac-desc,
+      .ui-newroles-desc,
+      .ui-manage-desc {
+        max-width: 100%;
+      }
+
+      /* Decisions Section */
+      .decision-row-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px;
+        align-items: start;
+      }
+
+      .decision-col {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .decision-row1-left-text,
+      .decision-row1-right-text,
+      .decision-row2-left-text,
+      .decision-row2-right-text,
+      .decision-row3-left-text,
+      .decision-row3-right-text {
+        width: 100%;
+      }
+
+      .decision-img-h,
+      .decision-img-i,
+      .decision-img-j,
+      .decision-img-k,
+      .decision-img-l,
+      .decision-img-m {
+        width: 100%;
+        height: auto;
+      }
+
+      /* Retrospective Section */
+      .retrospective-section {
+        width: 100%;
+        height: auto;
+        padding: 56px clamp(20px, 5vw, 48px) 64px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .retro-svg-wrap {
+        width: min(300px, 70vw);
+        height: auto;
+        align-self: center;
+      }
+
+      .retro-cols-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+
+      .retro-col {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .retro-left-desc,
+      .retro-right-desc {
+        width: 100%;
+      }
+
+      .other-projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px 28px;
+      }
+    }
+
+    /* 3. Mobile (<= 767px) */
+    @media (max-width: 767px) {
+      .jump-nav-wrapper {
+        align-items: flex-end;
+        padding: 0 16px;
+      }
+
+      .jump-toc-toggle {
+        max-width: calc(100vw - 154px);
+        height: 40px;
+        padding: 0 14px;
+        font-size: 12.5px;
+      }
+
+      .jump-toc-toggle-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .hero-canvas {
+        padding: 96px 20px 44px;
+      }
+
+      .problem-section,
+      .solution-section,
+      .how-it-works-section,
+      .ui-section,
+      .decisions-section,
+      .retrospective-section {
+        padding: 40px 20px;
+      }
+
+      .problem-grid,
+      .solution-media-row,
+      .entry-points-grid,
+      .how-steps-grid,
+      .ui-dual-grid,
+      .decision-row-grid,
+      .retro-cols-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .other-projects-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .other-card-meta {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .other-card-tags {
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .other-projects-section {
+        padding-bottom: 48px;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .corner-menu-panel {
+        width: min(320px, calc(100vw - 16px));
+        height: min(320px, calc(100vw - 16px));
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="progress-bar"></div>
+  <!-- CORNER TANGRAM MENU (Starts inverted on dark Hero, flips automatically on white/cream sections) -->
+  <div class="corner-menu-scrim" id="corner-menu-scrim" aria-hidden="true"></div>
 
-  <nav class="top-nav">
-    <a href="/#work" class="nav-pill">← All Projects</a>
-    <div class="nav-right-group">
-      <a href="/#contact" class="nav-pill">Contact</a>
-      <a href="https://drive.google.com/file/d/1a8mlDD0jzYdRFJJqXY0Y0knbyZKDnXD9/view?usp=sharing" class="nav-pill" target="_blank" rel="noreferrer">Resume</a>
+  <nav class="corner-menu is-inverted" id="corner-menu" aria-label="Portfolio navigation">
+    <button
+      class="corner-menu-trigger"
+      id="corner-menu-trigger"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="corner-menu-panel"
+    >
+      <svg class="corner-menu-trigger-svg" viewBox="0 0 400 400" overflow="visible" aria-hidden="true">
+        <polygon
+          class="corner-menu-trigger-shape"
+          shape-rendering="geometricPrecision"
+          points="0,0 100,0 200,100 200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 100,200 0,100"
+        />
+        <text
+          class="corner-menu-trigger-label"
+          x="142"
+          y="142"
+          text-anchor="middle"
+          dominant-baseline="central"
+          transform="rotate(45 142 142)"
+        >MENU</text>
+      </svg>
+    </button>
+
+    <div class="corner-menu-panel" id="corner-menu-panel" aria-hidden="true">
+      <svg class="corner-menu-open-svg" viewBox="0 0 400 400" overflow="visible">
+        <g class="corner-menu-piece" data-corner-nav="contact" role="button" tabindex="0" aria-label="Contact">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="0,0 100,0 100,100" />
+          <text class="corner-menu-piece-label" x="64" y="36" text-anchor="middle" dominant-baseline="central" transform="rotate(45 64 36)">CONTACT</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="about" role="button" tabindex="0" aria-label="About">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="0,0 100,100 100,200 0,100" />
+          <text class="corner-menu-piece-label" x="50" y="100" text-anchor="middle" dominant-baseline="central" transform="rotate(45 50 100)">ABOUT</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="resume" role="button" tabindex="0" aria-label="Resume">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="100,0 200,100 100,100" />
+          <text class="corner-menu-piece-label" x="136" y="64" text-anchor="middle" dominant-baseline="central" transform="rotate(45 136 64)">RESUME</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="work" role="button" tabindex="0" aria-label="Work">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="100,100 200,100 200,200 100,200" />
+          <text class="corner-menu-piece-label" x="150" y="150" text-anchor="middle" dominant-baseline="central" transform="rotate(45 150 150)">WORK</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="home" role="button" tabindex="0" aria-label="Home">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 200,200" />
+          <text class="corner-menu-piece-label" x="266" y="66" text-anchor="middle" dominant-baseline="central" transform="rotate(45 266 66)">HOME</text>
+        </g>
+      </svg>
     </div>
   </nav>
 
-  <!-- Nexus Image: /src/deloitte-case-study.jpg -->
-  <main class="case-container">
-    <img src="/src/deloitte case study.jpg" alt="Nexus Deloitte Case Study" loading="eager" />
+  <!-- BACK ARROW BUTTON -->
+  <a class="back-arrow-btn" id="back-arrow-btn" href="homepage.html#work" aria-label="Back to selected case studies">
+    <svg viewBox="0 0 16 36" aria-hidden="true">
+      <path d="M14 2L2 18L14 34" stroke-linecap="square" stroke-linejoin="miter" />
+    </svg>
+  </a>
+
+  <!-- FLOATING JUMP NAVIGATION BAR + COLLAPSIBLE TOC PILL (<= 1180px) -->
+  <header class="jump-nav-wrapper" id="jumpNavWrapper">
+    <button
+      class="jump-toc-toggle"
+      id="jumpTocToggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="jumpNav"
+      aria-label="Toggle section navigation"
+    >
+      <span class="jump-toc-dot" aria-hidden="true"></span>
+      <span class="jump-toc-toggle-text" id="jumpTocCurrent">OVERVIEW</span>
+      <svg class="jump-toc-chevron" viewBox="0 0 12 12" aria-hidden="true">
+        <path d="M2.5 4.5L6 8L9.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <nav class="jump-nav" id="jumpNav" aria-label="Nexus section navigation">
+      <a href="#overview" class="nav-item active">OVERVIEW</a>
+      <a href="#problem" class="nav-item">PROBLEM</a>
+      <a href="#solution" class="nav-item">SOLUTION</a>
+      <a href="#how-it-works" class="nav-item">HOW IT WORKS</a>
+      <a href="#decisions" class="nav-item">DECISIONS</a>
+      <a href="#retrospective" class="nav-item">RETROSPECTIVE</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-canvas" id="pageCanvas">
+
+      <!-- ─── SECTION 1: HERO CANVAS ─── -->
+      <div class="band-dark-hero">
+        <header id="overview" class="hero-canvas">
+          <div class="hero-top-row">
+            <img src="src/deloittelogo.svg" alt="Deloitte" class="deloitte-logo" />
+            <div class="project-meta">
+              Team of 2 · B2B SaaS · Admin tooling · 7 weeks · In development
+            </div>
+          </div>
+
+          <div class="hero-bg-stage">
+            <img src="src/nexusherobg.png" alt="Nexus Admin Console" class="hero-bg-img" decoding="async" />
+            <img src="src/nexuslogo.svg" alt="Feature Directory" class="hero-title-logo" />
+            <p class="hero-subtitle">
+              Self-serve feature and role management inside Nexus’s Admin Console
+            </p>
+          </div>
+
+          <div class="what-i-worked-on-pill">
+            <span class="pill-tag">WHAT I WORKED ON</span>
+            <span class="pill-details">
+              Interaction Design · Multi-step Form Flows · Delete &amp; Error Prevention
+            </span>
+          </div>
+        </header>
+      </div>
+
+      <!-- ─── SECTION 2: THE PROBLEM ─── -->
+      <div class="band-white">
+        <section id="problem" class="problem-section">
+          <span class="section-label reveal">(01) THE PROBLEM</span>
+
+          <div class="problem-grid">
+            <img src="src/problemimg.png" alt="Developer overwhelmed with feature tickets" class="problem-img reveal delay-1" decoding="async" />
+
+            <div class="problem-right-col">
+              <h2 class="problem-heading reveal delay-1">
+                Every change to the platform’s features &amp; user roles needed a developer
+              </h2>
+
+              <p class="problem-desc reveal delay-2">
+                Nexus is built from features. Each feature has roles, which are levels of access: a viewer can only read logs, an editor can change them. <strong>RBAC</strong> (role-based access control) is the system that stores those roles
+              </p>
+
+              <div class="problem-pills-row">
+                <img src="src/problempills.png" alt="Ticket process flow diagram" class="problem-pills reveal delay-2" decoding="async" />
+
+                <ul class="problem-bullets reveal delay-3">
+                  <li>Admins waited</li>
+                  <li>Developers got interrupted</li>
+                  <li>More features = more tickets, it didn’t scale</li>
+                </ul>
+              </div>
+
+              <h3 class="hmw-statement reveal delay-3">
+                How might we let admins manage features &amp; roles on their own, with no developer in the loop?
+              </h3>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── SECTION 3: THE SOLUTION ─── -->
+        <section id="solution" class="solution-section">
+          <span class="solution-label reveal">(02) THE SOLUTION</span>
+
+          <div class="solution-top-row">
+            <h2 class="solution-title reveal">Feature Directory</h2>
+            <div class="solution-divider reveal"></div>
+            <p class="solution-desc reveal delay-1">
+              A tab in Nexus’s Admin Console where admins add, rename and delete features and roles themselves, built to take the ticket and the developer out of routine changes
+            </p>
+          </div>
+
+          <div class="breadcrumbs-row reveal delay-2">
+            <span class="breadcrumb-item">NEXUS</span>
+            <img src="src/chevronright.png" alt=">" class="breadcrumb-chevron" />
+            <span class="breadcrumb-item">ADMIN CONSOLE</span>
+            <img src="src/chevronright.png" alt=">" class="breadcrumb-chevron" />
+            <span class="breadcrumb-item">FEATURE DIRECTORY</span>
+          </div>
+
+          <div class="solution-media-row">
+            <img src="src/a.png" alt="Nexus Admin Console Interface Laptop Mockup" class="laptop-img reveal delay-1" decoding="async" />
+            <img src="src/b.png" alt="Integration Hub Card" class="card-popup-img" decoding="async" />
+          </div>
+
+          <div class="solution-entry-box">
+            <div class="entry-points-pill reveal delay-2">ENTRY POINTS</div>
+
+            <div class="entry-points-grid">
+              <div class="entry-point-col">
+                <svg class="solution-arrow arrow-create" viewBox="0 0 114 12" fill="none">
+                  <path d="M1 6H111M111 6L105 1M111 6L105 11" stroke="#FF6D0F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h3 class="annotation-create-title reveal delay-2">Create</h3>
+                <p class="annotation-create-desc reveal delay-2">Add a feature, with new or existing roles</p>
+              </div>
+
+              <div class="entry-point-col">
+                <svg class="solution-arrow arrow-manage" viewBox="0 0 130 12" fill="none">
+                  <path d="M1 6H127M127 6L121 1M127 6L121 11" stroke="#FF6D0F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h3 class="annotation-manage-title reveal delay-3">Manage</h3>
+                <p class="annotation-manage-desc reveal delay-3">Adding roles, renaming, deleting</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── SECTION 4: (03) HOW IT WORKS ─── -->
+        <section id="how-it-works" class="how-it-works-section">
+          <span class="how-label reveal">(03) HOW IT WORKS</span>
+          <p class="how-subhead reveal">The conceptual mental model</p>
+
+          <div class="how-steps-grid">
+            <div class="how-step-col">
+              <h3 class="step1-title reveal delay-1">Create a feature</h3>
+              <p class="step1-desc reveal delay-1">name it</p>
+            </div>
+
+            <div class="how-step-col">
+              <h3 class="step2-title reveal delay-2">Assign roles</h3>
+              <p class="step2-desc reveal delay-2">pick existing ones or create new ones, then add approvers</p>
+            </div>
+
+            <div class="how-step-col">
+              <h3 class="step3-title reveal delay-3">Go live</h3>
+              <p class="step3-desc reveal delay-3">review, confirm, done</p>
+            </div>
+          </div>
+
+          <img src="src/workflow.png" alt="Workflow diagram" class="workflow-img reveal delay-2" decoding="async" />
+        </section>
+
+        <!-- ─── SECTION 5: (04) UI ─── -->
+        <section id="ui" class="ui-section">
+          <span class="ui-label reveal">(04) UI</span>
+
+          <!-- 1. Create a feature -->
+          <div class="ui-block">
+            <h3 class="ui-create-title ui-title-orange reveal">Create a feature</h3>
+            <p class="ui-create-desc ui-desc-regular reveal">Add names: one the system uses, one admins see</p>
+            <img src="src/c.jpg" alt="Create a feature screen" class="ui-create-img ui-img-static reveal delay-1" onerror="this.src='src/c.png'" decoding="async" />
+          </div>
+
+          <!-- 2 & 3. Roles dual screens -->
+          <div class="ui-dual-grid">
+            <div class="ui-block">
+              <h3 class="ui-rbac-title ui-title-orange reveal">Add roles from RBAC</h3>
+              <p class="ui-rbac-desc ui-desc-regular reveal">Search to attach roles that already exist - existing roles are fetched</p>
+              <img src="src/d.jpg" alt="Add roles from RBAC" class="ui-rbac-img ui-img-static reveal delay-1" onerror="this.src='src/d.png'" decoding="async" />
+            </div>
+
+            <div class="ui-block">
+              <h3 class="ui-newroles-title ui-title-orange reveal">Or create new roles</h3>
+              <p class="ui-newroles-desc ui-desc-regular reveal">Search to attach roles that already exist - existing roles are fetched</p>
+              <img src="src/e.jpg" alt="Or create new roles" class="ui-newroles-img ui-img-static reveal delay-1" onerror="this.src='src/e.png'" decoding="async" />
+            </div>
+          </div>
+
+          <!-- 4. Review -->
+          <div class="ui-block">
+            <h3 class="ui-review-title ui-title-orange reveal">Review</h3>
+            <p class="ui-review-desc ui-desc-regular reveal">Check everything before it goes live</p>
+            <img src="src/f.jpg" alt="Review screen" class="ui-review-img ui-img-static reveal delay-1" onerror="this.src='src/f.png'" decoding="async" />
+          </div>
+
+          <!-- 5. Manage feature -->
+          <div class="ui-block">
+            <h3 class="ui-manage-title ui-title-orange reveal">Manage feature</h3>
+            <p class="ui-manage-desc ui-desc-regular reveal">Add roles, rename or delete them - Deleting a feature also removes its roles, approvers and settings</p>
+            <img src="src/g.jpg" alt="Manage feature screen" class="ui-manage-img ui-img-static reveal delay-1" onerror="this.src='src/g.png'" decoding="async" />
+          </div>
+        </section>
+
+        <!-- ─── SECTION 6: (05) DESIGN DECISIONS ─── -->
+        <section id="decisions" class="decisions-section">
+          <span class="decisions-label reveal">(05) DESIGN DECISIONS</span>
+
+          <!-- ROW 1 -->
+          <div class="decision-row-grid">
+            <div class="decision-col">
+              <p class="decision-row1-left-text decision-text reveal">
+                A long form added scroll, became difficult to navigate &amp; overwhelming as more roles were created
+              </p>
+              <img src="src/h.jpg" alt="Intake step flow comparison" class="decision-img-h decision-img reveal delay-1" onerror="this.src='src/h.png'" decoding="async" />
+            </div>
+            <div class="decision-col">
+              <p class="decision-row1-right-text decision-text reveal delay-1">
+                The intake was split into three steps so that each one asks for a single kind of thinking. A final review step was made mandatory, so everything gets checked once before it goes live.
+              </p>
+              <img src="src/i.jpg" alt="Review step overview" class="decision-img-i decision-img reveal delay-2" onerror="this.src='src/i.png'" decoding="async" />
+            </div>
+          </div>
+
+          <!-- ROW 2 -->
+          <div class="decision-row-grid">
+            <div class="decision-col">
+              <p class="decision-row2-left-text decision-text reveal">
+                Delete &amp; rename on every row added visual clutter &amp; increased the chance of accidental deletion
+              </p>
+              <img src="src/j.png" alt="Delete and rename table comparison - before" class="decision-img-j decision-img reveal delay-1" onerror="this.src='src/j.jpg'" decoding="async" />
+            </div>
+            <div class="decision-col">
+              <p class="decision-row2-right-text decision-text reveal delay-1">
+                Deletion was placed inside a 3-dot kebab menu, keeping the table clean while making deletion more intentional
+              </p>
+              <img src="src/k.png" alt="Delete and rename table comparison - after" class="decision-img-k decision-img reveal delay-2" onerror="this.src='src/k.jpg'" decoding="async" />
+            </div>
+          </div>
+
+          <!-- ROW 3 -->
+          <div class="decision-row-grid">
+            <div class="decision-col">
+              <p class="decision-row3-left-text decision-text reveal">
+                A simple confirmation message did not communicate the impact of deleting a feature
+              </p>
+              <img src="src/l.png" alt="Simple confirmation modal" class="decision-img-l decision-img reveal delay-1" onerror="this.src='src/l.jpg'" decoding="async" />
+            </div>
+            <div class="decision-col">
+              <p class="decision-row3-right-text decision-text reveal delay-1">
+                An impact-focused modal was introduced to clearly show the affected users, roles, and permissions before deletion
+              </p>
+              <img src="src/m.png" alt="Detailed impact confirmation modal" class="decision-img-m decision-img reveal delay-2" onerror="this.src='src/m.jpg'" decoding="async" />
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ─── SECTION 7: (06) RETROSPECTIVE (Black BG) ─── -->
+      <div class="band-black-retro">
+        <section id="retrospective" class="retrospective-section">
+          <span class="retro-label reveal">(06) RETROSPECTIVE</span>
+
+          <div class="retro-svg-wrap">
+            <img src="src/retrospective.svg" alt="Two perspectives on number 6 and 9" class="retro-svg" />
+          </div>
+
+          <div class="retro-cols-grid">
+            <div class="retro-col">
+              <h3 class="retro-left-title reveal delay-1">Defending the UX with Intent</h3>
+              <p class="retro-left-desc reveal delay-2">
+                Standing up for user needs during handoff by defending the logic behind critical safeguards, while staying grounded in engineering feasibility.
+              </p>
+            </div>
+
+            <div class="retro-col">
+              <h3 class="retro-right-title reveal delay-1">Reaching mutual decisions with POs</h3>
+              <p class="retro-right-desc reveal delay-2">
+                Understanding the business pressures POs face helped us make mutual decisions that hit business goals without hurting the user experience.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+
+    <!-- ─── OTHER PROJECTS FOOTER ─── -->
+    <section class="other-projects-section" id="other-projects" aria-label="Other case studies">
+      <div class="other-projects-grid">
+
+        <a class="other-card" href="together.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/togertherhomeimg.png" alt="Together! packaging and cards" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">Boys here, girls there.</h3>
+            <div class="other-card-tags">
+              <span>Social psychology</span>
+              <span>Behavioural research</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            Nobody tells them where to sit. They already know. Across 59 participants, kids turned out not to be rejecting each other at all. They were avoiding the teasing.
+          </p>
+        </a>
+
+        <a class="other-card" href="broke-ya-woke.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/bywhomeimg.png" alt="Broke ya Woke? Jenga tower" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">Taxes are important, apparently.</h3>
+            <div class="other-card-tags">
+              <span>Phygital experience</span>
+              <span>Financial literacy</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            A game where bad money decisions make your tower wobble. Of 23 teens and 7 parents interviewed, the teens could tell a want from a need. Taxes sounded like something for later.
+          </p>
+        </a>
+
+        <a class="other-card" href="aris.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/arishomeimg.png" alt="Aris conversational interface" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">A reunion planned by AI.</h3>
+            <div class="other-card-tags">
+              <span>Agentic AI</span>
+              <span>Interaction design</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            Sonia says “look for flights for this.” She never says where or when. Aris reads the group chat to work out what “this” means.
+          </p>
+        </a>
+
+      </div>
+    </section>
   </main>
 
-  <!-- Bottom 3 Projects -->
-  <section class="other-work-section">
-    <h2 class="other-work-title">Explore Other Projects</h2>
-
-    <div class="cards-row">
-      <a class="work-card" href="/together.html">
-        <strong class="card-title">Together</strong>
-        <small class="card-subtitle">Behavioral Design</small>
-        <span class="card-image-wrapper"><img src="/together%20thumbnail.png" alt="Together Thumbnail" /></span>
-      </a>
-      <a class="work-card" href="/aris.html">
-        <strong class="card-title">Aris</strong>
-        <small class="card-subtitle">Agentic AI</small>
-        <span class="card-image-wrapper"><img src="/aris%20thumbnail.png" alt="Aris Thumbnail" /></span>
-      </a>
-      <a class="work-card" href="/broke-ya-woke.html">
-        <strong class="card-title">Broke Ya<br />Woke?</strong>
-        <small class="card-subtitle">Phygital Game</small>
-        <span class="card-image-wrapper"><img src="/byw%20thumbnail.png" alt="Broke Ya Woke Thumbnail" /></span>
-      </a>
-    </div>
-  </section>
-
+  <!-- ─── SCRIPTS: CORNER MENU, RESPONSIVE SCALING, CONTRAST SYNC, SCROLLSPY & REVEALS ─── -->
   <script>
-    window.addEventListener('scroll', () => {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      document.getElementById('progress-bar').style.width = ((winScroll / height) * 100) + '%';
+    const RESUME_URL = 'https://drive.google.com/drive/folders/1Cnc7uw2BrQGdqj-LFANdcJFBHuYpXxxG';
+    const HOMEPAGE_URL = 'homepage.html';
+    const CANVAS_WIDTH = 1440;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const pageCanvas = document.getElementById('pageCanvas');
+      const heroEl = document.getElementById('overview');
+      const retroEl = document.getElementById('retrospective');
+      const otherProjectsSec = document.getElementById('other-projects');
+      const cornerMenu = document.getElementById('corner-menu');
+      const backArrowBtn = document.getElementById('back-arrow-btn');
+      const jumpNavWrapper = document.getElementById('jumpNavWrapper');
+      const jumpTocToggle = document.getElementById('jumpTocToggle');
+      const jumpTocCurrent = document.getElementById('jumpTocCurrent');
+      const navLinks = Array.from(document.querySelectorAll('#jumpNav .nav-item'));
+
+      let isCornerMenuOpen = false;
+      let lastTargetId = '';
+      let lastMenuDark = null;
+      let lastTopLight = null;
+      let lastOverFooter = null;
+      let scrollRafId = null;
+
+      // 0. Zoom scaling for 1025px - 1439px laptops (keeps 1440px exact without transform lag)
+      function updateCanvasScaling() {
+        if (window.innerWidth <= 1024) {
+          pageCanvas.style.zoom = '';
+          return;
+        }
+        const scale = Math.min(window.innerWidth / CANVAS_WIDTH, 1);
+        pageCanvas.style.zoom = scale === 1 ? '' : String(scale);
+      }
+
+      // Back arrow behavior (matching together.html)
+      if (backArrowBtn) {
+        backArrowBtn.href = `${HOMEPAGE_URL}#work`;
+        backArrowBtn.addEventListener('click', (e) => {
+          if (document.referrer && /homepage\.html|index\.html|extra\.html/i.test(document.referrer) && window.history.length > 1) {
+            e.preventDefault();
+            window.history.back();
+          }
+        });
+      }
+
+      // Corner Tangram Menu Setup
+      const triggerBtn = document.getElementById('corner-menu-trigger');
+      const panelEl = document.getElementById('corner-menu-panel');
+      const scrimEl = document.getElementById('corner-menu-scrim');
+      const pieces = document.querySelectorAll('.corner-menu-piece');
+
+      if (window.gsap) {
+        gsap.set(panelEl, { opacity: 0, scale: 0.25 });
+        gsap.set(scrimEl, { opacity: 0 });
+      }
+
+      function openMenu() {
+        if (isCornerMenuOpen) return;
+        isCornerMenuOpen = true;
+        cornerMenu.classList.add('is-open');
+        scrimEl.classList.add('is-open');
+        triggerBtn.setAttribute('aria-expanded', 'true');
+        panelEl.setAttribute('aria-hidden', 'false');
+        lastMenuDark = null;
+        syncTopChromeContrast();
+
+        if (window.gsap) {
+          gsap.killTweensOf([scrimEl, triggerBtn, panelEl]);
+          gsap.to(scrimEl, { opacity: 1, duration: 0.32, ease: 'power2.out' });
+          gsap.to(triggerBtn, { opacity: 0, duration: 0.16, ease: 'power2.out' });
+          gsap.fromTo(panelEl, { opacity: 0, scale: 0.25 }, { opacity: 1, scale: 1, duration: 0.36, ease: 'power3.out' });
+        }
+      }
+
+      function closeMenu() {
+        if (!isCornerMenuOpen) return;
+        isCornerMenuOpen = false;
+        cornerMenu.classList.remove('is-open');
+        scrimEl.classList.remove('is-open');
+        triggerBtn.setAttribute('aria-expanded', 'false');
+        panelEl.setAttribute('aria-hidden', 'true');
+        lastMenuDark = null;
+        syncTopChromeContrast();
+
+        if (window.gsap) {
+          gsap.killTweensOf([scrimEl, triggerBtn, panelEl]);
+          gsap.to(scrimEl, { opacity: 0, duration: 0.25, ease: 'power2.in' });
+          gsap.to(panelEl, { opacity: 0, scale: 0.25, duration: 0.24, ease: 'power2.in' });
+          gsap.to(triggerBtn, { opacity: 1, duration: 0.22, delay: 0.08, ease: 'power2.out' });
+        }
+      }
+
+      triggerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openMenu();
+      });
+
+      scrimEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeMenu();
+      });
+
+      function closeTocDropdown() {
+        if (!jumpNavWrapper || !jumpTocToggle) return;
+        jumpNavWrapper.classList.remove('is-toc-open');
+        jumpTocToggle.setAttribute('aria-expanded', 'false');
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (isCornerMenuOpen) closeMenu();
+          closeTocDropdown();
+        }
+      });
+
+      pieces.forEach((piece) => {
+        const activate = () => {
+          const dest = piece.dataset.cornerNav;
+          closeMenu();
+          if (dest === 'resume') {
+            window.open(RESUME_URL, '_blank', 'noopener,noreferrer');
+          } else if (dest === 'home') {
+            try { sessionStorage.removeItem('portfolioNavState'); } catch (_) {}
+            window.location.href = HOMEPAGE_URL;
+          } else {
+            window.location.href = `${HOMEPAGE_URL}#${dest}`;
+          }
+        };
+
+        piece.addEventListener('click', (e) => {
+          e.stopPropagation();
+          activate();
+        });
+
+        piece.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
+        });
+      });
+
+      // Collapsible ToC Pill (<= 1180px)
+      if (jumpTocToggle && jumpNavWrapper) {
+        jumpTocToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const tocOpen = jumpNavWrapper.classList.toggle('is-toc-open');
+          jumpTocToggle.setAttribute('aria-expanded', tocOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!jumpNavWrapper.contains(e.target)) {
+            closeTocDropdown();
+          }
+        });
+      }
+
+      // Dynamic Light/Dark contrast check across Hero (#0E0E10), Body (#FFFFFF), Retro (#000000), Footer (#F2E7D5)
+      function isOverDarkZone(probeY) {
+        if (heroEl) {
+          const hRect = heroEl.getBoundingClientRect();
+          if (hRect.top <= probeY && hRect.bottom >= probeY) return true;
+        }
+        if (retroEl) {
+          const rRect = retroEl.getBoundingClientRect();
+          if (rRect.top <= probeY && rRect.bottom >= probeY) return true;
+        }
+        return false;
+      }
+
+      function syncTopChromeContrast() {
+        const menuProbeY = isCornerMenuOpen ? 160 : 44;
+        const menuOverDark = isOverDarkZone(menuProbeY);
+        const topOverLight = !isOverDarkZone(50);
+        const overFooter = otherProjectsSec ? otherProjectsSec.getBoundingClientRect().top <= 60 : false;
+
+        if (menuOverDark !== lastMenuDark) {
+          lastMenuDark = menuOverDark;
+          if (cornerMenu) cornerMenu.classList.toggle('is-inverted', menuOverDark);
+        }
+        if (topOverLight !== lastTopLight) {
+          lastTopLight = topOverLight;
+          if (backArrowBtn) backArrowBtn.classList.toggle('is-on-light', topOverLight);
+          if (jumpNavWrapper) jumpNavWrapper.classList.toggle('is-on-light', topOverLight);
+        }
+        if (overFooter !== lastOverFooter) {
+          lastOverFooter = overFooter;
+          if (backArrowBtn) backArrowBtn.classList.toggle('is-on-footer', overFooter);
+        }
+      }
+
+      // 1. Scroll-Triggered Reveal Animations
+      const revealElements = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        threshold: 0.08,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      revealElements.forEach((el) => revealObserver.observe(el));
+
+      // 2. Reliable Jump Nav Smooth Scroll & Active State Tracker
+      const sections = [
+        { id: 'overview',      el: heroEl,                                 navTarget: 'overview' },
+        { id: 'problem',       el: document.getElementById('problem'),      navTarget: 'problem' },
+        { id: 'solution',      el: document.getElementById('solution'),     navTarget: 'solution' },
+        { id: 'how-it-works',  el: document.getElementById('how-it-works'), navTarget: 'how-it-works' },
+        { id: 'ui',            el: document.getElementById('ui'),           navTarget: 'how-it-works' },
+        { id: 'decisions',     el: document.getElementById('decisions'),    navTarget: 'decisions' },
+        { id: 'retrospective', el: retroEl,                                navTarget: 'retrospective' }
+      ];
+
+      let isManualScrolling = false;
+      let manualScrollTimer = null;
+
+      navLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeTocDropdown();
+          const targetId = link.getAttribute('href').substring(1);
+          const targetSection = document.getElementById(targetId);
+
+          if (targetSection) {
+            isManualScrolling = true;
+            clearTimeout(manualScrollTimer);
+
+            setActiveNav(targetId);
+
+            const headerOffset = targetId === 'overview' ? 0 : 90;
+            const offsetPosition = targetId === 'overview'
+              ? 0
+              : Math.max(0, targetSection.getBoundingClientRect().top + window.scrollY - headerOffset);
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+
+            manualScrollTimer = setTimeout(() => {
+              isManualScrolling = false;
+              updateActiveNav();
+            }, 800);
+          }
+        });
+      });
+
+      function setActiveNav(targetId) {
+        if (targetId === lastTargetId) return;
+        lastTargetId = targetId;
+        navLinks.forEach((link) => {
+          const isMatch = link.getAttribute('href') === `#${targetId}`;
+          link.classList.toggle('active', isMatch);
+          if (isMatch && jumpTocCurrent) {
+            jumpTocCurrent.textContent = link.textContent.trim();
+          }
+        });
+      }
+
+      function updateActiveNav() {
+        syncTopChromeContrast();
+        if (isManualScrolling) return;
+
+        // If Retrospective is well into view (or footer reached), highlight RETROSPECTIVE
+        if (retroEl && retroEl.getBoundingClientRect().top <= window.innerHeight * 0.45) {
+          setActiveNav('retrospective');
+          return;
+        }
+
+        const triggerPoint = window.scrollY + 180;
+        let currentTarget = 'overview';
+
+        for (let i = 0; i < sections.length; i++) {
+          const sec = sections[i];
+          if (sec.el) {
+            const secTop = sec.el.getBoundingClientRect().top + window.scrollY;
+            if (triggerPoint >= secTop) {
+              currentTarget = sec.navTarget;
+            }
+          }
+        }
+
+        setActiveNav(currentTarget);
+      }
+
+      function scheduleScrollUpdate() {
+        if (scrollRafId === null) {
+          scrollRafId = requestAnimationFrame(() => {
+            scrollRafId = null;
+            updateActiveNav();
+          });
+        }
+      }
+
+      // View Case hover badge on Other Projects cards (desktop fine pointer only)
+      if (window.gsap && window.matchMedia('(pointer: fine)').matches) {
+        document.querySelectorAll('.other-img-box').forEach((box) => {
+          const badge = box.querySelector('.work-hover-badge');
+          if (!badge) return;
+          gsap.set(badge, { xPercent: -50, yPercent: -50, scale: 0.75, opacity: 0 });
+          const xTo = gsap.quickTo(badge, 'x', { duration: 0.25, ease: 'power3.out' });
+          const yTo = gsap.quickTo(badge, 'y', { duration: 0.25, ease: 'power3.out' });
+
+          function getLocalPos(e) {
+            const rect = box.getBoundingClientRect();
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+          }
+
+          box.addEventListener('mouseenter', (e) => {
+            const pos = getLocalPos(e);
+            gsap.set(badge, { x: pos.x, y: pos.y });
+            gsap.to(badge, { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.out', overwrite: 'auto' });
+          });
+          box.addEventListener('mousemove', (e) => {
+            const pos = getLocalPos(e);
+            xTo(pos.x);
+            yTo(pos.y);
+          });
+          box.addEventListener('mouseleave', () => {
+            gsap.to(badge, { opacity: 0, scale: 0.75, duration: 0.2, ease: 'power2.in', overwrite: 'auto' });
+          });
+        });
+      }
+
+      window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 1180) closeTocDropdown();
+        updateCanvasScaling();
+        lastMenuDark = null;
+        lastTopLight = null;
+        lastOverFooter = null;
+        lastTargetId = '';
+        updateActiveNav();
+      }, { passive: true });
+
+      updateCanvasScaling();
+      updateActiveNav();
     });
   </script>
 

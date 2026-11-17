@@ -3,113 +3,3131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aris — Siddhi Malpe</title>
-  
+  <title>Aris — Travel Planning with Agentic AI</title>
+
+  <!-- Google Fonts: BBH Hegarty for Other Projects footer titles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  
+  <link href="https://fonts.googleapis.com/css2?family=BBH+Hegarty&display=swap" rel="stylesheet" />
+
+  <!-- GSAP 3.12.5 for Corner Menu & View Case hover badge -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+
   <style>
+    @font-face {
+      font-family: 'Samsung Sans';
+      src: local('Samsung Sans Regular'), local('SamsungSans-Regular'),
+           url('fonts/SamsungSans-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Samsung Sans';
+      src: local('Samsung Sans Medium'), local('SamsungSans-Medium'),
+           url('fonts/SamsungSans-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
-      --brand-teal: #79d7c6;
-      --bg-canvas: #f5f6f8;
-      --text-dark: #000000;
-      --border-stroke: 1.2px solid #000000;
+      --bg-black: #000000;
+      --text-white: #FFFFFF;
+      --accent-purple: #AC8EFF;
+      --pill-purple-bg: #483089;
+      --font-samsung: 'Samsung Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-    body { background: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-dark); overflow-x: hidden; min-height: 100vh; }
-
-    #progress-bar {
-      position: fixed; top: 0; left: 0; height: 2px; width: 0%; background: var(--brand-teal); z-index: 2000; transition: width 0.1s ease-out;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .top-nav {
-      position: sticky; top: 0; left: 0; width: 100%; padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; background: rgba(245, 246, 248, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1000;
+    html {
+      background-color: var(--bg-black);
+      overflow-x: clip;
     }
 
-    .nav-pill {
-      display: inline-flex; align-items: center; gap: 6px; color: var(--text-dark); text-decoration: none; font-size: 14px; font-weight: 500; border: var(--border-stroke); border-radius: 9999px; padding: 8px 22px; background: #ffffff; transition: all 0.25s var(--ease); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    body {
+      background-color: var(--bg-black);
+      color: var(--text-white);
+      font-family: var(--font-samsung);
+      overflow-x: clip;
+      min-height: 100vh;
     }
 
-    .nav-pill:hover {
-      background: #000000; color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    /* --------------------------------------------------
+       CORNER TANGRAM MENU (Dark-mode inverted by default, auto-flips over cream footer)
+    -------------------------------------------------- */
+    .corner-menu-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 1090;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .nav-right-group { display: flex; align-items: center; gap: 12px; }
-
-    .case-container {
-      width: 100%; max-width: 1040px; margin: 40px auto 100px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); overflow: hidden; display: flex; flex-direction: column; align-items: center;
+    .corner-menu-scrim.is-open {
+      pointer-events: auto;
     }
 
-    .case-container img { width: 100%; height: auto; display: block; }
-
-    .other-work-section { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px 120px; display: flex; flex-direction: column; align-items: center; }
-    .other-work-title { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 48px; text-align: center; }
-    .cards-row { display: flex; align-items: center; justify-content: center; gap: 40px; width: 100%; flex-wrap: wrap; }
-
-    .work-card {
-      width: 273px; height: 680px; border: var(--border-stroke); border-radius: 136.5px; background-color: #ffffff; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); padding: 56px 0 0; position: relative; flex-shrink: 0; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    .corner-menu {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1100;
+      pointer-events: none;
     }
 
-    .work-card:hover { transform: translateY(-8px); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12); }
-    .card-title { font-size: 30px; font-weight: 600; line-height: 1.2; text-align: center; margin-bottom: 4px; padding: 0 20px; }
-    .card-subtitle { font-size: 16px; font-weight: 400; line-height: 1.4; text-align: center; color: #333333; margin-bottom: 24px; padding: 0 20px; }
-    .card-image-wrapper { width: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; margin-top: auto; }
-    .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+    .corner-menu-trigger {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 89px;
+      height: 89px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      pointer-events: none;
+      outline: none;
+    }
 
-    @media (max-width: 960px) {
-      .top-nav { padding: 16px 20px; }
-      .case-container { margin: 20px 16px 60px; border-radius: 12px; }
-      .cards-row { gap: 30px; }
+    .corner-menu-trigger-svg {
+      display: block;
+      width: 89px;
+      height: 89px;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-trigger-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      pointer-events: auto;
+      cursor: pointer;
+      transition: fill 0.22s ease, stroke 0.22s ease;
+    }
+
+    .corner-menu.is-open .corner-menu-trigger-shape {
+      pointer-events: none;
+    }
+
+    .corner-menu-trigger-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 53.93px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-trigger:hover .corner-menu-trigger-shape,
+    .corner-menu-trigger:focus-visible .corner-menu-trigger-shape {
+      fill: #BB211F;
+    }
+
+    /* Inverted state on dark #000000 Aris background */
+    .corner-menu.is-inverted .corner-menu-trigger-shape {
+      fill: #F2E7D5;
+      stroke: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger-label {
+      fill: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger:hover .corner-menu-trigger-shape,
+    .corner-menu.is-inverted .corner-menu-trigger:focus-visible .corner-menu-trigger-shape {
+      fill: #BB211F;
+      stroke: #F2E7D5;
+    }
+
+    .corner-menu.is-inverted .corner-menu-trigger:hover .corner-menu-trigger-label,
+    .corner-menu.is-inverted .corner-menu-trigger:focus-visible .corner-menu-trigger-label {
+      fill: #F2E7D5;
+    }
+
+    .corner-menu-panel {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 356px;
+      height: 356px;
+      transform-origin: 0 0;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .corner-menu-open-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-piece {
+      outline: none;
+      pointer-events: none;
+      cursor: pointer;
+    }
+
+    .corner-menu.is-open .corner-menu-piece {
+      pointer-events: auto;
+    }
+
+    .corner-menu-piece-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      transition: fill 0.22s ease, stroke 0.22s ease;
+    }
+
+    .corner-menu-piece-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 20.225px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-piece:hover .corner-menu-piece-shape,
+    .corner-menu-piece:focus-visible .corner-menu-piece-shape {
+      fill: #BB211F;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece-shape {
+      fill: #F2E7D5;
+      stroke: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece-label {
+      fill: #000000;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece:hover .corner-menu-piece-shape,
+    .corner-menu.is-inverted .corner-menu-piece:focus-visible .corner-menu-piece-shape {
+      fill: #BB211F;
+      stroke: #F2E7D5;
+    }
+
+    .corner-menu.is-inverted .corner-menu-piece:hover .corner-menu-piece-label,
+    .corner-menu.is-inverted .corner-menu-piece:focus-visible .corner-menu-piece-label {
+      fill: #F2E7D5;
+    }
+
+    /* --------------------------------------------------
+       BACK ARROW BUTTON (White on dark mode, flips dark on cream footer)
+    -------------------------------------------------- */
+    .back-arrow-btn {
+      position: fixed;
+      left: 112px;
+      top: 28px;
+      z-index: 1050;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-arrow-btn:hover,
+    .back-arrow-btn:focus-visible {
+      color: var(--accent-purple);
+      transform: translateX(-3px);
+      outline: none;
+    }
+
+    .back-arrow-btn.is-on-light {
+      color: #000000;
+    }
+
+    .back-arrow-btn.is-on-light:hover,
+    .back-arrow-btn.is-on-light:focus-visible {
+      color: #BB211F;
+    }
+
+    .back-arrow-btn svg {
+      width: 16px;
+      height: 36px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    /* --------------------------------------------------
+       1. TOP NAVIGATION: GLASS JUMP NAV + COLLAPSIBLE TOC PILL (<= 1180px)
+    -------------------------------------------------- */
+    .aris-jump-nav-wrapper {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(959px, calc(100vw - 340px));
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .jump-toc-toggle {
+      display: none;
+      pointer-events: auto;
+      align-items: center;
+      gap: 10px;
+      height: 44px;
+      padding: 0 18px;
+      border-radius: 9999px;
+      background: rgba(18, 12, 30, 0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow:
+        inset 1px 1px 2px rgba(255, 255, 255, 0.22),
+        0 8px 32px rgba(0, 0, 0, 0.55);
+      font-family: var(--font-samsung);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .jump-toc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-purple);
+      flex-shrink: 0;
+    }
+
+    .jump-toc-chevron {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.25s var(--ease);
+      flex-shrink: 0;
+    }
+
+    .aris-jump-nav-wrapper.is-toc-open .jump-toc-chevron {
+      transform: rotate(180deg);
+    }
+
+    .aris-jump-nav {
+      pointer-events: auto;
+      width: 100%;
+      height: 62px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      gap: clamp(4px, 0.8vw, 12px);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 1px 1px 2px rgba(255, 255, 255, 0.28),
+        0 8px 32px rgba(0, 0, 0, 0.5);
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .nav-pill-active {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px clamp(14px, 1.5vw, 22px);
+      height: 44px;
+      background: #FFFFFF !important;
+      border-radius: 50px;
+      color: #52286E !important;
+      font-size: clamp(13px, 1.05vw, 15px);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: all 0.25s var(--ease);
+      cursor: pointer;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px clamp(10px, 1.3vw, 20px);
+      height: 44px;
+      font-size: clamp(13px, 1.05vw, 15px);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text-white) !important;
+      background: transparent;
+      border-radius: 50px;
+      flex-shrink: 0;
+      transition: all 0.2s var(--ease);
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Adaptive light-surface styling when scrolled onto cream #F2E7D5 footer */
+    .aris-jump-nav-wrapper.is-on-light .aris-jump-nav {
+      background: rgba(255, 255, 255, 0.72);
+      border-color: rgba(72, 48, 137, 0.22);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .aris-jump-nav-wrapper.is-on-light .nav-link {
+      color: #000000 !important;
+    }
+
+    .aris-jump-nav-wrapper.is-on-light .nav-link:hover {
+      background: rgba(72, 48, 137, 0.1);
+    }
+
+    .aris-jump-nav-wrapper.is-on-light .nav-pill-active {
+      background: #483089 !important;
+      color: #FFFFFF !important;
+    }
+
+    .aris-jump-nav-wrapper.is-on-light .jump-toc-toggle {
+      background: rgba(255, 255, 255, 0.78);
+      border-color: rgba(72, 48, 137, 0.25);
+      color: #000000;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .aris-jump-nav-wrapper.is-on-light .jump-toc-dot {
+      background-color: #483089;
+    }
+
+    /* --------------------------------------------------
+       MASTER 1440px ARTBOARD STAGE WRAPPER
+       Uses native CSS zoom (no 9740px GPU transform layer -> zero blanking/freezing)
+    -------------------------------------------------- */
+    .aris-stage-wrap {
+      position: relative;
+      width: 100%;
+      background-color: var(--bg-black);
+      overflow: hidden;
+    }
+
+    .case-study-canvas {
+      position: relative;
+      width: 1440px;
+      height: 9740px;
+      margin: 0 auto;
+      background-color: var(--bg-black);
+      overflow: visible;
+    }
+
+    /* Transparent on desktop so Figma absolute coordinates remain direct children of .case-study-canvas */
+    .aris-section,
+    .tp-header-row,
+    .tp-flow-group,
+    .tp-flow-col,
+    .tp-pair-row {
+      display: contents;
+    }
+
+    .tp-mobile-star {
+      display: none;
+    }
+
+    /* Invisible Anchor Targets with fixed nav offset margin */
+    .nav-target {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      pointer-events: none;
+      visibility: hidden;
+      scroll-margin-top: 110px;
+    }
+
+    /* Hero Background Graphic: x: -287, y: 0, w: 1942, h: 1949 */
+    .aris-bg-image {
+      position: absolute;
+      left: -287px;
+      top: 0;
+      width: 1942px;
+      height: 1949px;
+      object-fit: cover;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Background Grid: x: -440, y: 863, w: 2320, h: 8999 */
+    .aris-bg-grid {
+      position: absolute;
+      left: -440px;
+      top: 863px;
+      width: 2320px;
+      height: 8999px;
+      object-fit: cover;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* --------------------------------------------------
+       2. TOP BAR: SAMSUNG PRISM & SILVER BADGE
+    -------------------------------------------------- */
+    .brand-group {
+      position: absolute;
+      left: 100px;
+      top: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      z-index: 10;
+    }
+
+    .samsung-prism-logo {
+      width: 207px;
+      height: 43.06px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .designathon-title {
+      font-family: var(--font-samsung);
+      font-size: 36px;
+      font-weight: 400;
+      line-height: normal;
+      color: var(--text-white);
+      margin: 0;
+      letter-spacing: 0.01em;
+    }
+
+    .silver-badge-wrap {
+      position: absolute;
+      left: 1131.17px;
+      top: 100px;
+      width: 208.73px;
+      height: 86.06px;
+      z-index: 10;
+    }
+
+    .silver-badge-img {
+      width: 208.73px;
+      height: 86.06px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* --------------------------------------------------
+       3. CENTER HERO STACK
+    -------------------------------------------------- */
+    .hero-meta-team {
+      position: absolute;
+      left: 611px;
+      top: 346px;
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--text-white);
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .aris-main-logo {
+      position: absolute;
+      left: 468px;
+      top: 405px;
+      width: 509.35px;
+      height: 234.6px;
+      object-fit: contain;
+      display: block;
+      z-index: 10;
+    }
+
+    .hero-subtitle-planning {
+      position: absolute;
+      left: 468px;
+      top: 663.6px;
+      width: 509.35px;
+      font-size: 36px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--text-white);
+      text-align: center;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    /* What I worked on Pill */
+    .what-i-worked-on-pill {
+      position: absolute;
+      left: 318.5px;
+      top: 775px;
+      width: 813px;
+      height: 54px;
+      padding: 12px 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 50px;
+      border: 1px solid var(--text-white);
+      background: transparent;
+      box-sizing: border-box;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .work-tag-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #AC8EFF;
+      line-height: 30px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .work-tag-desc {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-white);
+      line-height: 30px;
+      letter-spacing: 0;
+      flex-shrink: 0;
+    }
+
+    /* --------------------------------------------------
+       4. BRIEF & ARC OF TOUCHPOINTS SECTION
+    -------------------------------------------------- */
+    .brief-stars-bg {
+      position: absolute;
+      left: -450px;
+      top: 943px;
+      width: 615px;
+      height: 724px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .arc-point-item {
+      position: absolute;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-white);
+      white-space: nowrap;
+      z-index: 10;
+      display: block;
+    }
+
+    .arc-pt-1 { left: 89.2px;  top: 1024px; }
+    .arc-pt-2 { left: 147.61px; top: 1115px; }
+    .arc-pt-3 { left: 176.86px; top: 1205px; }
+    .arc-pt-4 { left: 183px;    top: 1294px; }
+    .arc-pt-5 { left: 176.86px; top: 1384px; }
+    .arc-pt-6 { left: 147.8px;  top: 1474px; }
+    .arc-pt-7 { left: 88.99px;  top: 1565px; }
+
+    .challenge-brief-text {
+      position: absolute;
+      left: 589px;
+      top: 1165px;
+      width: 751px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--text-white);
+      z-index: 10;
+      margin: 0;
+    }
+
+    .deliverables-glass-pill {
+      position: absolute;
+      left: 589px;
+      top: 1273px;
+      width: 178px;
+      height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow:
+        inset 1px 1px 2px rgba(255, 255, 255, 0.35),
+        0 8px 32px rgba(0, 0, 0, 0.45);
+      color: var(--text-white);
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+
+    .deliverables-list {
+      position: absolute;
+      left: 589px;
+      top: 1355px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 751px;
+      z-index: 10;
+    }
+
+    .deliverable-item {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--text-white);
+      margin: 0;
+    }
+
+    /* --------------------------------------------------
+       SCROLL-DRIVEN TRACKER LINE & STAR NODES
+    -------------------------------------------------- */
+    .scroll-timeline-track {
+      position: absolute;
+      left: 100px;
+      top: 1698px;
+      width: 30px;
+      height: 7143px;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .scroll-timeline-line {
+      position: absolute;
+      left: 14.5px;
+      top: 15px;
+      width: 1px;
+      height: 7113px;
+      background-color: #483089;
+      transform-origin: top center;
+      transform: scaleY(0);
+    }
+
+    .star-node {
+      position: absolute;
+      left: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.3);
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .star-node.star-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .star-svg-shape {
+      width: 30px;
+      height: 30px;
+      fill: #483089;
+      display: block;
+    }
+
+    .star-1 { top: 0px; opacity: 1; transform: scale(1); }
+    .star-2 { top: 1543px; }
+    .star-3 { top: 2341px; }
+    .star-4 { top: 3506px; }
+    .star-5 { top: 4457px; }
+    .star-6 { top: 4952px; }
+    .star-7 { top: 6085px; }
+    .star-8 { top: 7113px; }
+
+    /* --------------------------------------------------
+       COMMON PURPLE PILL SYSTEM
+    -------------------------------------------------- */
+    .aris-flow-pill {
+      position: absolute;
+      padding: 8px 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+      background-color: var(--pill-purple-bg);
+      color: var(--text-white);
+      font-family: var(--font-samsung);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      z-index: 25;
+      box-shadow: 0 4px 16px rgba(72, 48, 137, 0.4);
+    }
+
+    .aris-flow-pill-multiline {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+      background-color: var(--pill-purple-bg);
+      color: var(--text-white);
+      font-family: var(--font-samsung);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      white-space: normal;
+      text-align: center;
+      z-index: 25;
+      box-shadow: 0 4px 16px rgba(72, 48, 137, 0.4);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .tp-main-header {
+      position: absolute;
+      font-family: var(--font-samsung);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--text-white);
+      z-index: 10;
+      margin: 0;
+    }
+
+    .phone-mockup {
+      position: absolute;
+      width: 289.11px;
+      height: 600px;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    .flow-modal-card {
+      position: absolute;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    /* --------------------------------------------------
+       5. TOUCHPOINT 1: FLIGHT BOOKING
+    -------------------------------------------------- */
+    .tp1-main-header {
+      left: 190px;
+      top: 1691px;
+      width: 593px;
+    }
+
+    .pill-look-flights { left: 80px;  top: 1993px; width: 253px; }
+    .pill-scan-screen   { left: 403px; top: 2248px; width: 130px; }
+    .pill-specific-scan { left: 809px; top: 2152px; width: 136px; }
+
+    .phone-1 { left: 184px;  top: 1873px; }
+    .phone-2 { left: 600px;  top: 1783px; }
+    .phone-3 { left: 1012px; top: 1735px; }
+    .phone-4 { left: 184px;  top: 2521px; }
+
+    .social-context-block {
+      position: absolute;
+      left: 600px;
+      top: 2431px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .social-context-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--text-white);
+      margin: 0;
+    }
+
+    .social-context-desc {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-white);
+      margin: 0;
+    }
+
+    .card-step-1 { left: 521.11px; top: 2595px; width: 296.85px; height: 134.78px; }
+    .card-step-2 { left: 521.11px; top: 2754px; width: 296.85px; height: 134.78px; }
+    .card-step-3 { left: 521.11px; top: 2913px; width: 296.85px; height: 132.30px; }
+
+    .tp1-reasoning-group {
+      position: absolute;
+      left: 853.96px;
+      width: 334px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .reasoning-grp-1 { top: 2632px; }
+    .reasoning-grp-2 { top: 2791px; }
+    .reasoning-grp-3 { top: 2949px; }
+
+    .reasoning-title {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--text-white);
+      margin: 0;
+    }
+
+    .reasoning-desc {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      width: 334px;
+      color: var(--text-white);
+      margin: 0;
+    }
+
+    /* --------------------------------------------------
+       6. TOUCHPOINT 2: CAB TO AIRPORT WITH AJAY
+    -------------------------------------------------- */
+    .tp2-main-header {
+      left: 190px;
+      top: 3245px;
+      white-space: nowrap;
+    }
+
+    .pill-book-cab {
+      left: 521px;
+      top: 3322px;
+      width: 380px;
+      height: 30px;
+    }
+
+    .phone-8 {
+      left: 184px;
+      top: 3319px;
+      width: 289.11px;
+      height: 600px;
+    }
+
+    .card-tp2-9 {
+      left: 521.12px;
+      top: 3396px;
+      width: 291.38px;
+      height: 132px;
+    }
+
+    .card-tp2-10 {
+      left: 521.11px;
+      top: 3552px;
+      width: 291.38px;
+      height: 132.3px;
+    }
+
+    .card-tp2-11 {
+      left: 521.11px;
+      top: 3708.6px;
+      width: 291.38px;
+      height: 132.3px;
+    }
+
+    .tp2-text-group {
+      position: absolute;
+      left: 848.49px;
+      width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .tp2-grp-1 { top: 3441px; }
+    .tp2-grp-2 { top: 3754px; }
+
+    .tp2-group-heading {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--text-white);
+      margin: 0;
+    }
+
+    .tp2-group-text {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      color: var(--text-white);
+      margin: 0;
+    }
+
+    /* --------------------------------------------------
+       7. TOUCHPOINT 3: MEERA'S RECOMMENDATIONS
+    -------------------------------------------------- */
+    .tp3-main-header {
+      left: 190px;
+      top: 4043px;
+      white-space: nowrap;
+    }
+
+    .pill-meera-tip {
+      left: 335px;
+      top: 4373px;
+      width: 231px;
+      height: 44px;
+      padding: 0 16px;
+      font-size: 11.5px;
+      line-height: 14px;
+    }
+
+    .phone-12 {
+      left: 184px;
+      top: 4117px;
+      width: 289.11px;
+      height: 600px;
+    }
+
+    .card-13 {
+      left: 639px;
+      top: 4204px;
+      width: 216px;
+      height: 314.4px;
+    }
+
+    .phone-14 {
+      left: 1011px;
+      top: 4238px;
+      width: 289.11px;
+      height: 600px;
+    }
+
+    .card-15 {
+      left: 364px;
+      top: 4812px;
+      width: 524px;
+      height: 224px;
+    }
+
+    .edge-case-title {
+      position: absolute;
+      left: 512px;
+      top: 4766px;
+      font-family: var(--font-samsung);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    .edge-case-desc {
+      position: absolute;
+      left: 348px;
+      top: 5060px;
+      width: 581px;
+      font-family: var(--font-samsung);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    /* --------------------------------------------------
+       8. TOUCHPOINT 4: DAY PLAN AROUND MEERA'S PICKS
+    -------------------------------------------------- */
+    .tp4-main-header {
+      left: 190px;
+      top: 5208px;
+      white-space: nowrap;
+    }
+
+    .pill-tp4-plan {
+      left: 163px;
+      top: 5560px;
+      width: 315px;
+      height: 44px;
+      padding: 0 20px;
+      font-size: 11px;
+      line-height: 13px;
+    }
+
+    .pill-tp4-plan-inner {
+      width: 267px;
+      display: block;
+    }
+
+    .pill-tp4-share {
+      left: 951.5px;
+      top: 5549px;
+      width: 326px;
+      height: 30px;
+    }
+
+    .phone-16 {
+      left: 273px;
+      top: 5282px;
+      width: 289.11px;
+      height: 600px;
+    }
+
+    .card-17 {
+      left: 626px;
+      top: 5395px;
+      width: 290px;
+      height: 269px;
+    }
+
+    .card-18 {
+      left: 951.5px;
+      top: 5618px;
+      width: 290px;
+      height: 131.67px;
+    }
+
+    /* --------------------------------------------------
+       9. TOUCHPOINT 5: PACKING & MATTHEW'S HOODIE
+    -------------------------------------------------- */
+    .tp5-main-header {
+      left: 190px;
+      top: 6148px;
+      width: 530px;
+    }
+
+    .phone-19 {
+      left: 920px;
+      top: 5930px;
+      width: 289.11px;
+      height: 600px;
+      z-index: 15;
+    }
+
+    .card-20 {
+      position: absolute;
+      left: 795px;
+      top: 6010px;
+      width: 250px;
+      height: 57.16px;
+      object-fit: contain;
+      z-index: 22;
+    }
+
+    .card-21 {
+      position: absolute;
+      left: 864px;
+      top: 6430px;
+      width: 224px;
+      height: 51.1px;
+      object-fit: contain;
+      z-index: 22;
+    }
+
+    .pill-tp5-checklist {
+      left: 1116px;
+      top: 6400px;
+      width: 227px;
+      height: 30px;
+    }
+
+    .tp5-heading {
+      position: absolute;
+      left: 575px;
+      top: 6277px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    .tp5-body {
+      position: absolute;
+      left: 575px;
+      top: 6305px;
+      width: 305px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    /* --------------------------------------------------
+       10. TOUCHPOINT 6: EMPTY THE FRIDGE (FAMILY HUB)
+    -------------------------------------------------- */
+    .tp6-main-header {
+      left: 190px;
+      top: 6654px;
+      white-space: nowrap;
+    }
+
+    .tp6-heading {
+      position: absolute;
+      left: 871px;
+      top: 6904px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    .tp6-body {
+      position: absolute;
+      left: 871px;
+      top: 6932px;
+      width: 418px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    .pill-tp6-1 { left: 305px;  top: 6924px; width: 413px; height: 30px; }
+    .pill-tp6-2 { left: 405px;  top: 7189px; width: 165px; height: 30px; }
+    .pill-tp6-3 { left: 756px;  top: 7166px; width: 228px; height: 30px; }
+    .pill-tp6-4 { left: 1088px; top: 7285px; width: 255px; height: 30px; }
+
+    .fridge-22 {
+      position: absolute;
+      left: 0;
+      top: 6745px;
+      width: 523px;
+      height: 918px;
+      object-fit: contain;
+      z-index: 14;
+    }
+
+    .screen-23 {
+      position: absolute;
+      left: 499.52px;
+      top: 6980px;
+      width: 342px;
+      height: 610.86px;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    .card-24 {
+      position: absolute;
+      left: 866px;
+      top: 7339px;
+      width: 363px;
+      height: 103px;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    .card-25 {
+      position: absolute;
+      left: 941px;
+      top: 7466px;
+      width: 363px;
+      height: 79px;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    /* --------------------------------------------------
+       11. TOUCHPOINT 7: ORDER TRAVEL ESSENTIALS
+    -------------------------------------------------- */
+    .tp7-main-header {
+      left: 190px;
+      top: 7787px;
+      white-space: nowrap;
+    }
+
+    .pill-tp7-toothpaste {
+      left: 209px;
+      top: 7861px;
+      width: 333px;
+      height: 30px;
+    }
+
+    .tp7-heading {
+      position: absolute;
+      left: 470px;
+      top: 7966px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    .tp7-body {
+      position: absolute;
+      left: 470px;
+      top: 7994px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+    }
+
+    .tp7-confirm-note {
+      position: absolute;
+      left: 999px;
+      top: 8548px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-white);
+      margin: 0;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .card-26 {
+      position: absolute;
+      left: 100px;
+      top: 7874px;
+      width: 267px;
+      height: 468px;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    .card-27 {
+      position: absolute;
+      left: 470px;
+      top: 8091px;
+      width: 462.09px;
+      height: 462.09px;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    .phone-28 {
+      position: absolute;
+      left: 1015px;
+      top: 7880px;
+      width: 289.11px;
+      height: 600px;
+      object-fit: contain;
+      z-index: 15;
+    }
+
+    /* --------------------------------------------------
+       12. BONUS: LIVE CAMERA AT BARA IMAMBARA
+    -------------------------------------------------- */
+    .bonus-main-header {
+      left: 190px;
+      top: 8815px;
+      white-space: nowrap;
+    }
+
+    .pill-bonus-look {
+      left: 100px;
+      top: 9291px;
+      width: 405px;
+      height: 30px;
+    }
+
+    .pill-bonus-active {
+      left: 500px;
+      top: 9005px;
+      width: 265px;
+      height: 30px;
+    }
+
+    .pill-bonus-feed {
+      left: 1009px;
+      top: 9146px;
+      height: 30px;
+      white-space: nowrap;
+    }
+
+    .phone-29 {
+      left: 384px;
+      top: 8889px;
+      width: 289.11px;
+      height: 600px;
+    }
+
+    .phone-30 {
+      left: 834px;
+      top: 8965px;
+      width: 289.11px;
+      height: 600px;
+    }
+
+    /* --------------------------------------------------
+       13. OTHER PROJECTS FOOTER SECTION (Matching Home Smaller Cards)
+    -------------------------------------------------- */
+    .other-projects-section {
+      width: 100%;
+      background: #F2E7D5;
+      padding: clamp(56px, 6.2vw, 96px) clamp(20px, 4.86vw, 70px) clamp(64px, 7vw, 110px);
+      position: relative;
+      z-index: 30;
+    }
+
+    .other-projects-grid {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(24px, 3.26vw, 47px);
+    }
+
+    .other-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .other-img-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 402 / 227;
+      background: #E5D9C5;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .other-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .work-hover-badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #BB211F;
+      color: #F2E7D5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: 'AppleGothic', 'Apple Gothic', sans-serif;
+      font-size: 11px;
+      line-height: 1.25;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      z-index: 3;
+    }
+
+    .other-card-meta {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .other-card-title {
+      font-family: 'BBH Hegarty', 'AppleGothic', sans-serif;
+      font-size: clamp(22px, 1.8vw, 26px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: #BB211F;
+      max-width: 265px;
+    }
+
+    .other-card-tags {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: #696969;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-top: 3px;
+    }
+
+    .other-card-desc {
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(17px, 1.38vw, 20px);
+      font-weight: 400;
+      line-height: 1.35;
+      color: #696969;
+    }
+
+    /* =========================================================================
+       RESPONSIVE BREAKPOINTS
+       ========================================================================= */
+
+    /* 1. Tablet & Mobile Top Sticky ToC Pill (<= 1180px) */
+    @media (max-width: 1180px) {
+      .back-arrow-btn {
+        left: 98px;
+        top: 24px;
+      }
+
+      .aris-jump-nav-wrapper {
+        top: 22px;
+        left: 0;
+        transform: none;
+        width: 100%;
+        padding: 0 20px;
+        align-items: center;
+      }
+
+      .jump-toc-toggle {
+        display: inline-flex;
+      }
+
+      .aris-jump-nav {
+        display: none;
+        width: auto;
+        height: auto;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: 10px;
+        margin-top: 10px;
+        min-width: 220px;
+        border-radius: 22px;
+        background: rgba(18, 12, 30, 0.90);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+      }
+
+      .aris-jump-nav-wrapper.is-on-light .aris-jump-nav {
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .aris-jump-nav-wrapper.is-toc-open .aris-jump-nav {
+        display: flex;
+        animation: tocDropIn 0.22s var(--ease);
+      }
+
+      .nav-link,
+      .nav-pill-active {
+        font-size: 14px;
+        padding: 10px 16px;
+        min-height: 42px;
+        height: auto;
+        justify-content: flex-start;
+      }
+    }
+
+    @keyframes tocDropIn {
+      from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* 2. Tablet & Below (<= 1024px): Reflow 1440px Canvas into Fluid Vertical Case Study */
+    @media (max-width: 1024px) {
+      .case-study-canvas {
+        position: relative;
+        width: 100%;
+        height: auto !important;
+        zoom: 1 !important;
+        padding: 108px clamp(20px, 5vw, 48px) 72px;
+        display: flex;
+        flex-direction: column;
+        gap: 72px;
+      }
+
+      .nav-target,
+      .scroll-timeline-track {
+        display: none;
+      }
+
+      .aris-bg-image {
+        left: 50%;
+        top: -40px;
+        transform: translateX(-50%);
+        width: 1300px;
+        height: 1300px;
+        opacity: 0.9;
+      }
+
+      .aris-bg-grid {
+        left: 50%;
+        top: 420px;
+        transform: translateX(-50%);
+        width: 1600px;
+        height: calc(100% - 420px);
+        object-fit: cover;
+        object-position: top center;
+        opacity: 0.55;
+      }
+
+      .brief-stars-bg {
+        left: -260px;
+        top: 520px;
+        width: 440px;
+        height: auto;
+        opacity: 0.45;
+      }
+
+      /* Reset all absolute positions inside fluid mode */
+      .brand-group,
+      .silver-badge-wrap,
+      .hero-meta-team,
+      .aris-main-logo,
+      .hero-subtitle-planning,
+      .what-i-worked-on-pill,
+      .arc-point-item,
+      .challenge-brief-text,
+      .deliverables-glass-pill,
+      .deliverables-list,
+      .tp-main-header,
+      .aris-flow-pill,
+      .aris-flow-pill-multiline,
+      .phone-mockup,
+      .flow-modal-card,
+      .social-context-block,
+      .tp1-reasoning-group,
+      .tp2-text-group,
+      .edge-case-title,
+      .edge-case-desc,
+      .tp5-heading,
+      .tp5-body,
+      .card-20,
+      .card-21,
+      .tp6-heading,
+      .tp6-body,
+      .fridge-22,
+      .screen-23,
+      .card-24,
+      .card-25,
+      .tp7-heading,
+      .tp7-body,
+      .tp7-confirm-note,
+      .card-26,
+      .card-27,
+      .phone-28 {
+        position: static;
+        left: auto;
+        top: auto;
+        margin: 0;
+      }
+
+      .aris-section {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        scroll-margin-top: 92px;
+      }
+
+      .aris-hero-section {
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .hero-top-bar {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+
+      .samsung-prism-logo {
+        width: clamp(140px, 22vw, 207px);
+        height: auto;
+      }
+
+      .designathon-title {
+        font-size: clamp(24px, 3.6vw, 36px);
+      }
+
+      .silver-badge-wrap,
+      .silver-badge-img {
+        width: clamp(136px, 21vw, 208px);
+        height: auto;
+      }
+
+      .hero-meta-team {
+        font-size: clamp(16px, 2.2vw, 22px);
+        white-space: normal;
+      }
+
+      .aris-main-logo {
+        width: min(380px, 76vw);
+        height: auto;
+      }
+
+      .hero-subtitle-planning {
+        width: 100%;
+        max-width: 620px;
+        font-size: clamp(22px, 3.8vw, 34px);
+        white-space: normal;
+      }
+
+      .what-i-worked-on-pill {
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        padding: 12px 24px;
+        border-radius: 28px;
+        flex-wrap: wrap;
+        white-space: normal;
+        text-align: center;
+        gap: 4px 10px;
+      }
+
+      .work-tag-label,
+      .work-tag-desc {
+        line-height: 1.45;
+        font-size: clamp(13px, 1.8vw, 16px);
+        flex-shrink: 1;
+      }
+
+      .aris-brief-section {
+        display: grid;
+        grid-template-columns: 1fr 1.25fr;
+        gap: 28px 40px;
+        align-items: start;
+      }
+
+      .brief-arc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding-left: 18px;
+        border-left: 1px solid rgba(172, 142, 255, 0.45);
+      }
+
+      .arc-point-item {
+        font-size: 16px;
+        white-space: normal;
+        line-height: 1.4;
+        position: relative;
+      }
+
+      .arc-point-item::before {
+        content: "";
+        position: absolute;
+        left: -22px;
+        top: 7px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent-purple);
+      }
+
+      .brief-details-col {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .challenge-brief-text,
+      .deliverables-list {
+        width: 100%;
+      }
+
+      .challenge-brief-text,
+      .deliverable-item {
+        font-size: clamp(16px, 2vw, 18px);
+      }
+
+      .tp-header-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .tp-mobile-star {
+        display: block;
+        width: 22px;
+        height: 22px;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+
+      .tp-main-header {
+        width: auto !important;
+        max-width: 760px;
+        white-space: normal !important;
+        font-size: clamp(17px, 2.2vw, 20px);
+        line-height: 1.45;
+      }
+
+      .aris-flow-pill,
+      .aris-flow-pill-multiline {
+        width: fit-content !important;
+        max-width: 100%;
+        height: auto !important;
+        padding: 9px 18px !important;
+        white-space: normal !important;
+        text-align: center;
+        font-size: 12px !important;
+        line-height: 1.35 !important;
+      }
+
+      .pill-tp4-plan-inner {
+        width: auto;
+      }
+
+      .phone-mockup,
+      .phone-28,
+      .screen-23 {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+      }
+
+      .flow-modal-card,
+      .card-20,
+      .card-21,
+      .card-24,
+      .card-25 {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+      }
+
+      .card-15 {
+        max-width: 520px;
+      }
+
+      .card-26 {
+        width: 100%;
+        max-width: 267px;
+        height: auto;
+      }
+
+      .card-27 {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+      }
+
+      .fridge-22 {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+      }
+
+      .tp-flow-group {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        align-items: end;
+      }
+
+      .tp-flow-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .tp-pair-row {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .tp1-details-grid,
+      .tp2-grid,
+      .tp4-grid,
+      .tp5-grid,
+      .tp6-top-grid,
+      .tp6-bottom-grid,
+      .tp7-grid,
+      .bonus-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.25fr;
+        gap: 28px 36px;
+        align-items: start;
+      }
+
+      .tp3-media-grid {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 20px;
+        align-items: center;
+        justify-items: center;
+      }
+
+      .tp3-edge-case-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+        margin-top: 12px;
+      }
+
+      .edge-case-desc,
+      .tp2-text-group,
+      .tp1-reasoning-group,
+      .reasoning-desc,
+      .tp5-body,
+      .tp6-body {
+        width: 100%;
+        max-width: 540px;
+      }
+
+      .tp7-confirm-note {
+        white-space: normal;
+      }
+
+      .other-projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px 28px;
+      }
+    }
+
+    /* 3. Mobile (<= 767px) */
+    @media (max-width: 767px) {
+      .aris-jump-nav-wrapper {
+        align-items: flex-end;
+        padding: 0 16px;
+      }
+
+      .jump-toc-toggle {
+        max-width: calc(100vw - 154px);
+        height: 40px;
+        padding: 0 14px;
+        font-size: 12.5px;
+      }
+
+      .jump-toc-toggle-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .case-study-canvas {
+        padding: 96px 20px 56px;
+        gap: 56px;
+      }
+
+      .hero-top-bar {
+        margin-bottom: 12px;
+      }
+
+      .aris-brief-section,
+      .tp1-details-grid,
+      .tp2-grid,
+      .tp3-media-grid,
+      .tp4-grid,
+      .tp5-grid,
+      .tp6-top-grid,
+      .tp6-bottom-grid,
+      .tp7-grid,
+      .bonus-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .tp-flow-group {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .tp-pair-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .phone-mockup,
+      .phone-28,
+      .screen-23 {
+        max-width: 230px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .fridge-22 {
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .other-projects-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .other-card-meta {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .other-card-tags {
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .other-projects-section {
+        padding-bottom: 48px;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .corner-menu-panel {
+        width: min(320px, calc(100vw - 16px));
+        height: min(320px, calc(100vw - 16px));
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="progress-bar"></div>
+  <!-- CORNER TANGRAM MENU (Starts inverted for dark #000000 canvas, flips on cream footer) -->
+  <div class="corner-menu-scrim" id="corner-menu-scrim" aria-hidden="true"></div>
 
-  <nav class="top-nav">
-    <a href="/#work" class="nav-pill">← All Projects</a>
-    <div class="nav-right-group">
-      <a href="/#contact" class="nav-pill">Contact</a>
-      <a href="https://drive.google.com/file/d/1a8mlDD0jzYdRFJJqXY0Y0knbyZKDnXD9/view?usp=sharing" class="nav-pill" target="_blank" rel="noreferrer">Resume</a>
+  <nav class="corner-menu is-inverted" id="corner-menu" aria-label="Portfolio navigation">
+    <button
+      class="corner-menu-trigger"
+      id="corner-menu-trigger"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="corner-menu-panel"
+    >
+      <svg class="corner-menu-trigger-svg" viewBox="0 0 400 400" overflow="visible" aria-hidden="true">
+        <polygon
+          class="corner-menu-trigger-shape"
+          shape-rendering="geometricPrecision"
+          points="0,0 100,0 200,100 200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 100,200 0,100"
+        />
+        <text
+          class="corner-menu-trigger-label"
+          x="142"
+          y="142"
+          text-anchor="middle"
+          dominant-baseline="central"
+          transform="rotate(45 142 142)"
+        >MENU</text>
+      </svg>
+    </button>
+
+    <div class="corner-menu-panel" id="corner-menu-panel" aria-hidden="true">
+      <svg class="corner-menu-open-svg" viewBox="0 0 400 400" overflow="visible">
+        <g class="corner-menu-piece" data-corner-nav="contact" role="button" tabindex="0" aria-label="Contact">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="0,0 100,0 100,100" />
+          <text class="corner-menu-piece-label" x="64" y="36" text-anchor="middle" dominant-baseline="central" transform="rotate(45 64 36)">CONTACT</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="about" role="button" tabindex="0" aria-label="About">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="0,0 100,100 100,200 0,100" />
+          <text class="corner-menu-piece-label" x="50" y="100" text-anchor="middle" dominant-baseline="central" transform="rotate(45 50 100)">ABOUT</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="resume" role="button" tabindex="0" aria-label="Resume">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="100,0 200,100 100,100" />
+          <text class="corner-menu-piece-label" x="136" y="64" text-anchor="middle" dominant-baseline="central" transform="rotate(45 136 64)">RESUME</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="work" role="button" tabindex="0" aria-label="Work">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="100,100 200,100 200,200 100,200" />
+          <text class="corner-menu-piece-label" x="150" y="150" text-anchor="middle" dominant-baseline="central" transform="rotate(45 150 150)">WORK</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="home" role="button" tabindex="0" aria-label="Home">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 200,200" />
+          <text class="corner-menu-piece-label" x="266" y="66" text-anchor="middle" dominant-baseline="central" transform="rotate(45 266 66)">HOME</text>
+        </g>
+      </svg>
     </div>
   </nav>
 
-  <!-- Aris Image: /src/aris-hackathon.jpg -->
-  <main class="case-container">
-    <img src="/src/aris hackathon.jpg" alt="Aris Hackathon Case Study" loading="eager" />
+  <!-- BACK ARROW BUTTON -->
+  <a class="back-arrow-btn" id="back-arrow-btn" href="homepage.html#work" aria-label="Back to selected case studies">
+    <svg viewBox="0 0 16 36" aria-hidden="true">
+      <path d="M14 2L2 18L14 34" stroke-linecap="square" stroke-linejoin="miter" />
+    </svg>
+  </a>
+
+  <!-- GLASS TOP JUMP NAVIGATION (Desktop horizontal / Tablet & Mobile top collapsible ToC pill) -->
+  <header class="aris-jump-nav-wrapper" id="jumpNavWrapper">
+    <button
+      class="jump-toc-toggle"
+      id="jumpTocToggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="arisJumpNav"
+      aria-label="Toggle section navigation"
+    >
+      <span class="jump-toc-dot" aria-hidden="true"></span>
+      <span class="jump-toc-toggle-text" id="jumpTocCurrent">OVERVIEW</span>
+      <svg class="jump-toc-chevron" viewBox="0 0 12 12" aria-hidden="true">
+        <path d="M2.5 4.5L6 8L9.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <nav class="aris-jump-nav" id="arisJumpNav" aria-label="Aris section navigation">
+      <a href="#overview" class="nav-pill-active">OVERVIEW</a>
+      <a href="#brief" class="nav-link">BRIEF</a>
+      <a href="#tp1" class="nav-link">TP1</a>
+      <a href="#tp2" class="nav-link">TP2</a>
+      <a href="#tp3" class="nav-link">TP3</a>
+      <a href="#tp4" class="nav-link">TP4</a>
+      <a href="#tp5" class="nav-link">TP5</a>
+      <a href="#tp6" class="nav-link">TP6</a>
+      <a href="#tp7" class="nav-link">TP7</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="aris-stage-wrap" id="arisStageWrap">
+      <div class="case-study-canvas" id="caseStudyCanvas">
+
+        <!-- ==================== POSITIONED NAV ANCHORS (Desktop >= 1025px) ==================== -->
+        <span id="overview" class="nav-target" style="top: 0px;"></span>
+        <span id="brief" class="nav-target" style="top: 1020px;"></span>
+        <span id="tp1" class="nav-target" style="top: 1691px;"></span>
+        <span id="tp2" class="nav-target" style="top: 3245px;"></span>
+        <span id="tp3" class="nav-target" style="top: 4043px;"></span>
+        <span id="tp4" class="nav-target" style="top: 5208px;"></span>
+        <span id="tp5" class="nav-target" style="top: 6148px;"></span>
+        <span id="tp6" class="nav-target" style="top: 6654px;"></span>
+        <span id="tp7" class="nav-target" style="top: 7787px;"></span>
+
+        <!-- Hero Background Graphic: x: -287, y: 0, w: 1942, h: 1949 -->
+        <img
+          src="src/arisbg.png"
+          onerror="this.onerror=null; this.src='arisbg.png';"
+          alt=""
+          class="aris-bg-image"
+          aria-hidden="true"
+          decoding="async"
+        />
+
+        <!-- Background Grid: x: -440, y: 863, w: 2320, h: 8999 -->
+        <img
+          src="bggridaris.png"
+          onerror="this.onerror=null; this.src='src/bggridaris.png';"
+          alt=""
+          class="aris-bg-grid"
+          aria-hidden="true"
+          decoding="async"
+        />
+
+        <!-- ==================== 2–4. HERO SECTION ==================== -->
+        <section class="aris-section aris-hero-section" data-nav-section="overview">
+          <div class="hero-top-bar" style="display: contents;" id="heroTopBar">
+            <div class="brand-group">
+              <img
+                src="src/samsungprism.svg"
+                onerror="this.onerror=null; this.src='samsungprism.svg'; this.onerror=function(){this.src='src/samsung.svg'; this.onerror=function(){this.src='samsung.svg';};};"
+                alt="Samsung | PRISM"
+                class="samsung-prism-logo"
+              />
+              <h2 class="designathon-title">Designathon</h2>
+            </div>
+
+            <div class="silver-badge-wrap">
+              <img
+                src="src/silver.svg"
+                onerror="this.onerror=null; this.src='silver.svg'; this.onerror=function(){this.src='src/silver-badge.svg'; this.onerror=function(){this.src='silver-badge.svg';};};"
+                alt="2nd Position Award"
+                class="silver-badge-img"
+              />
+            </div>
+          </div>
+
+          <p class="hero-meta-team">Team of 7 · 22 hours</p>
+
+          <img
+            src="src/arislogo.svg"
+            onerror="this.onerror=null; this.src='arislogo.svg';"
+            alt="Aris Logo"
+            class="aris-main-logo"
+          />
+
+          <h1 class="hero-subtitle-planning">Travel planning with Agentic AI</h1>
+
+          <div class="what-i-worked-on-pill">
+            <span class="work-tag-label">WHAT I WORKED ON</span>
+            <span class="work-tag-desc">Interaction Design · Worked on Samsung Family Hub fridge touchpoint</span>
+          </div>
+        </section>
+
+        <!-- ==================== 5. BRIEF & 7 TOUCHPOINT ARC ==================== -->
+        <img
+          src="stars.png"
+          onerror="this.onerror=null; this.src='src/stars.png';"
+          alt=""
+          class="brief-stars-bg"
+          aria-hidden="true"
+          decoding="async"
+        />
+
+        <section class="aris-section aris-brief-section" data-nav-section="brief">
+          <div class="brief-arc-list" style="display: contents;" id="briefArcList">
+            <div class="arc-point-item arc-pt-1">Book the flight</div>
+            <div class="arc-point-item arc-pt-2">Sort the ride to the airport with Ajay</div>
+            <div class="arc-point-item arc-pt-3">Dig up Meera’s recommendations</div>
+            <div class="arc-point-item arc-pt-4">Plan the day &amp; check with the group</div>
+            <div class="arc-point-item arc-pt-5">Pack for the trip</div>
+            <div class="arc-point-item arc-pt-6">Empty the fridge</div>
+            <div class="arc-point-item arc-pt-7">Order travel essentials</div>
+          </div>
+
+          <div class="brief-details-col" style="display: contents;" id="briefDetailsCol">
+            <p class="challenge-brief-text">
+              Samsung challenged us to design an agentic mobile assistant for a real-world travel scenario: helping a user named Sonia coordinate and book a weekend reunion with friends in Lucknow.
+            </p>
+
+            <div class="deliverables-glass-pill">
+              DELIVERABLES
+            </div>
+
+            <div class="deliverables-list">
+              <p class="deliverable-item">· High-fidelity screens for all touchpoints</p>
+              <p class="deliverable-item">· How the agent shows its reasoning, asks for consent, &amp; gives the user more ways to control it</p>
+              <p class="deliverable-item">· One bonus: a live camera feature of our choice</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCROLL-DRIVEN LINE & 8 STARS (Desktop) ==================== -->
+        <div class="scroll-timeline-track" id="scrollTimelineTrack" aria-hidden="true">
+          <div class="scroll-timeline-line" id="scrollTimelineLine"></div>
+
+          <div class="star-node star-1 star-active" data-y="0">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+          <div class="star-node star-2" data-y="1543">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+          <div class="star-node star-3" data-y="2341">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+          <div class="star-node star-4" data-y="3506">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+          <div class="star-node star-5" data-y="4457">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+          <div class="star-node star-6" data-y="4952">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+          <div class="star-node star-7" data-y="6085">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+          <div class="star-node star-8" data-y="7113">
+            <svg class="star-svg-shape" viewBox="0 0 30 30">
+              <path d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ==================== 6. TOUCHPOINT 1: FLIGHT BOOKING ==================== -->
+        <section class="aris-section" data-nav-section="tp1">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header tp1-main-header">
+              Sonia says ‘look for flights for this’ over a friend’s message. Aris reads the screen to work out what ‘this’ means
+            </p>
+          </div>
+
+          <div class="tp-flow-group">
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-look-flights">“Let’s look for flights for this”</div>
+              <img src="src/1.png" onerror="this.onerror=null; this.src='1.png';" alt="WhatsApp Chat Prompt" class="phone-mockup phone-1" decoding="async" />
+            </div>
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-scan-screen">SCAN SCREEN</div>
+              <img src="src/2.png" onerror="this.onerror=null; this.src='2.png';" alt="Selected Reunion Message" class="phone-mockup phone-2" decoding="async" />
+            </div>
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-specific-scan">SPECIFIC SCAN</div>
+              <img src="src/3.png" onerror="this.onerror=null; this.src='3.png';" alt="Floating Aris Prompt" class="phone-mockup phone-3" decoding="async" />
+            </div>
+          </div>
+
+          <div class="tp1-details-grid" style="display: contents;" id="tp1DetailsGrid">
+            <div class="tp-flow-col">
+              <div class="social-context-block">
+                <h3 class="social-context-title">Social context</h3>
+                <p class="social-context-desc">Aris reads the group chat, so destination and dates come from the message, not from Sonia</p>
+              </div>
+              <img src="src/4.png" onerror="this.onerror=null; this.src='4.png';" alt="Flight Options Selection" class="phone-mockup phone-4" decoding="async" />
+            </div>
+
+            <div class="tp1-steps-col" style="display: contents;" id="tp1StepsCol">
+              <div class="tp-pair-row">
+                <img src="src/5.png" onerror="this.onerror=null; this.src='5.png'; this.onerror=function(){this.src='src/7.png';};" alt="Searching Flights Modal" class="flow-modal-card card-step-1" decoding="async" />
+                <div class="tp1-reasoning-group reasoning-grp-1">
+                  <h4 class="reasoning-title">Chain of thought made visible</h4>
+                  <p class="reasoning-desc">Aris echoes her inputs back before acting, so she can correct a wrong assumption early</p>
+                </div>
+              </div>
+
+              <div class="tp-pair-row">
+                <img src="src/6.png" onerror="this.onerror=null; this.src='6.png';" alt="Payment Selection Modal" class="flow-modal-card card-step-2" decoding="async" />
+                <div class="tp1-reasoning-group reasoning-grp-2">
+                  <h4 class="reasoning-title">Consent gates the spend</h4>
+                  <p class="reasoning-desc">Aris asks for the payment method, then needs an explicit confirm before it pays</p>
+                </div>
+              </div>
+
+              <div class="tp-pair-row">
+                <img src="src/7.png" onerror="this.onerror=null; this.src='7.png'; this.onerror=function(){this.src='src/5.png';};" alt="Confirm Payment Modal" class="flow-modal-card card-step-3" decoding="async" />
+                <div class="tp1-reasoning-group reasoning-grp-3">
+                  <h4 class="reasoning-title">Aris keeps Sonia in the chat</h4>
+                  <p class="reasoning-desc">A floating window handles the questions (answered by tap, voice or keyboard), search &amp; booking</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 7. TOUCHPOINT 2: CAB TO AIRPORT WITH AJAY ==================== -->
+        <section class="aris-section" data-nav-section="tp2">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header tp2-main-header">
+              Sonia asks for a cab to the airport with a stop for Ajay. Aris books it &amp; drafts a message to him for her approval
+            </p>
+          </div>
+
+          <div class="tp2-grid" style="display: contents;" id="tp2Grid">
+            <img
+              src="src/8.png"
+              onerror="this.onerror=null; this.src='8.png';"
+              alt="Home screen with Aris Cab Booking Widget"
+              class="phone-mockup phone-8"
+              decoding="async"
+            />
+
+            <div class="tp2-right-col" style="display: contents;" id="tp2RightCol">
+              <div class="aris-flow-pill pill-book-cab">
+                “Book me a cab to the airport, pick Ajay on the way”
+              </div>
+
+              <div class="tp-pair-row">
+                <img
+                  src="src/9.png"
+                  onerror="this.onerror=null; this.src='9.png';"
+                  alt="Checking flight details & Uber booking"
+                  class="flow-modal-card card-tp2-9"
+                  decoding="async"
+                />
+                <div class="tp2-text-group tp2-grp-1">
+                  <h4 class="tp2-group-heading">The floating window stays with her on the home screen</h4>
+                  <p class="tp2-group-text">Aris works across apps so Sonia never has to jump back and forth</p>
+                </div>
+              </div>
+
+              <img
+                src="src/10.png"
+                onerror="this.onerror=null; this.src='10.png';"
+                alt="Cab scheduled confirmation"
+                class="flow-modal-card card-tp2-10"
+                decoding="async"
+              />
+
+              <div class="tp-pair-row">
+                <img
+                  src="src/11.png"
+                  onerror="this.onerror=null; this.src='11.png';"
+                  alt="Message confirmation prompt for Ajay"
+                  class="flow-modal-card card-tp2-11"
+                  decoding="async"
+                />
+                <div class="tp2-text-group tp2-grp-2">
+                  <h4 class="tp2-group-heading">Sonia stays in control</h4>
+                  <p class="tp2-group-text">Aris drafts the message, but only sends it after she confirms</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 8. TOUCHPOINT 3: MEERA'S RECOMMENDATIONS ==================== -->
+        <section class="aris-section" data-nav-section="tp3">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header tp3-main-header">
+              Sonia half-remembers a tip from Meera. Aris searches their past chats and pulls up the exact recommendations
+            </p>
+          </div>
+
+          <div class="aris-flow-pill-multiline pill-meera-tip">
+            “WHAT WAS THAT PLACE MEERA<br>TOLD ME ABOUT IN LUCKNOW?”
+          </div>
+
+          <div class="tp3-media-grid" style="display: contents;" id="tp3MediaGrid">
+            <img
+              src="src/12.png"
+              onerror="this.onerror=null; this.src='12.png';"
+              alt="Past chat recommendation query"
+              class="phone-mockup phone-12"
+              decoding="async"
+            />
+            <img
+              src="src/13.png"
+              onerror="this.onerror=null; this.src='13.png';"
+              alt="Pulled up recommendation cards"
+              class="flow-modal-card card-13"
+              decoding="async"
+            />
+            <img
+              src="src/14.png"
+              onerror="this.onerror=null; this.src='14.png';"
+              alt="Search recommendation results overview"
+              class="phone-mockup phone-14"
+              decoding="async"
+            />
+          </div>
+
+          <div class="tp3-edge-case-box" style="display: contents;" id="tp3EdgeBox">
+            <h4 class="edge-case-title">Edge case: human intervention</h4>
+            <img
+              src="src/15.png"
+              onerror="this.onerror=null; this.src='15.png';"
+              alt="Human intervention captcha pause flow"
+              class="flow-modal-card card-15"
+              decoding="async"
+            />
+            <p class="edge-case-desc">
+              When Aris hits something only a human can do, like a captcha, it pauses and hands control to Sonia, then resumes when she hands it back
+            </p>
+          </div>
+        </section>
+
+        <!-- ==================== 9. TOUCHPOINT 4: DAY PLAN AROUND MEERA'S PICKS ==================== -->
+        <section class="aris-section" data-nav-section="tp4">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header tp4-main-header">
+              Sonia asks for a day plan around Meera’s picks. Aris drafts it, shows her the exact message, and posts to the group only after she approves
+            </p>
+          </div>
+
+          <div class="tp4-grid" style="display: contents;" id="tp4Grid">
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill-multiline pill-tp4-plan">
+                <span class="pill-tp4-plan-inner">
+                  “PLAN A DAY AROUND THESE PLACES AND<br>CHECK WITH THE GROUP IF THEY’RE UP FOR IT.”
+                </span>
+              </div>
+              <img
+                src="src/16.png"
+                onerror="this.onerror=null; this.src='16.png';"
+                alt="Day plan chat interface"
+                class="phone-mockup phone-16"
+                decoding="async"
+              />
+            </div>
+
+            <div class="tp-flow-col">
+              <img
+                src="src/17.png"
+                onerror="this.onerror=null; this.src='17.png';"
+                alt="Drafted day plan itinerary"
+                class="flow-modal-card card-17"
+                decoding="async"
+              />
+              <div class="aris-flow-pill pill-tp4-share">
+                “this looks good! share it with my friends”
+              </div>
+              <img
+                src="src/18.png"
+                onerror="this.onerror=null; this.src='18.png';"
+                alt="Group message confirmation"
+                class="flow-modal-card card-18"
+                decoding="async"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 10. TOUCHPOINT 5: PACKING & MATTHEW'S HOODIE ==================== -->
+        <section class="aris-section" data-nav-section="tp5">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header tp5-main-header">
+              While Sonia packs, Aris reminds her about Matthew’s hoodie, a promise from an old chat. A long press shows where it came from
+            </p>
+          </div>
+
+          <div class="tp5-grid" style="display: contents;" id="tp5Grid">
+            <div class="tp-flow-col">
+              <div style="display: contents;" id="tp5CopyBox">
+                <h4 class="tp5-heading">Always showing its work</h4>
+                <p class="tp5-body">
+                  Aris links every suggestion straight back to the original chat, so recommendations feel useful instead of invasive
+                </p>
+              </div>
+              <img
+                src="src/20.png"
+                onerror="this.onerror=null; this.src='20.png';"
+                alt="Hoodie reminder card"
+                class="card-20"
+                decoding="async"
+              />
+              <img
+                src="src/21.png"
+                onerror="this.onerror=null; this.src='21.png';"
+                alt="Original chat verification prompt"
+                class="card-21"
+                decoding="async"
+              />
+            </div>
+
+            <div class="tp-flow-col">
+              <img
+                src="src/19.png"
+                onerror="this.onerror=null; this.src='19.png';"
+                alt="Packing reminder interface"
+                class="phone-mockup phone-19"
+                decoding="async"
+              />
+              <div class="aris-flow-pill pill-tp5-checklist">
+                “add it to my trip checklist”
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 11. TOUCHPOINT 6: EMPTY THE FRIDGE ==================== -->
+        <section class="aris-section" data-nav-section="tp6">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header tp6-main-header">
+              Sonia asks Aris to help empty the fridge. Aris reads what’s about to expire, suggests recipes, and orders what’s missing
+            </p>
+          </div>
+
+          <div class="tp6-top-grid" style="display: contents;" id="tp6TopGrid">
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-tp6-1">
+                “I need to empty the fridge before I leave. Can you help?”
+              </div>
+              <img
+                src="src/22.png"
+                onerror="this.onerror=null; this.src='22.png';"
+                alt="Samsung Family Hub fridge screen"
+                class="fridge-22"
+                decoding="async"
+              />
+            </div>
+
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-tp6-2">
+                recipe suggestion
+              </div>
+              <img
+                src="src/23.png"
+                onerror="this.onerror=null; this.src='23.png';"
+                alt="Recipe suggestions view"
+                class="screen-23"
+                decoding="async"
+              />
+              <div class="aris-flow-pill pill-tp6-3">
+                “chicken curry looks good”
+              </div>
+            </div>
+          </div>
+
+          <div class="tp6-bottom-grid" style="display: contents;" id="tp6BottomGrid">
+            <div style="display: contents;" id="tp6CopyBox">
+              <h4 class="tp6-heading">Always showing its work</h4>
+              <p class="tp6-body">
+                Payment stays off the shared fridge screen, Aris pushes the request to Sonia’s phone for a quick confirmation &amp; payment, then takes back control
+              </p>
+            </div>
+
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-tp6-4">
+                order &amp; approval for groceries
+              </div>
+              <img
+                src="src/24.png"
+                onerror="this.onerror=null; this.src='24.png';"
+                alt="Confirm Blinkit payment approval card"
+                class="card-24"
+                decoding="async"
+              />
+              <img
+                src="src/25.png"
+                onerror="this.onerror=null; this.src='25.png';"
+                alt="Ordered arrival status card"
+                class="card-25"
+                decoding="async"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 12. TOUCHPOINT 7: ORDER TRAVEL ESSENTIALS ==================== -->
+        <section class="aris-section" data-nav-section="tp7">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header tp7-main-header">
+              Sonia dictates her packing list. When Blinkit runs out of three items, Aris finds them on Zepto and shows both carts before she pays once
+            </p>
+          </div>
+
+          <div class="tp7-grid" style="display: contents;" id="tp7Grid">
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-tp7-toothpaste">
+                “add toothpaste and usual stuff to my list”
+              </div>
+              <img
+                src="src/26.png"
+                onerror="this.onerror=null; this.src='26.png';"
+                alt="Voice list transcription"
+                class="card-26"
+                decoding="async"
+              />
+            </div>
+
+            <div class="tp-flow-col">
+              <div style="display: contents;" id="tp7CopyBox">
+                <h4 class="tp7-heading">Aris explains store changes upfront</h4>
+                <p class="tp7-body">
+                  So she’s not caught of guard by two separate deliveries
+                </p>
+              </div>
+              <img
+                src="src/27.png"
+                onerror="this.onerror=null; this.src='27.png';"
+                alt="Split store carts overview"
+                class="card-27"
+                decoding="async"
+              />
+              <img
+                src="src/28.png"
+                onerror="this.onerror=null; this.src='28.png';"
+                alt="Consolidated payment authorization"
+                class="phone-28"
+                decoding="async"
+              />
+              <p class="tp7-confirm-note">
+                Even with two different stores, she only has to confirm once
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== 13. BONUS: LIVE CAMERA AT BARA IMAMBARA ==================== -->
+        <section class="aris-section" data-nav-section="bonus">
+          <div class="tp-header-row">
+            <svg class="tp-mobile-star" viewBox="0 0 30 30" aria-hidden="true">
+              <path fill="#483089" d="M15 0 Q15 15 30 15 Q15 15 15 30 Q15 15 0 15 Q15 15 15 0 Z"/>
+            </svg>
+            <p class="tp-main-header bonus-main-header">
+              Sonia points her camera at the Bara Imambara. Aris highlights the exact structure on screen and explains what she’s looking at.
+            </p>
+          </div>
+
+          <div class="bonus-grid" style="display: contents;" id="bonusGrid">
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-bonus-look">
+                “what am i looking at? what’s so interesting about it?”
+              </div>
+              <div class="aris-flow-pill pill-bonus-active">
+                agent active on real time camera
+              </div>
+              <img
+                src="src/29.png"
+                onerror="this.onerror=null; this.src='29.png';"
+                alt="Live viewfinder highlight"
+                class="phone-mockup phone-29"
+                decoding="async"
+              />
+            </div>
+
+            <div class="tp-flow-col">
+              <div class="aris-flow-pill pill-bonus-feed">
+                live feed feature: giving historic information
+              </div>
+              <img
+                src="src/30.png"
+                onerror="this.onerror=null; this.src='30.png';"
+                alt="Historical context card on camera feed"
+                class="phone-mockup phone-30"
+                decoding="async"
+              />
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ==================== 14. OTHER PROJECTS FOOTER ==================== -->
+    <section class="other-projects-section" id="other-projects" aria-label="Other case studies">
+      <div class="other-projects-grid">
+
+        <a class="other-card" href="nexus.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/nexushomeimg.png" alt="Deloitte Feature Directory" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">Please wait.</h3>
+            <div class="other-card-tags">
+              <span>B2B SaaS</span>
+              <span>Interaction design</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            Adding a feature, or changing who can use it, meant asking a developer and waiting. The more features, the longer the wait.
+          </p>
+        </a>
+
+        <a class="other-card" href="together.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/togertherhomeimg.png" alt="Together! packaging and cards" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">Boys here, girls there.</h3>
+            <div class="other-card-tags">
+              <span>Social psychology</span>
+              <span>Behavioural research</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            Nobody tells them where to sit. They already know. Across 59 participants, kids turned out not to be rejecting each other at all. They were avoiding the teasing.
+          </p>
+        </a>
+
+        <a class="other-card" href="broke-ya-woke.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/bywhomeimg.png" alt="Broke ya Woke? Jenga tower" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">Taxes are important, apparently.</h3>
+            <div class="other-card-tags">
+              <span>Phygital experience</span>
+              <span>Financial literacy</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            A game where bad money decisions make your tower wobble. Of 23 teens and 7 parents interviewed, the teens could tell a want from a need. Taxes sounded like something for later.
+          </p>
+        </a>
+
+      </div>
+    </section>
   </main>
 
-  <section class="other-work-section">
-    <h2 class="other-work-title">Explore Other Projects</h2>
-
-    <div class="cards-row">
-      <a class="work-card" href="/nexus.html">
-        <strong class="card-title">Nexus</strong>
-        <small class="card-subtitle">B2B SaaS</small>
-        <span class="card-image-wrapper"><img src="/nexus%20thumbnail.png" alt="Nexus Thumbnail" /></span>
-      </a>
-      <a class="work-card" href="/together.html">
-        <strong class="card-title">Together</strong>
-        <small class="card-subtitle">Behavioral Design</small>
-        <span class="card-image-wrapper"><img src="/together%20thumbnail.png" alt="Together Thumbnail" /></span>
-      </a>
-      <a class="work-card" href="/broke-ya-woke.html">
-        <strong class="card-title">Broke Ya<br />Woke?</strong>
-        <small class="card-subtitle">Phygital Game</small>
-        <span class="card-image-wrapper"><img src="/byw%20thumbnail.png" alt="Broke Ya Woke Thumbnail" /></span>
-      </a>
-    </div>
-  </section>
-
   <script>
-    window.addEventListener('scroll', () => {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      document.getElementById('progress-bar').style.width = ((winScroll / height) * 100) + '%';
+    const RESUME_URL = 'https://drive.google.com/drive/folders/1Cnc7uw2BrQGdqj-LFANdcJFBHuYpXxxG';
+    const HOMEPAGE_URL = 'homepage.html';
+    const CANVAS_WIDTH = 1440;
+
+    const navAnchors = [
+      { id: 'overview', y: 0 },
+      { id: 'brief',    y: 1020 },
+      { id: 'tp1',      y: 1691 },
+      { id: 'tp2',      y: 3245 },
+      { id: 'tp3',      y: 4043 },
+      { id: 'tp4',      y: 5208 },
+      { id: 'tp5',      y: 6148 },
+      { id: 'tp6',      y: 6654 },
+      { id: 'tp7',      y: 7787 }
+    ];
+
+    const canvasEl = document.getElementById('caseStudyCanvas');
+    const timelineLine = document.getElementById('scrollTimelineLine');
+    const starNodes = document.querySelectorAll('.star-node');
+    const jumpNavWrapper = document.getElementById('jumpNavWrapper');
+    const jumpTocToggle = document.getElementById('jumpTocToggle');
+    const jumpTocCurrent = document.getElementById('jumpTocCurrent');
+    const navLinks = Array.from(document.querySelectorAll('#arisJumpNav a'));
+    const cornerMenu = document.getElementById('corner-menu');
+    const backArrowBtn = document.getElementById('back-arrow-btn');
+    const otherProjectsSec = document.getElementById('other-projects');
+
+    let isCornerMenuOpen = false;
+    let currentCanvasScale = 1;
+    let lastActiveSectionId = '';
+    let lastOverLightTop = null;
+    let lastOverLightMenu = null;
+    let scrollRafId = null;
+
+    function getCanvasScale() {
+      if (window.innerWidth <= 1024) return 1;
+      return Math.min(window.innerWidth / CANVAS_WIDTH, 1);
+    }
+
+    function updateCanvasScaling() {
+      if (window.innerWidth <= 1024) {
+        currentCanvasScale = 1;
+        canvasEl.style.zoom = '';
+        return;
+      }
+      currentCanvasScale = getCanvasScale();
+      canvasEl.style.zoom = currentCanvasScale === 1 ? '' : String(currentCanvasScale);
+    }
+
+    function closeTocDropdown() {
+      if (!jumpNavWrapper || !jumpTocToggle) return;
+      jumpNavWrapper.classList.remove('is-toc-open');
+      jumpTocToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function syncTopChromeContrast() {
+      if (!otherProjectsSec) return;
+      const rect = otherProjectsSec.getBoundingClientRect();
+      const overLightTop = rect.top <= 90;
+      const menuProbeY = isCornerMenuOpen ? 160 : 44;
+      const overLightMenu = rect.top <= menuProbeY;
+
+      if (overLightMenu !== lastOverLightMenu) {
+        lastOverLightMenu = overLightMenu;
+        if (cornerMenu) cornerMenu.classList.toggle('is-inverted', !overLightMenu);
+      }
+      if (overLightTop !== lastOverLightTop) {
+        lastOverLightTop = overLightTop;
+        if (backArrowBtn) backArrowBtn.classList.toggle('is-on-light', overLightTop);
+        if (jumpNavWrapper) jumpNavWrapper.classList.toggle('is-on-light', overLightTop);
+      }
+    }
+
+    function handleScrollUpdates() {
+      scrollRafId = null;
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const isFluidMode = window.innerWidth <= 1024;
+      const s = isFluidMode ? 1 : currentCanvasScale;
+
+      // 1. Update Jump Nav active link & ToC pill ONLY when section changes
+      let activeSectionId = 'overview';
+
+      if (isFluidMode) {
+        const probe = scrollY + 150;
+        for (let i = navAnchors.length - 1; i >= 0; i--) {
+          const secEl = document.querySelector(`[data-nav-section="${navAnchors[i].id}"]`);
+          if (secEl) {
+            const secTop = secEl.getBoundingClientRect().top + scrollY;
+            if (probe >= secTop) {
+              activeSectionId = navAnchors[i].id;
+              break;
+            }
+          }
+        }
+      } else {
+        const scrollProbe = (scrollY + 160) / s;
+        for (let i = navAnchors.length - 1; i >= 0; i--) {
+          if (scrollProbe >= navAnchors[i].y) {
+            activeSectionId = navAnchors[i].id;
+            break;
+          }
+        }
+      }
+
+      if (activeSectionId !== lastActiveSectionId) {
+        lastActiveSectionId = activeSectionId;
+        navLinks.forEach((link) => {
+          const linkId = link.getAttribute('href').slice(1);
+          const isActive = linkId === activeSectionId;
+          link.className = isActive ? 'nav-pill-active' : 'nav-link';
+          if (isActive && jumpTocCurrent) {
+            jumpTocCurrent.textContent = link.textContent.trim();
+          }
+        });
+      }
+
+      // 2. Update vertical tracker line & stars progression via GPU scaleY (no layout reflow)
+      if (!isFluidMode) {
+        const currentScrollTip = (scrollY + (windowHeight * 0.45)) / s;
+        const trackTop = 1698;
+        const totalTrackHeight = 7113;
+
+        let currentLineHeight = currentScrollTip - trackTop - 15;
+        if (currentLineHeight < 0) currentLineHeight = 0;
+        if (currentLineHeight > totalTrackHeight) currentLineHeight = totalTrackHeight;
+
+        if (timelineLine) {
+          const ratio = currentLineHeight / totalTrackHeight;
+          timelineLine.style.transform = `scaleY(${ratio.toFixed(4)})`;
+        }
+
+        starNodes.forEach((star, index) => {
+          if (index === 0) {
+            star.classList.add('star-active');
+            return;
+          }
+          const starOffset = parseFloat(star.getAttribute('data-y') || '0');
+          if (currentLineHeight >= starOffset - 15) {
+            star.classList.add('star-active');
+          } else {
+            star.classList.remove('star-active');
+          }
+        });
+      }
+
+      // 3. Invert/adapt fixed top chrome when entering cream Other Projects footer
+      syncTopChromeContrast();
+    }
+
+    function scheduleScrollUpdate() {
+      if (scrollRafId === null) {
+        scrollRafId = requestAnimationFrame(handleScrollUpdates);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Back arrow behavior (matching together.html)
+      if (backArrowBtn) {
+        backArrowBtn.href = `${HOMEPAGE_URL}#work`;
+        backArrowBtn.addEventListener('click', (e) => {
+          if (document.referrer && /homepage\.html|index\.html|extra\.html/i.test(document.referrer) && window.history.length > 1) {
+            e.preventDefault();
+            window.history.back();
+          }
+        });
+      }
+
+      // Corner Tangram Menu Setup
+      const triggerBtn = document.getElementById('corner-menu-trigger');
+      const panelEl = document.getElementById('corner-menu-panel');
+      const scrimEl = document.getElementById('corner-menu-scrim');
+      const pieces = document.querySelectorAll('.corner-menu-piece');
+
+      if (window.gsap) {
+        gsap.set(panelEl, { opacity: 0, scale: 0.25 });
+        gsap.set(scrimEl, { opacity: 0 });
+      }
+
+      function openMenu() {
+        if (isCornerMenuOpen) return;
+        isCornerMenuOpen = true;
+        cornerMenu.classList.add('is-open');
+        scrimEl.classList.add('is-open');
+        triggerBtn.setAttribute('aria-expanded', 'true');
+        panelEl.setAttribute('aria-hidden', 'false');
+        lastOverLightMenu = null;
+        syncTopChromeContrast();
+
+        if (window.gsap) {
+          gsap.killTweensOf([scrimEl, triggerBtn, panelEl]);
+          gsap.to(scrimEl, { opacity: 1, duration: 0.32, ease: 'power2.out' });
+          gsap.to(triggerBtn, { opacity: 0, duration: 0.16, ease: 'power2.out' });
+          gsap.fromTo(panelEl, { opacity: 0, scale: 0.25 }, { opacity: 1, scale: 1, duration: 0.36, ease: 'power3.out' });
+        }
+      }
+
+      function closeMenu() {
+        if (!isCornerMenuOpen) return;
+        isCornerMenuOpen = false;
+        cornerMenu.classList.remove('is-open');
+        scrimEl.classList.remove('is-open');
+        triggerBtn.setAttribute('aria-expanded', 'false');
+        panelEl.setAttribute('aria-hidden', 'true');
+        lastOverLightMenu = null;
+        syncTopChromeContrast();
+
+        if (window.gsap) {
+          gsap.killTweensOf([scrimEl, triggerBtn, panelEl]);
+          gsap.to(scrimEl, { opacity: 0, duration: 0.25, ease: 'power2.in' });
+          gsap.to(panelEl, { opacity: 0, scale: 0.25, duration: 0.24, ease: 'power2.in' });
+          gsap.to(triggerBtn, { opacity: 1, duration: 0.22, delay: 0.08, ease: 'power2.out' });
+        }
+      }
+
+      triggerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openMenu();
+      });
+
+      scrimEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeMenu();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (isCornerMenuOpen) closeMenu();
+          closeTocDropdown();
+        }
+      });
+
+      pieces.forEach((piece) => {
+        const activate = () => {
+          const dest = piece.dataset.cornerNav;
+          closeMenu();
+          if (dest === 'resume') {
+            window.open(RESUME_URL, '_blank', 'noopener,noreferrer');
+          } else if (dest === 'home') {
+            try { sessionStorage.removeItem('portfolioNavState'); } catch (_) {}
+            window.location.href = HOMEPAGE_URL;
+          } else {
+            window.location.href = `${HOMEPAGE_URL}#${dest}`;
+          }
+        };
+
+        piece.addEventListener('click', (e) => {
+          e.stopPropagation();
+          activate();
+        });
+
+        piece.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
+        });
+      });
+
+      // Collapsible ToC Pill (<= 1180px)
+      if (jumpTocToggle && jumpNavWrapper) {
+        jumpTocToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = jumpNavWrapper.classList.toggle('is-toc-open');
+          jumpTocToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!jumpNavWrapper.contains(e.target)) {
+            closeTocDropdown();
+          }
+        });
+      }
+
+      // Smooth click handler on Jump Nav Links
+      navLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+          const targetId = href.substring(1);
+          e.preventDefault();
+          closeTocDropdown();
+
+          if (window.innerWidth <= 1024) {
+            const secEl = document.querySelector(`[data-nav-section="${targetId}"]`);
+            if (secEl) {
+              const targetY = Math.max(0, secEl.getBoundingClientRect().top + window.scrollY - 92);
+              window.scrollTo({ top: targetY, behavior: 'smooth' });
+            }
+          } else {
+            const section = navAnchors.find((s) => s.id === targetId);
+            if (section) {
+              const targetY = section.y > 0 ? Math.max(0, (section.y * currentCanvasScale) - 110) : 0;
+              window.scrollTo({ top: targetY, behavior: 'smooth' });
+            }
+          }
+        });
+      });
+
+      // View Case hover badge on Other Projects cards (desktop fine pointer only)
+      if (window.gsap && window.matchMedia('(pointer: fine)').matches) {
+        document.querySelectorAll('.other-img-box').forEach((box) => {
+          const badge = box.querySelector('.work-hover-badge');
+          if (!badge) return;
+          gsap.set(badge, { xPercent: -50, yPercent: -50, scale: 0.75, opacity: 0 });
+          const xTo = gsap.quickTo(badge, 'x', { duration: 0.25, ease: 'power3.out' });
+          const yTo = gsap.quickTo(badge, 'y', { duration: 0.25, ease: 'power3.out' });
+
+          function getLocalPos(e) {
+            const rect = box.getBoundingClientRect();
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+          }
+
+          box.addEventListener('mouseenter', (e) => {
+            const pos = getLocalPos(e);
+            gsap.set(badge, { x: pos.x, y: pos.y });
+            gsap.to(badge, { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.out', overwrite: 'auto' });
+          });
+          box.addEventListener('mousemove', (e) => {
+            const pos = getLocalPos(e);
+            xTo(pos.x);
+            yTo(pos.y);
+          });
+          box.addEventListener('mouseleave', () => {
+            gsap.to(badge, { opacity: 0, scale: 0.75, duration: 0.2, ease: 'power2.in', overwrite: 'auto' });
+          });
+        });
+      }
+
+      updateCanvasScaling();
+      handleScrollUpdates();
+    });
+
+    window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1180) closeTocDropdown();
+      updateCanvasScaling();
+      lastActiveSectionId = '';
+      lastOverLightTop = null;
+      lastOverLightMenu = null;
+      handleScrollUpdates();
     });
   </script>
 

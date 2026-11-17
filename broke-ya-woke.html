@@ -1,117 +1,3159 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Broke Ya Woke — Siddhi Malpe</title>
-  
+  <title>Broke ya Woke? — Case Study</title>
+
+  <!-- Google Fonts: BBH Hegarty for Other Projects footer titles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  
+  <link href="https://fonts.googleapis.com/css2?family=BBH+Hegarty&display=swap" rel="stylesheet" />
+
+  <!-- GSAP 3.12.5 for Corner Menu & View Case hover badge -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+
   <style>
+    /* ==========================================================================
+       Typography & Global Settings
+       ========================================================================== */
+    @font-face {
+      font-family: 'Avenir';
+      src: local('Avenir-Roman'), local('Avenir'), local('Avenir Next');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Avenir';
+      src: local('Avenir-Medium'), local('Avenir Medium'), local('Avenir Next Medium');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Avenir';
+      src: local('Avenir-Heavy'), local('Avenir Heavy'), local('Avenir-Black'), local('Avenir Next Bold');
+      font-weight: 800;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Avenir';
+      src: local('Avenir-Black'), local('Avenir Black'), local('Avenir Next Heavy');
+      font-weight: 900;
+      font-style: normal;
+    }
+
     :root {
-      --brand-teal: #79d7c6;
-      --bg-canvas: #f5f6f8;
-      --text-dark: #000000;
-      --border-stroke: 1.2px solid #000000;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --brand-blue: #6785FF;
+      --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-    body { background: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-dark); overflow-x: hidden; min-height: 100vh; }
-
-    #progress-bar {
-      position: fixed; top: 0; left: 0; height: 2px; width: 0%; background: var(--brand-teal); z-index: 2000; transition: width 0.1s ease-out;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .top-nav {
-      position: sticky; top: 0; left: 0; width: 100%; padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; background: rgba(245, 246, 248, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1000;
+    html {
+      background-color: #FFFFFF;
+      overflow-x: clip;
     }
 
-    .nav-pill {
-      display: inline-flex; align-items: center; gap: 6px; color: var(--text-dark); text-decoration: none; font-size: 14px; font-weight: 500; border: var(--border-stroke); border-radius: 9999px; padding: 8px 22px; background: #ffffff; transition: all 0.25s var(--ease); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    body {
+      background-color: #FFFFFF;
+      font-family: 'Avenir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: clip;
+      min-height: 100vh;
     }
 
-    .nav-pill:hover {
-      background: #000000; color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    /* ==========================================================================
+       CORNER TANGRAM MENU (Light mode: #000000 shape, #F2E7D5 stroke/text, #BB211F hover)
+    ========================================================================== */
+    .corner-menu-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 1090;
+      background: rgba(0, 0, 0, 0.62);
+      backdrop-filter: blur(2.5px);
+      -webkit-backdrop-filter: blur(2.5px);
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .nav-right-group { display: flex; align-items: center; gap: 12px; }
-
-    .case-container {
-      width: 100%; max-width: 1040px; margin: 40px auto 100px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); overflow: hidden; display: flex; flex-direction: column; align-items: center;
+    .corner-menu-scrim.is-open {
+      pointer-events: auto;
     }
 
-    .case-container img { width: 100%; height: auto; display: block; }
-
-    .other-work-section { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 24px 120px; display: flex; flex-direction: column; align-items: center; }
-    .other-work-title { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 48px; text-align: center; }
-    .cards-row { display: flex; align-items: center; justify-content: center; gap: 40px; width: 100%; flex-wrap: wrap; }
-
-    .work-card {
-      width: 273px; height: 680px; border: var(--border-stroke); border-radius: 136.5px; background-color: #ffffff; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); padding: 56px 0 0; position: relative; flex-shrink: 0; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    .corner-menu {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1100;
+      pointer-events: none;
     }
 
-    .work-card:hover { transform: translateY(-8px); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12); }
-    .card-title { font-size: 30px; font-weight: 600; line-height: 1.2; text-align: center; margin-bottom: 4px; padding: 0 20px; }
-    .card-subtitle { font-size: 16px; font-weight: 400; line-height: 1.4; text-align: center; color: #333333; margin-bottom: 24px; padding: 0 20px; }
-    .card-image-wrapper { width: 100%; flex: 1; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; margin-top: auto; }
-    .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+    .corner-menu-trigger {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 89px;
+      height: 89px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      pointer-events: none;
+      outline: none;
+    }
 
-    @media (max-width: 960px) {
-      .top-nav { padding: 16px 20px; }
-      .case-container { margin: 20px 16px 60px; border-radius: 12px; }
-      .cards-row { gap: 30px; }
+    .corner-menu-trigger-svg {
+      display: block;
+      width: 89px;
+      height: 89px;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-trigger-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      pointer-events: auto;
+      cursor: pointer;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu.is-open .corner-menu-trigger-shape {
+      pointer-events: none;
+    }
+
+    .corner-menu-trigger-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 53.93px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-trigger:hover .corner-menu-trigger-shape,
+    .corner-menu-trigger:focus-visible .corner-menu-trigger-shape {
+      fill: #BB211F;
+    }
+
+    .corner-menu-panel {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 356px;
+      height: 356px;
+      transform-origin: 0 0;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .corner-menu-open-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .corner-menu-piece {
+      outline: none;
+      pointer-events: none;
+      cursor: pointer;
+    }
+
+    .corner-menu.is-open .corner-menu-piece {
+      pointer-events: auto;
+    }
+
+    .corner-menu-piece-shape {
+      fill: #000000;
+      stroke: #F2E7D5;
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+      stroke-linejoin: round;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-piece-label {
+      fill: #F2E7D5;
+      font-family: 'Apple Symbols', 'AppleGothic', 'Apple Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 20.225px;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      user-select: none;
+      pointer-events: none;
+      transition: fill 0.22s ease;
+    }
+
+    .corner-menu-piece:hover .corner-menu-piece-shape,
+    .corner-menu-piece:focus-visible .corner-menu-piece-shape {
+      fill: #BB211F;
+    }
+
+    /* ==========================================================================
+       BACK ARROW BUTTON (Dark on light surfaces, hover periwinkle / footer red)
+    ========================================================================== */
+    .back-arrow-btn {
+      position: fixed;
+      left: 112px;
+      top: 28px;
+      z-index: 1050;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      color: #000000;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-arrow-btn:hover,
+    .back-arrow-btn:focus-visible {
+      color: #6785FF;
+      transform: translateX(-3px);
+      outline: none;
+    }
+
+    .back-arrow-btn.is-on-footer:hover,
+    .back-arrow-btn.is-on-footer:focus-visible {
+      color: #BB211F;
+    }
+
+    .back-arrow-btn svg {
+      width: 16px;
+      height: 36px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    /* ==========================================================================
+       FIXED LIQUID-GLASS JUMP NAVIGATION (5 FIGMA TABS + COLLAPSIBLE TOC PILL)
+    ========================================================================== */
+    .jump-nav-sticky-wrapper {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1000;
+      padding: 0 24px;
+      pointer-events: none;
+    }
+
+    .jump-toc-toggle {
+      display: none;
+      pointer-events: auto;
+      align-items: center;
+      gap: 10px;
+      height: 44px;
+      padding: 0 18px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.40) 100%);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 8px 30px rgba(103, 133, 255, 0.16),
+        inset 0 1px 2px rgba(255, 255, 255, 0.95);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #6785FF;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.2s var(--ease-smooth), box-shadow 0.2s ease;
+    }
+
+    .jump-toc-toggle:focus-visible {
+      outline: 2px solid #6785FF;
+    }
+
+    .jump-toc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #6785FF;
+      flex-shrink: 0;
+    }
+
+    .jump-toc-chevron {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.25s var(--ease-smooth);
+      flex-shrink: 0;
+    }
+
+    .jump-nav-sticky-wrapper.is-toc-open .jump-toc-chevron {
+      transform: rotate(180deg);
+    }
+
+    .jump-nav {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px;
+      gap: 18px;
+      border-radius: 50px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.78) 0%,
+        rgba(255, 255, 255, 0.38) 100%
+      );
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 8px 32px rgba(103, 133, 255, 0.16),
+        inset 0 1px 2px rgba(255, 255, 255, 0.95);
+    }
+
+    .nav-item {
+      text-decoration: none;
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      color: #6785FF;
+      padding: 10px 22px;
+      border-radius: 40px;
+      transition: all 0.25s ease;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .nav-item:hover {
+      color: #4a68eb;
+    }
+
+    .nav-item.active {
+      background-color: #6785FF;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 14px rgba(103, 133, 255, 0.35);
+    }
+
+    /* ==========================================================================
+       OVERALL 1440px STAGE WRAPPER (Zoom-scaled on 1025-1439px so sticky works!)
+    ========================================================================== */
+    .page-stage-wrap {
+      position: relative;
+      width: 100%;
+      background-color: #FFFFFF;
+    }
+
+    /* Full-bleed #D1DBFF top band on wide screens (> 1440px) */
+    .hero-bleed-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1024px;
+      background-color: #D1DBFF;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-canvas {
+      position: relative;
+      width: 1440px;
+      height: 14920px;
+      margin: 0 auto;
+      background-color: #FFFFFF;
+      z-index: 1;
+    }
+
+    /* Transparent on desktop so Figma absolute coordinates remain direct children of .page-canvas */
+    .byw-section,
+    .hero-meta-row,
+    .hero-left-col,
+    .stats-grid,
+    .stat-card,
+    .comparison-grid,
+    .box-logos-row,
+    .box-items-list,
+    .insight-tags-row,
+    .insights-balls-grid,
+    .brief-grid,
+    .brief-right-col,
+    .card-1-copy,
+    .card-1-media,
+    .card-2-copy,
+    .card-3-decisions-grid,
+    .card-3-decision-item,
+    .card-3-copy,
+    .card-4-media,
+    .card-4-copy,
+    .ui-row-grid,
+    .ui-item,
+    .ui-dual-phones {
+      display: contents;
+    }
+
+    /* ==========================================================================
+       HERO SECTION (x: 0, y: 0, w: 1440, h: 1024)
+    ========================================================================== */
+    .hero-section {
+      position: relative;
+      width: 1440px;
+      height: 1024px;
+      background-color: #D1DBFF;
+      overflow: hidden;
+      scroll-margin-top: 0px;
+    }
+
+    .meta-text {
+      position: absolute;
+      top: 100px;
+      font-size: 24px;
+      font-weight: 400;
+      color: #6785FF;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .meta-team { left: 100px; }
+    .meta-topic { left: 637px; }
+    .meta-duration { right: 100px; }
+
+    .hero-tagline {
+      position: absolute;
+      top: 226px;
+      left: 111px;
+      font-size: 24px;
+      font-weight: 400;
+      color: #000000;
+      z-index: 10;
+    }
+
+    .hero-logo {
+      position: absolute;
+      top: 307px;
+      left: 111px;
+      width: 651.72px;
+      height: 420px;
+      display: block;
+      z-index: 10;
+      user-select: none;
+    }
+
+    .hero-tower {
+      position: absolute;
+      top: 177px;
+      left: 824px;
+      width: 515.51px;
+      height: 847px;
+      display: block;
+      object-fit: contain;
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .worked-on-pill {
+      position: absolute;
+      top: 775px;
+      left: 111px;
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 48px;
+      gap: 10px;
+      border-radius: 50px;
+      border: 1px solid #6785FF;
+      background: transparent;
+      z-index: 10;
+    }
+
+    .worked-on-label {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 30px;
+      color: #000000;
+      text-transform: uppercase;
+    }
+
+    .worked-on-skills {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 30px;
+      color: #6785FF;
+    }
+
+    /* ==========================================================================
+       SECTION (01): THE PROBLEM
+    ========================================================================== */
+    .section-label {
+      position: absolute;
+      left: 100px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #000000;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .problem-label { top: 1144px; }
+
+    .stat-number {
+      position: absolute;
+      top: 1214px;
+      font-size: 96px;
+      font-weight: 900;
+      line-height: 1;
+      color: #B0D645;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-num-1 { left: 103px; }
+    .stat-num-2 { left: 504px; }
+    .stat-num-3 { left: 1030px; }
+
+    .stat-desc {
+      position: absolute;
+      top: 1331px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: #000000;
+    }
+    .stat-desc-1 { left: 103px; width: 201px; }
+    .stat-desc-2 { left: 504px; width: 245px; }
+    .stat-desc-3 { left: 1030px; width: 281px; }
+
+    .problem-paragraph {
+      position: absolute;
+      top: 1445px;
+      left: 103px;
+      width: 1237px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: #000000;
+    }
+
+    .target-heading {
+      position: absolute;
+      top: 1559px;
+      left: 100px;
+      font-size: 24px;
+      font-weight: 500;
+      color: #000000;
+    }
+
+    .target-audience {
+      position: absolute;
+      top: 1592px;
+      left: 100px;
+      font-size: 48px;
+      font-weight: 900;
+      color: #95ABFF;
+      line-height: 1.2;
+    }
+
+    .target-desc {
+      position: absolute;
+      top: 1664px;
+      left: 100px;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       SECTION (02): WHY CURRENT SOLUTIONS FAIL
+    ========================================================================== */
+    .solutions-fail-label { top: 1809px; }
+
+    .comparison-box {
+      position: absolute;
+      top: 1879px;
+      width: 600px;
+      height: 273px;
+      border: 1.2px solid #6785FF;
+      border-radius: 16px;
+      background: transparent;
+    }
+    .box-1 { left: 100px; }
+    .box-2 { left: 737px; }
+
+    .box-title {
+      position: absolute;
+      left: 80px;
+      top: 33px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #6785FF;
+      line-height: normal;
+    }
+
+    .box-img {
+      position: absolute;
+      display: block;
+      object-fit: contain;
+    }
+    .img-monopoly { left: 80px; top: 82px; width: 200px; height: 53px; }
+    .img-cashflow { left: 320px; top: 82px; width: 200px; height: 53px; }
+    .img-fampay { left: 80px; top: 82px; width: 200px; height: 67px; }
+    .img-junio { left: 320px; top: 82px; width: 200px; height: 61px; }
+
+    .box-item {
+      position: absolute;
+      left: 80px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+      white-space: nowrap;
+    }
+    .item-row-1 { top: 159px; }
+    .item-row-2 { top: 189px; }
+    .item-row-3 { top: 219px; }
+
+    /* ==========================================================================
+       SECTION (03): KEY INSIGHTS (RESEARCH TAB DESTINATION)
+    ========================================================================== */
+    .insights-label {
+      top: 2272px;
+      letter-spacing: 0.02em;
+    }
+
+    .insight-tag {
+      position: absolute;
+      top: 2318px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #000000;
+      white-space: nowrap;
+    }
+    .tag-1 { left: 100px; }
+    .tag-2 { left: 357px; }
+    .tag-3 { left: 640px; }
+    .tag-4 { left: 913px; }
+
+    .insight-ball {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(103, 133, 255, 0.5);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: left;
+      cursor: default;
+      user-select: none;
+      will-change: transform, opacity;
+      transform-origin: center center;
+    }
+
+    .ball-1 { left: 100px; top: 2367px; z-index: 2; }
+    .ball-2 { left: 725px; top: 2367px; z-index: 5; }
+    .ball-3 { left: 390px; top: 2767px; z-index: 3; }
+    .ball-4 { left: 940px; top: 2767px; z-index: 2; }
+
+    .ball-text {
+      width: 250px;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: #000000;
+      margin: 0;
+      pointer-events: none;
+    }
+
+    .ball-text .highlight {
+      color: #6785FF;
+    }
+
+    /* ==========================================================================
+       SECTION (04): PERSONA
+    ========================================================================== */
+    .persona-label {
+      top: 3287px;
+      letter-spacing: 0.02em;
+    }
+
+    .persona-card {
+      position: absolute;
+      left: 131px;
+      top: 3357px;
+      width: 1178px;
+      height: 610px;
+      border: 2px solid #BDCBFF;
+      border-radius: 16px;
+      background: #FFFFFF;
+      display: flex;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .persona-left-col {
+      width: 340px;
+      height: 100%;
+      background: #BDCBFF;
+      border-top-left-radius: 14px;
+      border-bottom-left-radius: 14px;
+      padding: 76.69px 42px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .persona-avatar-wrap {
+      width: 256.4px;
+      height: 290.12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .persona-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .persona-bio-list {
+      width: 256.4px;
+      display: flex;
+      flex-direction: column;
+      gap: 13.13px;
+    }
+
+    .persona-bio-item {
+      font-size: 14.1px;
+      font-weight: 400;
+      line-height: normal;
+      color: #000000;
+    }
+
+    .persona-right-col {
+      flex: 1;
+      height: 100%;
+      padding: 74px 39px 40px 39px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    .persona-name {
+      font-size: 42.31px;
+      font-weight: 800;
+      color: #6785FF;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .persona-quote {
+      font-size: 15.87px;
+      font-weight: 400;
+      font-style: italic;
+      color: #000000;
+      line-height: normal;
+      margin-bottom: 26px;
+    }
+
+    .persona-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .persona-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .persona-block-header {
+      display: flex;
+      align-items: center;
+      gap: 7.1px;
+      margin-bottom: 6px;
+    }
+
+    .persona-icon {
+      width: 21.29px;
+      height: 21.16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .persona-block-title {
+      font-size: 15.87px;
+      font-weight: 500;
+      color: #000000;
+      line-height: normal;
+    }
+
+    .persona-bullets {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .persona-bullets li {
+      font-size: 14.1px;
+      font-weight: 400;
+      line-height: 25px;
+      color: #000000;
+    }
+
+    /* ==========================================================================
+       SECTION (05): FINAL BRIEF
+    ========================================================================== */
+    .brief-label { top: 4087px; }
+
+    .brief-hmw {
+      position: absolute;
+      top: 4157px;
+      left: 100px;
+      width: 586px;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.35;
+      color: #000000;
+    }
+
+    .brief-which-also {
+      position: absolute;
+      top: 4137px;
+      left: 734px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #9E9E9E;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .brief-pills-img {
+      position: absolute;
+      top: 4170px;
+      left: 734px;
+      width: 606px;
+      height: 72px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* ==========================================================================
+       SECTION (06): IDEATION (IDEATION TAB DESTINATION)
+    ========================================================================== */
+    .ideation-label { top: 4362px; }
+
+    .ideation-desc {
+      position: absolute;
+      top: 4406.67px;
+      left: 100px;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+    }
+
+    .ideation-img {
+      position: absolute;
+      top: 4455px;
+      left: 128px;
+      width: 1183.6px;
+      height: 872.67px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* ==========================================================================
+       SECTION (07): PIVOT
+    ========================================================================== */
+    .pivot-label { top: 5375.67px; }
+
+    .pivot-desc {
+      position: absolute;
+      top: 5420.67px;
+      left: 100px;
+      max-width: 1240px;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: 1.4;
+    }
+
+    .pivot-img {
+      position: absolute;
+      top: 5470px;
+      left: 128px;
+      width: 1184px;
+      height: 707.6px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* ==========================================================================
+       SECTION (08): SOLUTION (SOLUTION TAB DESTINATION)
+    ========================================================================== */
+    .solution-label { top: 6297.6px; }
+
+    .solution-intro {
+      position: absolute;
+      top: 6366.6px;
+      left: 231px;
+      font-size: 24px;
+      font-weight: 400;
+      color: #6785FF;
+      line-height: normal;
+    }
+
+    .solution-logo {
+      position: absolute;
+      top: 6423.6px;
+      left: 231px;
+      width: 977.57px;
+      height: 630px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .solution-phygital-desc {
+      position: absolute;
+      top: 7097.6px;
+      left: 231px;
+      width: 977.57px;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 42px;
+      color: #000000;
+    }
+
+    /* ==========================================================================
+       SECTION (09): GAMEPLAY LOOP (PINNED CYCLING FLASHCARDS)
+    ========================================================================== */
+    .gameplay-label { top: 7385.6px; }
+
+    .gameplay-loop-container {
+      position: absolute;
+      left: 0;
+      top: 7454.6px;
+      width: 1440px;
+      height: 6000px;
+    }
+
+    .gameplay-sticky-frame {
+      position: sticky;
+      top: 96px;
+      width: 1440px;
+      height: 680px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+
+    .cards-deck-arena {
+      position: relative;
+      width: 1012px;
+      height: 614px;
+      pointer-events: auto;
+    }
+
+    .loop-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1012px;
+      height: 614px;
+      background: #FFFFFF;
+      border: 4px solid #000000;
+      box-shadow: 12px 14px 0px rgba(0, 0, 0, 0.25);
+      border-radius: 0px;
+      overflow: hidden;
+      box-sizing: border-box;
+      will-change: transform, opacity;
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .card-title {
+      position: absolute;
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #000000;
+      letter-spacing: -0.01em;
+    }
+
+    .card-body {
+      position: absolute;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: #000000;
+    }
+
+    .card-img {
+      position: absolute;
+      display: block;
+      object-fit: contain;
+    }
+
+    /* Card 1 */
+    .card-1 .c1-title { left: 100px; top: 100px; }
+    .card-1 .c1-desc-1 { left: 100px; top: 190px; width: 500px; }
+    .card-1 .c1-desc-2 { left: 100px; top: 280px; width: 500px; }
+    .card-1 .c1-phone { left: 694.38px; top: 110px; width: 205.74px; height: 420.63px; }
+    .card-1 .c1-step1 { left: 243px; top: 295px; width: 456px; height: 272px; }
+
+    /* Card 2 */
+    .card-2 .c2-phone { left: 160px; top: 74px; width: 221.5px; height: 452.84px; }
+    .card-2 .c2-title { left: 500px; top: 254px; }
+    .card-2 .c2-desc-1 { left: 500px; top: 344px; width: 450px; }
+    .card-2 .c2-desc-2 { left: 500px; top: 467px; width: 450px; }
+
+    /* Card 3 */
+    .decision-question {
+      position: absolute;
+      font-size: 16px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+      white-space: nowrap;
+    }
+    .decision-answer {
+      position: absolute;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+      white-space: nowrap;
+    }
+    .decision-answer strong {
+      font-weight: 800;
+    }
+
+    .card-3 .c3-img-green { left: 87px; top: 81px; width: 233px; height: 172px; }
+    .card-3 .c3-img-pink { left: 409px; top: 81px; width: 220px; height: 178px; }
+    .card-3 .c3-img-blue { left: 765px; top: 81px; width: 89px; height: 223px; }
+
+    .card-3 .c3-q1 { left: 100px; top: 253px; }
+    .card-3 .c3-a1 { left: 100px; top: 275px; }
+    .card-3 .c3-q2 { left: 409px; top: 259px; }
+    .card-3 .c3-a2 { left: 409px; top: 281px; }
+    .card-3 .c3-q3 { left: 718px; top: 304px; }
+    .card-3 .c3-a3 { left: 718px; top: 326px; }
+
+    .card-3 .c3-title { left: 100px; top: 345px; }
+    .card-3 .c3-desc-1 { left: 100px; top: 423px; width: 820px; }
+    .card-3 .c3-desc-2 { left: 100px; top: 468px; width: 820px; }
+
+    /* Card 4 */
+    .card-4 .c4-phone { left: 266px; top: 74px; width: 221.5px; height: 452.84px; z-index: 1; }
+    .card-4 .c4-collapse { left: 0px; top: 159px; width: 331px; height: 441px; z-index: 2; }
+    .card-4 .c4-title { left: 544px; top: 122px; width: 420px; }
+    .card-4 .c4-desc-1 { left: 544px; top: 230px; width: 420px; }
+    .card-4 .c4-desc-2 { left: 544px; top: 410px; width: 420px; }
+
+    /* ==========================================================================
+       SECTION (10): KEY GAMEPLAY UI
+    ========================================================================== */
+    .gameplay-ui-label { top: 13550px; }
+
+    .ui-heading {
+      position: absolute;
+      font-size: 18px;
+      font-weight: 400;
+      color: #000000;
+      line-height: normal;
+      white-space: nowrap;
+    }
+
+    .ui-head-1 { left: 278px; top: 13619px; }
+    .ui-head-2 { left: 642px; top: 13619px; }
+    .ui-head-3 { left: 947.5px; top: 13619px; }
+
+    .ui-head-4 { left: 252px; top: 14203px; }
+    .ui-head-5 { left: 685px; top: 14203px; }
+    .ui-head-6 { left: 1153px; top: 14203px; }
+
+    .ui-mockup-img {
+      position: absolute;
+      width: 221.5px;
+      height: 452.84px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .ui-img-n { left: 290px; top: 13668px; }
+    .ui-img-o { left: 620px; top: 13668px; }
+    .ui-img-p { left: 941.5px; top: 13668px; }
+
+    .ui-img-q { left: 166px; top: 14252px; z-index: 1; }
+    .ui-img-t { left: 1088px; top: 14252px; z-index: 2; }
+    .ui-img-r { left: 358px; top: 14329px; z-index: 3; }
+    .ui-img-s { left: 716px; top: 14252px; z-index: 1; }
+
+    /* ==========================================================================
+       OTHER PROJECTS FOOTER SECTION (Matching Home Smaller Cards)
+    ========================================================================== */
+    .other-projects-section {
+      width: 100%;
+      background: #F2E7D5;
+      padding: clamp(56px, 6.2vw, 96px) clamp(20px, 4.86vw, 70px) clamp(64px, 7vw, 110px);
+      position: relative;
+      z-index: 10;
+    }
+
+    .other-projects-grid {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(24px, 3.26vw, 47px);
+    }
+
+    .other-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .other-img-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 402 / 227;
+      background: #E5D9C5;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .other-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .work-hover-badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #BB211F;
+      color: #F2E7D5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: 'AppleGothic', 'Apple Gothic', sans-serif;
+      font-size: 11px;
+      line-height: 1.25;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      z-index: 3;
+    }
+
+    .other-card-meta {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .other-card-title {
+      font-family: 'BBH Hegarty', 'AppleGothic', sans-serif;
+      font-size: clamp(22px, 1.8vw, 26px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: #BB211F;
+      max-width: 265px;
+    }
+
+    .other-card-tags {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: #696969;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-top: 3px;
+    }
+
+    .other-card-desc {
+      font-family: 'Apple Symbols', 'AppleGothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(17px, 1.38vw, 20px);
+      font-weight: 400;
+      line-height: 1.35;
+      color: #696969;
+    }
+
+    /* =========================================================================
+       RESPONSIVE BREAKPOINTS
+       ========================================================================= */
+
+    /* 1. Tablet & Mobile Top Sticky ToC Pill (<= 1180px) */
+    @media (max-width: 1180px) {
+      .back-arrow-btn {
+        left: 98px;
+        top: 24px;
+      }
+
+      .jump-nav-sticky-wrapper {
+        top: 22px;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .jump-toc-toggle {
+        display: inline-flex;
+      }
+
+      .jump-nav {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: 10px;
+        margin-top: 10px;
+        min-width: 220px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.68) 100%);
+      }
+
+      .jump-nav-sticky-wrapper.is-toc-open .jump-nav {
+        display: flex;
+        animation: tocDropIn 0.22s var(--ease-smooth);
+      }
+
+      .nav-item {
+        font-size: 14px;
+        padding: 11px 16px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    @keyframes tocDropIn {
+      from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* 2. Tablet & Below (<= 1024px): Reflow 1440px Canvas into Clean Fluid Layout */
+    @media (max-width: 1024px) {
+      .hero-bleed-bg {
+        display: none;
+      }
+
+      .page-canvas {
+        width: 100%;
+        height: auto !important;
+        zoom: 1 !important;
+        display: flex;
+        flex-direction: column;
+        gap: 64px;
+        padding-bottom: 72px;
+      }
+
+      /* Reset all absolute positions inside fluid mode */
+      .hero-section,
+      .meta-text,
+      .hero-tagline,
+      .hero-logo,
+      .hero-tower,
+      .worked-on-pill,
+      .section-label,
+      .stat-number,
+      .stat-desc,
+      .problem-paragraph,
+      .target-heading,
+      .target-audience,
+      .target-desc,
+      .comparison-box,
+      .box-title,
+      .box-img,
+      .box-item,
+      .insight-tag,
+      .insight-ball,
+      .persona-card,
+      .brief-hmw,
+      .brief-which-also,
+      .brief-pills-img,
+      .ideation-desc,
+      .ideation-img,
+      .pivot-desc,
+      .pivot-img,
+      .solution-intro,
+      .solution-logo,
+      .solution-phygital-desc,
+      .gameplay-loop-container,
+      .gameplay-sticky-frame,
+      .cards-deck-arena,
+      .loop-card,
+      .card-title,
+      .card-body,
+      .card-img,
+      .decision-question,
+      .decision-answer,
+      .ui-heading,
+      .ui-mockup-img {
+        position: static;
+        left: auto;
+        right: auto;
+        top: auto;
+        margin: 0;
+      }
+
+      /* Hero */
+      .hero-section {
+        width: 100%;
+        height: auto;
+        padding: 104px clamp(20px, 5vw, 48px) 48px;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px 32px;
+        align-items: center;
+      }
+
+      .hero-meta-row {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+
+      .meta-text {
+        font-size: clamp(14px, 2vw, 20px);
+      }
+
+      .hero-left-col {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .hero-tagline {
+        font-size: clamp(18px, 2.4vw, 24px);
+        line-height: 1.35;
+      }
+
+      .hero-logo {
+        width: 100%;
+        max-width: 460px;
+        height: auto;
+      }
+
+      .hero-tower {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        justify-self: center;
+      }
+
+      .worked-on-pill {
+        width: auto;
+        max-width: 100%;
+        padding: 10px 22px;
+        border-radius: 26px;
+        flex-wrap: wrap;
+        gap: 4px 10px;
+      }
+
+      .worked-on-label,
+      .worked-on-skills {
+        line-height: 1.4;
+        font-size: clamp(13px, 1.8vw, 16px);
+      }
+
+      /* Generic section wrapper in fluid mode */
+      .byw-section {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 0 clamp(20px, 5vw, 48px);
+        scroll-margin-top: 90px;
+      }
+
+      /* (01) Problem */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .stat-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .stat-number {
+        font-size: clamp(48px, 7.5vw, 80px);
+      }
+
+      .stat-desc {
+        width: 100% !important;
+        font-size: clamp(15px, 1.9vw, 18px);
+      }
+
+      .problem-paragraph {
+        width: 100%;
+        font-size: clamp(16px, 2vw, 18px);
+      }
+
+      .target-audience {
+        font-size: clamp(28px, 4.5vw, 42px);
+      }
+
+      /* (02) Solutions fail */
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      .comparison-box {
+        width: 100%;
+        height: auto;
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .box-title {
+        font-size: 22px;
+      }
+
+      .box-logos-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .box-img {
+        width: auto !important;
+        max-width: 160px;
+        height: 44px !important;
+      }
+
+      .box-items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .box-item {
+        white-space: normal;
+        line-height: 1.4;
+      }
+
+      /* (03) Key Insights */
+      .insight-tags-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 24px;
+      }
+
+      .insight-tag {
+        font-size: 16px;
+      }
+
+      .insights-balls-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        justify-items: center;
+        margin-top: 8px;
+      }
+
+      .insight-ball {
+        width: 300px;
+        height: 300px;
+        padding: 28px;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+
+      .ball-text {
+        width: 100%;
+        font-size: 15.5px;
+        text-align: center;
+      }
+
+      /* (04) Persona */
+      .persona-card {
+        width: 100%;
+        height: auto;
+      }
+
+      .persona-left-col {
+        width: 280px;
+        padding: 36px 24px;
+      }
+
+      .persona-avatar-wrap {
+        width: 200px;
+        height: auto;
+      }
+
+      .persona-bio-list {
+        width: 100%;
+      }
+
+      .persona-right-col {
+        padding: 36px 28px;
+      }
+
+      .persona-name {
+        font-size: 34px;
+      }
+
+      /* (05) Final Brief */
+      .brief-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 36px;
+        align-items: center;
+      }
+
+      .brief-hmw {
+        width: 100%;
+        font-size: clamp(20px, 2.5vw, 24px);
+      }
+
+      .brief-right-col {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .brief-pills-img {
+        width: 100%;
+        max-width: 520px;
+        height: auto;
+      }
+
+      /* (06) Ideation & (07) Pivot */
+      .ideation-img,
+      .pivot-img {
+        width: 100%;
+        height: auto;
+      }
+
+      /* (08) Solution */
+      .byw-solution-section {
+        align-items: center;
+        text-align: center;
+      }
+
+      .byw-solution-section .section-label {
+        align-self: flex-start;
+      }
+
+      .solution-logo {
+        width: 100%;
+        max-width: 560px;
+        height: auto;
+      }
+
+      .solution-phygital-desc {
+        width: 100%;
+        max-width: 780px;
+        font-size: clamp(18px, 2.4vw, 22px);
+        line-height: 1.55;
+      }
+
+      /* (09) Gameplay Loop Cards (Unpinned readable stack) */
+      .gameplay-loop-container,
+      .gameplay-sticky-frame {
+        width: 100%;
+        height: auto;
+      }
+
+      .cards-deck-arena {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .loop-card {
+        width: 100%;
+        height: auto;
+        transform: none !important;
+        opacity: 1 !important;
+        border-width: 3px;
+        box-shadow: 8px 10px 0px rgba(0, 0, 0, 0.22);
+        padding: clamp(24px, 4vw, 40px);
+        display: grid;
+        gap: 24px 32px;
+        align-items: center;
+      }
+
+      .card-1 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .card-1-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .card-1-media {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+      }
+      .card-1 .c1-phone { width: 150px; height: auto; }
+      .card-1 .c1-step1 { width: 180px; height: auto; }
+
+      .card-2 {
+        grid-template-columns: 0.75fr 1.25fr;
+      }
+      .card-2 .c2-phone { width: 180px; height: auto; justify-self: center; }
+      .card-2-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .card-3 {
+        grid-template-columns: 1fr;
+      }
+      .card-3-decisions-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        align-items: end;
+      }
+      .card-3-decision-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+      }
+      .card-3 .c3-img-green,
+      .card-3 .c3-img-pink,
+      .card-3 .c3-img-blue {
+        width: auto;
+        max-width: 100%;
+        height: 120px;
+        margin-bottom: 6px;
+      }
+      .decision-question,
+      .decision-answer {
+        white-space: normal;
+        font-size: 14.5px;
+      }
+      .card-3-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .card-4 {
+        grid-template-columns: 0.85fr 1.15fr;
+      }
+      .card-4-media {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .card-4 .c4-phone { width: 150px; height: auto; }
+      .card-4 .c4-collapse { width: 160px; height: auto; }
+      .card-4-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .card-title {
+        font-size: clamp(28px, 4vw, 38px);
+      }
+
+      .card-body {
+        width: 100% !important;
+        font-size: clamp(16px, 2.2vw, 20px);
+      }
+
+      /* (10) Key Gameplay UI */
+      .ui-row-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px 24px;
+        align-items: start;
+      }
+
+      .ui-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .ui-heading {
+        white-space: normal;
+        font-size: 16px;
+        line-height: 1.35;
+      }
+
+      .ui-mockup-img {
+        width: 100%;
+        max-width: 210px;
+        height: auto;
+      }
+
+      .ui-dual-phones {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+      .ui-dual-phones .ui-mockup-img {
+        max-width: 140px;
+      }
+
+      .other-projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px 28px;
+      }
+    }
+
+    /* 3. Mobile (<= 767px) */
+    @media (max-width: 767px) {
+      .jump-nav-sticky-wrapper {
+        align-items: flex-end;
+        padding: 0 16px;
+      }
+
+      .jump-toc-toggle {
+        max-width: calc(100vw - 154px);
+        height: 40px;
+        padding: 0 14px;
+        font-size: 12.5px;
+      }
+
+      .jump-toc-toggle-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .page-canvas {
+        gap: 52px;
+        padding-bottom: 56px;
+      }
+
+      .hero-section {
+        grid-template-columns: 1fr;
+        padding: 96px 20px 40px;
+        text-align: center;
+      }
+
+      .hero-left-col {
+        align-items: center;
+      }
+
+      .hero-tower {
+        max-width: 230px;
+      }
+
+      .worked-on-pill {
+        justify-content: center;
+      }
+
+      .stats-grid,
+      .comparison-grid,
+      .insights-balls-grid,
+      .brief-grid,
+      .card-1,
+      .card-2,
+      .card-3-decisions-grid,
+      .card-4,
+      .ui-row-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .insight-ball {
+        width: 268px;
+        height: 268px;
+        padding: 24px;
+      }
+
+      .ball-text {
+        font-size: 14.5px;
+      }
+
+      .persona-card {
+        flex-direction: column;
+      }
+
+      .persona-left-col {
+        width: 100%;
+        border-radius: 14px 14px 0 0;
+        padding: 32px 24px;
+      }
+
+      .persona-avatar-wrap {
+        width: 170px;
+      }
+
+      .persona-right-col {
+        padding: 28px 20px;
+      }
+
+      .persona-bullets li {
+        line-height: 1.55;
+        margin-bottom: 6px;
+      }
+
+      .card-2 .c2-phone {
+        order: 2;
+      }
+
+      .card-1-media,
+      .card-4-media {
+        flex-wrap: wrap;
+      }
+
+      .other-projects-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .other-card-meta {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .other-card-tags {
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .other-projects-section {
+        padding-bottom: 48px;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .corner-menu-panel {
+        width: min(320px, calc(100vw - 16px));
+        height: min(320px, calc(100vw - 16px));
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="progress-bar"></div>
+  <!-- CORNER TANGRAM MENU (Matching Homepage Light Mode) -->
+  <div class="corner-menu-scrim" id="corner-menu-scrim" aria-hidden="true"></div>
 
-  <nav class="top-nav">
-    <a href="/#work" class="nav-pill">← All Projects</a>
-    <div class="nav-right-group">
-      <a href="/#contact" class="nav-pill">Contact</a>
-      <a href="https://drive.google.com/file/d/1a8mlDD0jzYdRFJJqXY0Y0knbyZKDnXD9/view?usp=sharing" class="nav-pill" target="_blank" rel="noreferrer">Resume</a>
+  <nav class="corner-menu" id="corner-menu" aria-label="Portfolio navigation">
+    <button
+      class="corner-menu-trigger"
+      id="corner-menu-trigger"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="corner-menu-panel"
+    >
+      <svg class="corner-menu-trigger-svg" viewBox="0 0 400 400" overflow="visible" aria-hidden="true">
+        <polygon
+          class="corner-menu-trigger-shape"
+          shape-rendering="geometricPrecision"
+          points="0,0 100,0 200,100 200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 100,200 0,100"
+        />
+        <text
+          class="corner-menu-trigger-label"
+          x="142"
+          y="142"
+          text-anchor="middle"
+          dominant-baseline="central"
+          transform="rotate(45 142 142)"
+        >MENU</text>
+      </svg>
+    </button>
+
+    <div class="corner-menu-panel" id="corner-menu-panel" aria-hidden="true">
+      <svg class="corner-menu-open-svg" viewBox="0 0 400 400" overflow="visible">
+        <g class="corner-menu-piece" data-corner-nav="contact" role="button" tabindex="0" aria-label="Contact">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="0,0 100,0 100,100" />
+          <text class="corner-menu-piece-label" x="64" y="36" text-anchor="middle" dominant-baseline="central" transform="rotate(45 64 36)">CONTACT</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="about" role="button" tabindex="0" aria-label="About">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="0,0 100,100 100,200 0,100" />
+          <text class="corner-menu-piece-label" x="50" y="100" text-anchor="middle" dominant-baseline="central" transform="rotate(45 50 100)">ABOUT</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="resume" role="button" tabindex="0" aria-label="Resume">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="100,0 200,100 100,100" />
+          <text class="corner-menu-piece-label" x="136" y="64" text-anchor="middle" dominant-baseline="central" transform="rotate(45 136 64)">RESUME</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="work" role="button" tabindex="0" aria-label="Work">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="100,100 200,100 200,200 100,200" />
+          <text class="corner-menu-piece-label" x="150" y="150" text-anchor="middle" dominant-baseline="central" transform="rotate(45 150 150)">WORK</text>
+        </g>
+
+        <g class="corner-menu-piece" data-corner-nav="home" role="button" tabindex="0" aria-label="Home">
+          <polygon class="corner-menu-piece-shape" shape-rendering="geometricPrecision" points="200,0 400,0 270.711,129.289 270.711,270.711 129.289,270.711 0,400 0,200 200,200" />
+          <text class="corner-menu-piece-label" x="266" y="66" text-anchor="middle" dominant-baseline="central" transform="rotate(45 266 66)">HOME</text>
+        </g>
+      </svg>
     </div>
   </nav>
 
-  <!-- Broke Ya Woke Image: /src/broke-ya-woke-asid.jpg -->
-  <main class="case-container">
-    <img src="/src/broka ya woke asid.jpg" alt="Broke Ya Woke Case Study" loading="eager" />
+  <!-- BACK ARROW BUTTON -->
+  <a class="back-arrow-btn" id="back-arrow-btn" href="homepage.html#work" aria-label="Back to selected case studies">
+    <svg viewBox="0 0 16 36" aria-hidden="true">
+      <path d="M14 2L2 18L14 34" stroke-linecap="square" stroke-linejoin="miter" />
+    </svg>
+  </a>
+
+  <!-- FIXED LIQUID-GLASS JUMP NAVIGATION (5 FIGMA TABS + COLLAPSIBLE TOC PILL <= 1180px) -->
+  <header class="jump-nav-sticky-wrapper" id="jumpNavWrapper">
+    <button
+      class="jump-toc-toggle"
+      id="jumpTocToggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="jumpNavBar"
+      aria-label="Toggle section navigation"
+    >
+      <span class="jump-toc-dot" aria-hidden="true"></span>
+      <span class="jump-toc-toggle-text" id="jumpTocCurrent">OVERVIEW</span>
+      <svg class="jump-toc-chevron" viewBox="0 0 12 12" aria-hidden="true">
+        <path d="M2.5 4.5L6 8L9.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <nav class="jump-nav" id="jumpNavBar" aria-label="Page Sections">
+      <a href="#overview" class="nav-item active" data-tab-target="OVERVIEW">OVERVIEW</a>
+      <a href="#problem" class="nav-item" data-tab-target="PROBLEM">PROBLEM</a>
+      <a href="#research" class="nav-item" data-tab-target="RESEARCH">RESEARCH</a>
+      <a href="#ideation" class="nav-item" data-tab-target="IDEATION">IDEATION</a>
+      <a href="#solution" class="nav-item" data-tab-target="SOLUTION">SOLUTION</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-stage-wrap" id="pageStageWrap">
+      <div class="hero-bleed-bg" id="heroBleedBg" aria-hidden="true"></div>
+
+      <div class="page-canvas" id="pageCanvas">
+
+        <!-- ==================== HERO SECTION (OVERVIEW) ==================== -->
+        <header class="hero-section" id="overview">
+
+          <div class="hero-meta-row">
+            <div class="meta-text meta-team">Team of 4</div>
+            <div class="meta-text meta-topic">Financial Literacy</div>
+            <div class="meta-text meta-duration">3 weeks</div>
+          </div>
+
+          <div class="hero-left-col">
+            <p class="hero-tagline">
+              A Jenga game where bad money decisions make your tower wobble
+            </p>
+
+            <img
+              src="src/bywlogo.svg"
+              onerror="this.onerror=null; this.src='bywlogo.svg';"
+              alt="Broke ya Woke? Logo"
+              class="hero-logo"
+            />
+
+            <div class="worked-on-pill">
+              <span class="worked-on-label">WHAT I WORKED ON</span>
+              <span class="worked-on-skills">User Research · Interaction Design · Game Mechanics</span>
+            </div>
+          </div>
+
+          <img
+            src="src/herotower.png"
+            onerror="this.onerror=null; this.src='herotower.png';"
+            alt="Jenga Tower"
+            class="hero-tower"
+          />
+
+        </header>
+
+        <!-- ==================== (01) THE PROBLEM ==================== -->
+        <section class="byw-section" id="problem">
+
+          <h2 class="section-label problem-label" id="anchor-problem">(01) THE PROBLEM</h2>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number stat-num-1" data-count="73" data-decimals="0" data-suffix="%">0%</div>
+              <p class="stat-desc stat-desc-1">of Indian adults aren’t financially literate</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number stat-num-2" data-count="16.7" data-decimals="1" data-suffix="%">0.0%</div>
+              <p class="stat-desc stat-desc-2">of school students met a basic financial literacy benchmark</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number stat-num-3" data-count="50" data-decimals="0" data-suffix="%">0%</div>
+              <p class="stat-desc stat-desc-3">of class 6-8 students didn’t know that buying on EMI is taking a loan</p>
+            </div>
+          </div>
+
+          <p class="problem-paragraph">
+            Schools teach money as abstract math, while families avoid discussing it until adulthood. Without a safe space to experience financial trade-offs, young adults only discover the consequences of poor financial habits when their mistakes start costing real money and real debt
+          </p>
+
+          <div>
+            <h3 class="target-heading">Who are we designing for?</h3>
+            <div class="target-audience">Teenagers / pre-teens aged 10-16</div>
+            <p class="target-desc">Want independence but don't always understand the consequences of financial decisions.</p>
+          </div>
+
+        </section>
+
+        <!-- ==================== (02) WHY CURRENT SOLUTIONS FAIL ==================== -->
+        <section class="byw-section" id="solutions-fail">
+
+          <h2 class="section-label solutions-fail-label" id="anchor-solutions-fail">(02) WHY CURRENT SOLUTIONS FAIL</h2>
+
+          <div class="comparison-grid">
+            <!-- Box 1 -->
+            <div class="comparison-box box-1">
+              <h3 class="box-title">Traditional Board Games</h3>
+
+              <div class="box-logos-row">
+                <img
+                  src="src/monopoly.png"
+                  onerror="this.onerror=null; this.src='monopoly.png';"
+                  alt="Monopoly"
+                  class="box-img img-monopoly"
+                  decoding="async"
+                />
+                <img
+                  src="src/cashflow.png"
+                  onerror="this.onerror=null; this.src='cashflow.png';"
+                  alt="Cashflow"
+                  class="box-img img-cashflow"
+                  decoding="async"
+                />
+              </div>
+
+              <div class="box-items-list">
+                <p class="box-item item-row-1">Gameplay relies on dice rolls &amp; luck</p>
+                <p class="box-item item-row-2">Encourage predatory hoarding &amp; bankrupting peers</p>
+                <p class="box-item item-row-3">Teach zero real-world budgetary cause &amp; effect</p>
+              </div>
+            </div>
+
+            <!-- Box 2 -->
+            <div class="comparison-box box-2">
+              <h3 class="box-title">Teen Neo-Banks</h3>
+
+              <div class="box-logos-row">
+                <img
+                  src="src/fampay.png"
+                  onerror="this.onerror=null; this.src='fampay.png';"
+                  alt="FamPay"
+                  class="box-img img-fampay"
+                  decoding="async"
+                />
+                <img
+                  src="src/junio.png"
+                  onerror="this.onerror=null; this.src='junio.png';"
+                  alt="Junio"
+                  class="box-img img-junio"
+                  decoding="async"
+                />
+              </div>
+
+              <div class="box-items-list">
+                <p class="box-item item-row-1">Prepaid debit cards tied to real currency</p>
+                <p class="box-item item-row-2">High parental hesitation to grant minors financial independence</p>
+                <p class="box-item item-row-3">Without built-in habits, teens just use cards for fast food</p>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==================== (03) KEY INSIGHTS (RESEARCH TAB DESTINATION) ==================== -->
+        <section class="byw-section" id="research">
+
+          <h2 class="section-label insights-label" id="anchor-research">(03) KEY INSIGHTS</h2>
+
+          <div class="insight-tags-row">
+            <span class="insight-tag tag-1">Primary research</span>
+            <span class="insight-tag tag-2">23 teens + 7 parents</span>
+            <span class="insight-tag tag-3">Remote interviews</span>
+            <span class="insight-tag tag-4">Sentence completion</span>
+          </div>
+
+          <div class="insights-balls-grid">
+            <!-- Ball 1 -->
+            <div class="insight-ball ball-1" id="ball1">
+              <p class="ball-text">
+                Pre-teens and teens (10-16) <span class="highlight">want financial independence</span>, but parents mostly give money only when needed, which creates <span class="highlight">tension between freedom and control.</span>
+              </p>
+            </div>
+
+            <!-- Ball 2 -->
+            <div class="insight-ball ball-2" id="ball2">
+              <p class="ball-text">
+                These teens <span class="highlight">understand basic ideas</span> like saving and needs vs wants, but <span class="highlight">struggle with real-world finance</span>, topics like taxes, interest, and investing feel confusing &amp; advanced.
+              </p>
+            </div>
+
+            <!-- Ball 3 -->
+            <div class="insight-ball ball-3" id="ball3">
+              <p class="ball-text">
+                They <span class="highlight">rely on memory or piggy banks to track</span> money, which leads to forgetting spends, running out unexpectedly &amp; feeling stressed.
+              </p>
+            </div>
+
+            <!-- Ball 4 -->
+            <div class="insight-ball ball-4" id="ball4">
+              <p class="ball-text">
+                They are strongly <span class="highlight">motivated to earn and grow</span> money, but they engage only when learning feels interactive &amp; game-like rather than lecture-based.
+              </p>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==================== (04) PERSONA ==================== -->
+        <section class="byw-section" id="persona">
+
+          <h2 class="section-label persona-label" id="anchor-persona">(04) PERSONA</h2>
+
+          <div class="persona-card">
+
+            <!-- Left Sidebar: Purple #BDCBFF -->
+            <div class="persona-left-col">
+              <div class="persona-avatar-wrap">
+                <img
+                  src="src/arjun.png"
+                  onerror="this.onerror=null; this.src='arjun.png'; this.onerror=function(){this.src='src/persona.png'; this.onerror=function(){this.src='persona.png';};};"
+                  alt="Arjun, 14 Persona Illustration"
+                  class="persona-avatar-img"
+                  decoding="async"
+                />
+              </div>
+
+              <div class="persona-bio-list">
+                <p class="persona-bio-item">Handles his own spending but parents set the limits</p>
+                <p class="persona-bio-item">Gets pocket money from parents + occasional festival cash</p>
+                <p class="persona-bio-item">Curious about money but has never been taught how it actually works</p>
+                <p class="persona-bio-item">Owns a smartphone but supervised</p>
+              </div>
+            </div>
+
+            <!-- Right Content -->
+            <div class="persona-right-col">
+              <h3 class="persona-name">Arjun, 14</h3>
+              <p class="persona-quote">"I know the terms... but not what they actually mean."</p>
+
+              <div class="persona-sections">
+
+                <!-- Goals -->
+                <div class="persona-block">
+                  <div class="persona-block-header">
+                    <span class="persona-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="m9 12 2 2 4-4"></path>
+                      </svg>
+                    </span>
+                    <h4 class="persona-block-title">Goals</h4>
+                  </div>
+                  <ul class="persona-bullets">
+                    <li>Feel independent with money without asking parents for permission every time</li>
+                    <li>Understand real financial terms (EMI, investing) instead of just memorizing definitions</li>
+                    <li>Not run out of money without knowing why</li>
+                  </ul>
+                </div>
+
+                <!-- Frustrations -->
+                <div class="persona-block">
+                  <div class="persona-block-header">
+                    <span class="persona-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                      </svg>
+                    </span>
+                    <h4 class="persona-block-title">Frustrations</h4>
+                  </div>
+                  <ul class="persona-bullets">
+                    <li>Tracks spending in his head / piggy bank, forgets what he spent &amp; panics when numbers don't add up</li>
+                    <li>Existing finance apps &amp; videos feel like lectures, will not choose to do for fun</li>
+                    <li>Caught between wanting freedom and his parents wanting oversight, creates mild annoyance</li>
+                    <li>Investing/credit/EMI sound "advanced" and intimidating, so he avoids engaging with them at all</li>
+                  </ul>
+                </div>
+
+                <!-- Behaviour -->
+                <div class="persona-block">
+                  <div class="persona-block-header">
+                    <span class="persona-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                      </svg>
+                    </span>
+                    <h4 class="persona-block-title">Behaviour</h4>
+                  </div>
+                  <ul class="persona-bullets">
+                    <li>Learns fastest when something feels "real life but fun”</li>
+                    <li>Plays games with friends already, more likely to learn finance through play than through solo app use</li>
+                    <li>Will disengage the moment something feels like a lesson</li>
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ==================== (05) FINAL BRIEF ==================== -->
+        <section class="byw-section" id="brief">
+          <h2 class="section-label brief-label" id="anchor-brief">(05) FINAL BRIEF</h2>
+
+          <div class="brief-grid">
+            <p class="brief-hmw">
+              How might we let teens practise money decisions and feel what they cost, without risking real money?
+            </p>
+
+            <div class="brief-right-col">
+              <div class="brief-which-also">WHICH ALSO HAD TO</div>
+
+              <img
+                src="src/4pills.png"
+                onerror="this.onerror=null; this.src='4pills.png';"
+                alt="Four criteria requirements"
+                class="brief-pills-img"
+                decoding="async"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== (06) IDEATION (IDEATION TAB DESTINATION) ==================== -->
+        <section class="byw-section" id="ideation">
+          <h2 class="section-label ideation-label" id="anchor-ideation">(06) IDEATION</h2>
+
+          <p class="ideation-desc">
+            We started off with board game concepts, but they all went back to being repetitive, lengthy and predictable
+          </p>
+
+          <img
+            src="src/i1.png"
+            onerror="this.onerror=null; this.src='i1.png';"
+            alt="Board game ideation sketches"
+            class="ideation-img"
+            decoding="async"
+          />
+        </section>
+
+        <!-- ==================== (07) PIVOT ==================== -->
+        <section class="byw-section" id="pivot">
+          <h2 class="section-label pivot-label" id="anchor-pivot">(07) PIVOT</h2>
+
+          <p class="pivot-desc">
+            We went back to what the boards couldn’t do and wrote it on one sticky note: personal growth, real-life situations, unlimited situations, unpredictability
+          </p>
+
+          <img
+            src="src/i2.png"
+            onerror="this.onerror=null; this.src='i2.png';"
+            alt="Pivot sticky note and explorations"
+            class="pivot-img"
+            decoding="async"
+          />
+        </section>
+
+        <!-- ==================== (08) SOLUTION (SOLUTION TAB DESTINATION) ==================== -->
+        <section class="byw-section byw-solution-section" id="solution">
+          <h2 class="section-label solution-label" id="anchor-solution">(08) SOLUTION</h2>
+
+          <div class="solution-intro">Introducing</div>
+
+          <img
+            src="src/bywlogo.svg"
+            onerror="this.onerror=null; this.src='bywlogo.svg';"
+            alt="Broke ya Woke? Solution Header"
+            class="solution-logo"
+            decoding="async"
+          />
+
+          <p class="solution-phygital-desc">
+            A phygital experience pairing Jenga with generative AI scenario. Every money decision dictates the tower's physical balance: smart choices keep it steady, while reckless spending forces shaky placements until it falls. Dilemmas scale across three life stages - school, teen years, and college.
+          </p>
+        </section>
+
+        <!-- ==================== (09) GAMEPLAY LOOP (PINNED CYCLING FLASHCARDS) ==================== -->
+        <section class="byw-section" id="gameplay">
+          <h2 class="section-label gameplay-label" id="anchor-gameplay">(09) GAMEPLAY LOOP</h2>
+
+          <div class="gameplay-loop-container" id="gameplayLoopContainer">
+            <div class="gameplay-sticky-frame">
+              <div class="cards-deck-arena" id="cardsDeck">
+
+                <!-- CARD 1 -->
+                <article class="loop-card card-1" id="loopCard1">
+                  <div class="card-1-copy">
+                    <h3 class="card-title c1-title">Pull a Block</h3>
+                    <p class="card-body c1-desc-1">Every block has a number printed on it. Pull one out and choose the number into the app</p>
+                    <p class="card-body c1-desc-2">This input triggers the situation</p>
+                  </div>
+
+                  <div class="card-1-media">
+                    <img src="src/n.png" onerror="this.onerror=null; this.src='n.png';" class="card-img c1-phone" alt="Choose your block app interface" decoding="async" />
+                    <img src="src/step1.png" onerror="this.onerror=null; this.src='step1.png';" class="card-img c1-step1" alt="Pulling a jenga block" decoding="async" />
+                  </div>
+                </article>
+
+                <!-- CARD 2 -->
+                <article class="loop-card card-2" id="loopCard2">
+                  <img src="src/o.png" onerror="this.onerror=null; this.src='o.png';" class="card-img c2-phone" alt="Face a dilemma app screen" decoding="async" />
+
+                  <div class="card-2-copy">
+                    <h3 class="card-title c2-title">Face a dilemma</h3>
+                    <p class="card-body c2-desc-1">The app’s AI writes a money decision that fits your age and the block you pulled.</p>
+                    <p class="card-body c2-desc-2">You read the options and pick one</p>
+                  </div>
+                </article>
+
+                <!-- CARD 3 -->
+                <article class="loop-card card-3" id="loopCard3">
+                  <div class="card-3-decisions-grid">
+                    <div class="card-3-decision-item">
+                      <img src="src/green.png" onerror="this.onerror=null; this.src='green.png';" class="card-img c3-img-green" alt="Upright Block Placement" decoding="async" />
+                      <div class="decision-question c3-q1">Reckless Choice?</div>
+                      <div class="decision-answer c3-a1">Place the block <strong>UPRIGHT</strong></div>
+                    </div>
+
+                    <div class="card-3-decision-item">
+                      <img src="src/pink.png" onerror="this.onerror=null; this.src='pink.png';" class="card-img c3-img-pink" alt="Sideways Block Placement" decoding="async" />
+                      <div class="decision-question c3-q2">Balanced Compromise?</div>
+                      <div class="decision-answer c3-a2">Place the block <strong>SIDEWAYS</strong></div>
+                    </div>
+
+                    <div class="card-3-decision-item">
+                      <img src="src/blue.png" onerror="this.onerror=null; this.src='blue.png';" class="card-img c3-img-blue" alt="Flat Block Placement" decoding="async" />
+                      <div class="decision-question c3-q3">Good Financial Decision?</div>
+                      <div class="decision-answer c3-a3">Place the block <strong>FLAT</strong></div>
+                    </div>
+                  </div>
+
+                  <div class="card-3-copy">
+                    <h3 class="card-title c3-title">Place the block</h3>
+                    <p class="card-body c3-desc-1">You read the options and pick one</p>
+                    <p class="card-body c3-desc-2">The app rates your choice and tells you how to place the block on your tower</p>
+                  </div>
+                </article>
+
+                <!-- CARD 4 -->
+                <article class="loop-card card-4" id="loopCard4">
+                  <div class="card-4-media">
+                    <img src="src/t.png" onerror="this.onerror=null; this.src='t.png';" class="card-img c4-phone" alt="Game End Screen" decoding="async" />
+                    <img src="src/towercollapse.png" onerror="this.onerror=null; this.src='towercollapse.png';" class="card-img c4-collapse" alt="Jenga Tower Collapse" decoding="async" />
+                  </div>
+
+                  <div class="card-4-copy">
+                    <h3 class="card-title c4-title">Collapse &amp; endgame</h3>
+                    <p class="card-body c4-desc-1">Bad decisions pile up, and eventually the tower falls. The app calculates every player’s FHS (Financial Health Score) by how healthy their budget is</p>
+                    <p class="card-body c4-desc-2">The player with highest FHS wins</p>
+                  </div>
+                </article>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== (10) KEY GAMEPLAY UI ==================== -->
+        <section class="byw-section" id="gameplay-ui">
+          <h2 class="section-label gameplay-ui-label" id="anchor-gameplay-ui">(10) KEY GAMEPLAY UI</h2>
+
+          <!-- Row 1 -->
+          <div class="ui-row-grid">
+            <div class="ui-item">
+              <h3 class="ui-heading ui-head-1">Starting setup: Age 10 &amp; ₹500</h3>
+              <img src="src/n.png" onerror="this.onerror=null; this.src='n.png';" alt="Starting setup UI" class="ui-mockup-img ui-img-n" decoding="async" />
+            </div>
+
+            <div class="ui-item">
+              <h3 class="ui-heading ui-head-2">Make decisions wisely</h3>
+              <img src="src/o.png" onerror="this.onerror=null; this.src='o.png';" alt="Make decisions wisely UI" class="ui-mockup-img ui-img-o" decoding="async" />
+            </div>
+
+            <div class="ui-item">
+              <h3 class="ui-heading ui-head-3">AI tells you block position</h3>
+              <img src="src/p.png" onerror="this.onerror=null; this.src='p.png';" alt="AI tells you block position UI" class="ui-mockup-img ui-img-p" decoding="async" />
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="ui-row-grid">
+            <div class="ui-item">
+              <h3 class="ui-heading ui-head-4">Scenarios evolve as you age</h3>
+              <div class="ui-dual-phones">
+                <img src="src/q.png" onerror="this.onerror=null; this.src='q.png';" alt="Scenario evolution UI" class="ui-mockup-img ui-img-q" decoding="async" />
+                <img src="src/r.png" onerror="this.onerror=null; this.src='r.png';" alt="Consequences UI" class="ui-mockup-img ui-img-r" decoding="async" />
+              </div>
+            </div>
+
+            <div class="ui-item">
+              <h3 class="ui-heading ui-head-5">Deal with plots affecting all players</h3>
+              <img src="src/s.png" onerror="this.onerror=null; this.src='s.png';" alt="Plot events UI" class="ui-mockup-img ui-img-s" decoding="async" />
+            </div>
+
+            <div class="ui-item">
+              <h3 class="ui-heading ui-head-6">FHS Reveal</h3>
+              <img src="src/t.png" onerror="this.onerror=null; this.src='t.png';" alt="FHS Reveal UI" class="ui-mockup-img ui-img-t" decoding="async" />
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ==================== OTHER PROJECTS FOOTER ==================== -->
+    <section class="other-projects-section" id="other-projects" aria-label="Other case studies">
+      <div class="other-projects-grid">
+
+        <a class="other-card" href="nexus.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/nexushomeimg.png" alt="Deloitte Feature Directory" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">Please wait.</h3>
+            <div class="other-card-tags">
+              <span>Agentic AI</span>
+              <span>Interaction design</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            Adding a feature, or changing who can use it, meant asking a developer and waiting. The more features, the longer the wait.
+          </p>
+        </a>
+
+        <a class="other-card" href="together.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/togertherhomeimg.png" alt="Together! packaging and cards" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">Boys here, girls there.</h3>
+            <div class="other-card-tags">
+              <span>Social psychology</span>
+              <span>Behavioural research</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            Nobody tells them where to sit. They already know. Across 59 participants, kids turned out not to be rejecting each other at all. They were avoiding the teasing.
+          </p>
+        </a>
+
+        <a class="other-card" href="aris.html">
+          <div class="other-img-box">
+            <img class="other-img" src="src/arishomeimg.png" alt="Aris conversational interface" decoding="async" />
+            <span class="work-hover-badge">View<br />Case</span>
+          </div>
+          <div class="other-card-meta">
+            <h3 class="other-card-title">A reunion planned by AI.</h3>
+            <div class="other-card-tags">
+              <span>B2B SaaS</span>
+              <span>Interaction design</span>
+            </div>
+          </div>
+          <p class="other-card-desc">
+            Sonia says “look for flights for this.” She never says where or when. Aris reads the group chat to work out what “this” means.
+          </p>
+        </a>
+
+      </div>
+    </section>
   </main>
 
-  <!-- Bottom 3 Projects -->
-  <section class="other-work-section">
-    <h2 class="other-work-title">Explore Other Projects</h2>
-
-    <div class="cards-row">
-      <a class="work-card" href="/nexus.html">
-        <strong class="card-title">Nexus</strong>
-        <small class="card-subtitle">B2B SaaS</small>
-        <span class="card-image-wrapper"><img src="/nexus%20thumbnail.png" alt="Nexus Thumbnail" /></span>
-      </a>
-      <a class="work-card" href="/together.html">
-        <strong class="card-title">Together</strong>
-        <small class="card-subtitle">Behavioral Design</small>
-        <span class="card-image-wrapper"><img src="/together%20thumbnail.png" alt="Together Thumbnail" /></span>
-      </a>
-      <a class="work-card" href="/aris.html">
-        <strong class="card-title">Aris</strong>
-        <small class="card-subtitle">Agentic AI</small>
-        <span class="card-image-wrapper"><img src="/aris%20thumbnail.png" alt="Aris Thumbnail" /></span>
-      </a>
-    </div>
-  </section>
-
+  <!-- ==================== SCRIPT ENGINE ==================== -->
   <script>
-    window.addEventListener('scroll', () => {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      document.getElementById('progress-bar').style.width = ((winScroll / height) * 100) + '%';
+    const RESUME_URL = 'https://drive.google.com/drive/folders/1Cnc7uw2BrQGdqj-LFANdcJFBHuYpXxxG';
+    const HOMEPAGE_URL = 'homepage.html';
+    const CANVAS_WIDTH = 1440;
+
+    const pageCanvas = document.getElementById('pageCanvas');
+    const heroBleedBg = document.getElementById('heroBleedBg');
+    const jumpNavWrapper = document.getElementById('jumpNavWrapper');
+    const jumpTocToggle = document.getElementById('jumpTocToggle');
+    const jumpTocCurrent = document.getElementById('jumpTocCurrent');
+    const navItems = Array.from(document.querySelectorAll('.nav-item'));
+    const backArrowBtn = document.getElementById('back-arrow-btn');
+    const otherProjectsSec = document.getElementById('other-projects');
+
+    let currentCanvasScale = 1;
+    let lastActiveTabName = '';
+    let lastOverFooter = null;
+    let scrollRafId = null;
+
+    function getCanvasScale() {
+      if (window.innerWidth <= 1024) return 1;
+      return Math.min(window.innerWidth / CANVAS_WIDTH, 1);
+    }
+
+    function updateCanvasScaling() {
+      if (window.innerWidth <= 1024) {
+        currentCanvasScale = 1;
+        pageCanvas.style.zoom = '';
+        if (heroBleedBg) heroBleedBg.style.height = '';
+        return;
+      }
+      currentCanvasScale = getCanvasScale();
+      pageCanvas.style.zoom = currentCanvasScale === 1 ? '' : String(currentCanvasScale);
+      if (heroBleedBg) {
+        heroBleedBg.style.height = `${Math.round(1024 * currentCanvasScale)}px`;
+      }
+    }
+
+    function closeTocDropdown() {
+      if (!jumpNavWrapper || !jumpTocToggle) return;
+      jumpNavWrapper.classList.remove('is-toc-open');
+      jumpTocToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    /* ==================================================
+       1. REAL ANCHOR MAP (Fixes 0-height absolute section bug!)
+    ================================================== */
+    const anchorMap = [
+      { anchorId: 'overview',             tab: 'OVERVIEW', offset: 0 },
+      { anchorId: 'anchor-problem',       tab: 'PROBLEM',  offset: 110 },
+      { anchorId: 'anchor-solutions-fail',tab: 'PROBLEM',  offset: 110 },
+      { anchorId: 'anchor-research',      tab: 'RESEARCH', offset: 110 },
+      { anchorId: 'anchor-persona',       tab: 'RESEARCH', offset: 110 },
+      { anchorId: 'anchor-brief',         tab: 'IDEATION', offset: 110 },
+      { anchorId: 'anchor-ideation',      tab: 'IDEATION', offset: 110 },
+      { anchorId: 'anchor-pivot',         tab: 'IDEATION', offset: 110 },
+      { anchorId: 'anchor-solution',      tab: 'SOLUTION', offset: 110 },
+      { anchorId: 'anchor-gameplay',      tab: 'SOLUTION', offset: 110 },
+      { anchorId: 'anchor-gameplay-ui',   tab: 'SOLUTION', offset: 110 }
+    ];
+
+    const navTargetLookup = {
+      overview: 'overview',
+      problem:  'anchor-problem',
+      research: 'anchor-research',
+      ideation: 'anchor-ideation',
+      solution: 'anchor-solution'
+    };
+
+    function getAnchorPageTop(el) {
+      return el.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function updateNavScrollSpy() {
+      const scrollPos = window.scrollY + 180;
+      let activeTabName = 'OVERVIEW';
+
+      for (let i = 0; i < anchorMap.length; i++) {
+        const el = document.getElementById(anchorMap[i].anchorId);
+        if (el && scrollPos >= getAnchorPageTop(el)) {
+          activeTabName = anchorMap[i].tab;
+        }
+      }
+
+      if (activeTabName !== lastActiveTabName) {
+        lastActiveTabName = activeTabName;
+        navItems.forEach((item) => {
+          const isMatch = item.dataset.tabTarget === activeTabName;
+          item.classList.toggle('active', isMatch);
+        });
+        if (jumpTocCurrent) {
+          jumpTocCurrent.textContent = activeTabName;
+        }
+      }
+
+      if (otherProjectsSec && backArrowBtn) {
+        const overFooter = otherProjectsSec.getBoundingClientRect().top <= 90;
+        if (overFooter !== lastOverFooter) {
+          lastOverFooter = overFooter;
+          backArrowBtn.classList.toggle('is-on-footer', overFooter);
+        }
+      }
+    }
+
+    /* ==================================================
+       2. NUMBERS COUNT-UP ANIMATION (SECTION 01: 73%, 16.7%, 50%)
+    ================================================== */
+    const statElements = document.querySelectorAll('.stat-number');
+    let counted = false;
+
+    function animateCountUp() {
+      if (counted) return;
+      const problemAnchor = document.getElementById('anchor-problem');
+      if (!problemAnchor) return;
+
+      const rect = problemAnchor.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.8) {
+        counted = true;
+
+        statElements.forEach((el) => {
+          const target = parseFloat(el.getAttribute('data-count'));
+          const decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+          const suffix = el.getAttribute('data-suffix') || '';
+          const duration = 1800;
+          let startTime = null;
+
+          function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const current = (target * ease).toFixed(decimals);
+            el.textContent = current + suffix;
+
+            if (progress < 1) {
+              requestAnimationFrame(step);
+            } else {
+              el.textContent = target.toFixed(decimals) + suffix;
+            }
+          }
+
+          requestAnimationFrame(step);
+        });
+      }
+    }
+
+    /* ==================================================
+       3. KEY INSIGHTS BALL BREAK ENGINE
+       Plays once on desktop/laptop (> 1024px), floats gently after
+    ================================================== */
+    const researchAnchor = document.getElementById('anchor-research');
+
+    const ballConfigs = [
+      {
+        el: document.getElementById('ball1'),
+        rackX: 200, rackY: 120,
+        breakVx: -9.5, breakVy: -7.5,
+        bounds: { minX: -60, maxX: 350, minY: -60, maxY: 300 },
+        floatParams: { freqX: 0.65, ampX: 9, freqY: 0.58, ampY: 10, fRot: 0.45, rotAmp: 0.7, phase: 0.5 }
+      },
+      {
+        el: document.getElementById('ball2'),
+        rackX: 420, rackY: -300,
+        hitX: -40, hitY: 20,
+        breakVx: 8.5, breakVy: -7.0,
+        bounds: { minX: -300, maxX: 260, minY: -60, maxY: 300 },
+        floatParams: { freqX: 0.72, ampX: 10, freqY: 0.68, ampY: 9, fRot: 0.52, rotAmp: 0.8, phase: 2.1 }
+      },
+      {
+        el: document.getElementById('ball3'),
+        rackX: -40, rackY: -120,
+        breakVx: -8.0, breakVy: 9.0,
+        bounds: { minX: -260, maxX: 320, minY: -200, maxY: 180 },
+        floatParams: { freqX: 0.60, ampX: 10, freqY: 0.70, ampY: 11, fRot: 0.48, rotAmp: 0.7, phase: 4.3 }
+      },
+      {
+        el: document.getElementById('ball4'),
+        rackX: -140, rackY: -120,
+        breakVx: 9.0, breakVy: 8.0,
+        bounds: { minX: -320, maxX: 180, minY: -200, maxY: 180 },
+        floatParams: { freqX: 0.68, ampX: 9, freqY: 0.62, ampY: 10, fRot: 0.50, rotAmp: 0.9, phase: 1.7 }
+      }
+    ];
+
+    let poolStarted = false;
+    let poolCompleted = false;
+    let startTime = null;
+    let breakInitiated = false;
+
+    function initializeRackFormation() {
+      if (window.innerWidth <= 1024) {
+        ballConfigs.forEach((b) => {
+          b.el.style.transform = '';
+          b.el.style.opacity = '1';
+        });
+        return;
+      }
+      if (poolStarted) return;
+      ballConfigs.forEach((b, idx) => {
+        b.x = b.rackX;
+        b.y = b.rackY;
+        b.vx = 0;
+        b.vy = 0;
+        b.targetX = 0;
+        b.targetY = 0;
+        b.el.style.transform = `translate3d(${b.x}px, ${b.y}px, 0px) rotate(0deg)`;
+        b.el.style.opacity = idx === 1 ? '0' : '1';
+      });
+    }
+
+    function renderPhysicsLoop(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsedTotal = (timestamp - startTime) / 1000;
+
+      if (window.innerWidth <= 1024) {
+        ballConfigs.forEach((b) => {
+          b.el.style.transform = '';
+          b.el.style.opacity = '1';
+        });
+        return;
+      }
+
+      if (poolCompleted) {
+        ballConfigs.forEach((b) => {
+          const fp = b.floatParams;
+          const floatX = Math.sin(elapsedTotal * fp.freqX + fp.phase) * fp.ampX;
+          const floatY = Math.cos(elapsedTotal * fp.freqY + fp.phase) * fp.ampY;
+          const floatRot = Math.sin(elapsedTotal * fp.fRot + fp.phase) * fp.rotAmp;
+          b.el.style.transform = `translate3d(${floatX.toFixed(2)}px, ${floatY.toFixed(2)}px, 0px) rotate(${floatRot.toFixed(2)}deg)`;
+        });
+        requestAnimationFrame(renderPhysicsLoop);
+        return;
+      }
+
+      const delay = 0.35;
+      if (elapsedTotal < delay) {
+        requestAnimationFrame(renderPhysicsLoop);
+        return;
+      }
+
+      const elapsed = elapsedTotal - delay;
+
+      const cueInDuration = 0.85;
+      if (elapsed < cueInDuration) {
+        const cueProgress = elapsed / cueInDuration;
+        const ease = Math.pow(cueProgress, 1.3);
+
+        const cue = ballConfigs[1];
+        cue.x = cue.rackX + (cue.hitX - cue.rackX) * ease;
+        cue.y = cue.rackY + (cue.hitY - cue.rackY) * ease;
+        cue.el.style.opacity = Math.min(cueProgress * 3.5, 1);
+        cue.el.style.transform = `translate3d(${cue.x.toFixed(2)}px, ${cue.y.toFixed(2)}px, 0px)`;
+      }
+
+      if (elapsed >= cueInDuration && !breakInitiated) {
+        breakInitiated = true;
+        ballConfigs.forEach((b) => {
+          b.vx = b.breakVx;
+          b.vy = b.breakVy;
+        });
+        ballConfigs[1].el.style.opacity = '1';
+      }
+
+      if (breakInitiated) {
+        const breakTime = elapsed - cueInDuration;
+
+        ballConfigs.forEach((b) => {
+          b.x += b.vx;
+          b.y += b.vy;
+
+          const elasticity = 0.55;
+          if (b.x <= b.bounds.minX) {
+            b.x = b.bounds.minX;
+            b.vx = -b.vx * elasticity;
+          } else if (b.x >= b.bounds.maxX) {
+            b.x = b.bounds.maxX;
+            b.vx = -b.vx * elasticity;
+          }
+
+          if (b.y <= b.bounds.minY) {
+            b.y = b.bounds.minY;
+            b.vy = -b.vy * elasticity;
+          } else if (b.y >= b.bounds.maxY) {
+            b.y = b.bounds.maxY;
+            b.vy = -b.vy * elasticity;
+          }
+
+          const feltFriction = 0.978;
+          b.vx *= feltFriction;
+          b.vy *= feltFriction;
+
+          if (breakTime > 0.8) {
+            const springRate = 0.015;
+            b.vx += (b.targetX - b.x) * springRate;
+            b.vy += (b.targetY - b.y) * springRate;
+          }
+
+          const fp = b.floatParams;
+          const floatX = Math.sin(elapsedTotal * fp.freqX + fp.phase) * fp.ampX;
+          const floatY = Math.cos(elapsedTotal * fp.freqY + fp.phase) * fp.ampY;
+          const floatRot = Math.sin(elapsedTotal * fp.fRot + fp.phase) * fp.rotAmp;
+
+          const floatBlend = Math.max(0, Math.min(1, (breakTime - 1.8) / 1.5));
+
+          const finalX = b.x * (1 - floatBlend) + floatX * floatBlend;
+          const finalY = b.y * (1 - floatBlend) + floatY * floatBlend;
+          const finalRot = floatRot * floatBlend;
+
+          b.el.style.transform = `translate3d(${finalX.toFixed(2)}px, ${finalY.toFixed(2)}px, 0px) rotate(${finalRot.toFixed(2)}deg)`;
+        });
+
+        if (breakTime >= 4.2) {
+          poolCompleted = true;
+        }
+      }
+
+      requestAnimationFrame(renderPhysicsLoop);
+    }
+
+    function handleInsightsScroll() {
+      if (poolStarted || !researchAnchor) return;
+      if (window.innerWidth <= 1024) {
+        initializeRackFormation();
+        return;
+      }
+
+      const rect = researchAnchor.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.65 && rect.bottom >= -600) {
+        poolStarted = true;
+        requestAnimationFrame(renderPhysicsLoop);
+      }
+    }
+
+    /* ==================================================
+       4. GAMEPLAY LOOP FLASHCARD DECK ENGINE (Zoom-accurate)
+    ================================================== */
+    const loopContainer = document.getElementById('gameplayLoopContainer');
+    const cards = [
+      document.getElementById('loopCard1'),
+      document.getElementById('loopCard2'),
+      document.getElementById('loopCard3'),
+      document.getElementById('loopCard4')
+    ];
+
+    function updateCardDeckScroll() {
+      if (!loopContainer || !cards[0]) return;
+      if (window.innerWidth <= 1024) {
+        cards.forEach((c) => {
+          c.style.transform = '';
+          c.style.opacity = '1';
+          c.style.zIndex = '';
+        });
+        return;
+      }
+
+      const rect = loopContainer.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
+      if (totalScrollable <= 0) return;
+
+      const progress = Math.min(Math.max(-rect.top / totalScrollable, 0), 1);
+
+      const p1 = Math.min(Math.max((progress - 0.04) / 0.28, 0), 1);
+      const p2 = Math.min(Math.max((progress - 0.36) / 0.28, 0), 1);
+      const p3 = Math.min(Math.max((progress - 0.68) / 0.28, 0), 1);
+
+      // Card 1
+      if (p1 === 0) {
+        cards[0].style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+        cards[0].style.zIndex = '4';
+        cards[0].style.opacity = '1';
+      } else if (p1 < 0.5) {
+        const ease = p1 * 2;
+        cards[0].style.transform = `translate3d(${ease * 180}px, ${-ease * 50}px, 0) rotate(${ease * 4}deg)`;
+        cards[0].style.zIndex = '5';
+        cards[0].style.opacity = '1';
+      } else {
+        const ease = (p1 - 0.5) * 2;
+        cards[0].style.transform = `translate3d(${(1 - ease) * 180}px, ${-(1 - ease) * 50}px, 0) scale(${1 - ease * 0.04})`;
+        cards[0].style.zIndex = '1';
+        cards[0].style.opacity = `${Math.max(0.25, 1 - ease * 0.75)}`;
+      }
+
+      // Card 2
+      if (p1 < 0.5) {
+        cards[1].style.zIndex = '3';
+        cards[1].style.transform = 'translate3d(0, 0, 0) scale(0.97)';
+        cards[1].style.opacity = '0.9';
+      } else if (p2 === 0) {
+        cards[1].style.zIndex = '4';
+        cards[1].style.transform = 'translate3d(0, 0, 0) scale(1)';
+        cards[1].style.opacity = '1';
+      } else if (p2 < 0.5) {
+        const ease = p2 * 2;
+        cards[1].style.transform = `translate3d(${ease * 180}px, ${-ease * 50}px, 0) rotate(${ease * 4}deg)`;
+        cards[1].style.zIndex = '5';
+        cards[1].style.opacity = '1';
+      } else {
+        const ease = (p2 - 0.5) * 2;
+        cards[1].style.transform = `translate3d(${(1 - ease) * 180}px, ${-(1 - ease) * 50}px, 0) scale(${1 - ease * 0.04})`;
+        cards[1].style.zIndex = '1';
+        cards[1].style.opacity = `${Math.max(0.25, 1 - ease * 0.75)}`;
+      }
+
+      // Card 3
+      if (p2 < 0.5) {
+        cards[2].style.zIndex = '2';
+        cards[2].style.transform = 'translate3d(0, 0, 0) scale(0.95)';
+        cards[2].style.opacity = '0.85';
+      } else if (p3 === 0) {
+        cards[2].style.zIndex = '4';
+        cards[2].style.transform = 'translate3d(0, 0, 0) scale(1)';
+        cards[2].style.opacity = '1';
+      } else if (p3 < 0.5) {
+        const ease = p3 * 2;
+        cards[2].style.transform = `translate3d(${ease * 180}px, ${-ease * 50}px, 0) rotate(${ease * 4}deg)`;
+        cards[2].style.zIndex = '5';
+        cards[2].style.opacity = '1';
+      } else {
+        const ease = (p3 - 0.5) * 2;
+        cards[2].style.transform = `translate3d(${(1 - ease) * 180}px, ${-(1 - ease) * 50}px, 0) scale(${1 - ease * 0.04})`;
+        cards[2].style.zIndex = '1';
+        cards[2].style.opacity = `${Math.max(0.25, 1 - ease * 0.75)}`;
+      }
+
+      // Card 4
+      if (p3 < 0.5) {
+        cards[3].style.zIndex = '1';
+        cards[3].style.transform = 'translate3d(0, 0, 0) scale(0.93)';
+        cards[3].style.opacity = '0.8';
+      } else {
+        cards[3].style.zIndex = '4';
+        cards[3].style.transform = 'translate3d(0, 0, 0) scale(1)';
+        cards[3].style.opacity = '1';
+      }
+    }
+
+    function runScrollFrame() {
+      scrollRafId = null;
+      updateNavScrollSpy();
+      animateCountUp();
+      handleInsightsScroll();
+      updateCardDeckScroll();
+    }
+
+    function scheduleScrollUpdate() {
+      if (scrollRafId === null) {
+        scrollRafId = requestAnimationFrame(runScrollFrame);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Back arrow behavior (matching together.html)
+      if (backArrowBtn) {
+        backArrowBtn.href = `${HOMEPAGE_URL}#work`;
+        backArrowBtn.addEventListener('click', (e) => {
+          if (document.referrer && /homepage\.html|index\.html|extra\.html/i.test(document.referrer) && window.history.length > 1) {
+            e.preventDefault();
+            window.history.back();
+          }
+        });
+      }
+
+      // Corner Tangram Menu Setup
+      const cornerMenu = document.getElementById('corner-menu');
+      const triggerBtn = document.getElementById('corner-menu-trigger');
+      const panelEl = document.getElementById('corner-menu-panel');
+      const scrimEl = document.getElementById('corner-menu-scrim');
+      const pieces = document.querySelectorAll('.corner-menu-piece');
+      let isOpen = false;
+
+      if (window.gsap) {
+        gsap.set(panelEl, { opacity: 0, scale: 0.25 });
+        gsap.set(scrimEl, { opacity: 0 });
+      }
+
+      function openMenu() {
+        if (isOpen) return;
+        isOpen = true;
+        cornerMenu.classList.add('is-open');
+        scrimEl.classList.add('is-open');
+        triggerBtn.setAttribute('aria-expanded', 'true');
+        panelEl.setAttribute('aria-hidden', 'false');
+        if (window.gsap) {
+          gsap.killTweensOf([scrimEl, triggerBtn, panelEl]);
+          gsap.to(scrimEl, { opacity: 1, duration: 0.32, ease: 'power2.out' });
+          gsap.to(triggerBtn, { opacity: 0, duration: 0.16, ease: 'power2.out' });
+          gsap.fromTo(panelEl, { opacity: 0, scale: 0.25 }, { opacity: 1, scale: 1, duration: 0.36, ease: 'power3.out' });
+        }
+      }
+
+      function closeMenu() {
+        if (!isOpen) return;
+        isOpen = false;
+        cornerMenu.classList.remove('is-open');
+        scrimEl.classList.remove('is-open');
+        triggerBtn.setAttribute('aria-expanded', 'false');
+        panelEl.setAttribute('aria-hidden', 'true');
+        if (window.gsap) {
+          gsap.killTweensOf([scrimEl, triggerBtn, panelEl]);
+          gsap.to(scrimEl, { opacity: 0, duration: 0.25, ease: 'power2.in' });
+          gsap.to(panelEl, { opacity: 0, scale: 0.25, duration: 0.24, ease: 'power2.in' });
+          gsap.to(triggerBtn, { opacity: 1, duration: 0.22, delay: 0.08, ease: 'power2.out' });
+        }
+      }
+
+      triggerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openMenu();
+      });
+
+      scrimEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeMenu();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (isOpen) closeMenu();
+          closeTocDropdown();
+        }
+      });
+
+      pieces.forEach((piece) => {
+        const activate = () => {
+          const dest = piece.dataset.cornerNav;
+          closeMenu();
+          if (dest === 'resume') {
+            window.open(RESUME_URL, '_blank', 'noopener,noreferrer');
+          } else if (dest === 'home') {
+            try { sessionStorage.removeItem('portfolioNavState'); } catch (_) {}
+            window.location.href = HOMEPAGE_URL;
+          } else {
+            window.location.href = `${HOMEPAGE_URL}#${dest}`;
+          }
+        };
+
+        piece.addEventListener('click', (e) => {
+          e.stopPropagation();
+          activate();
+        });
+
+        piece.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
+        });
+      });
+
+      // Collapsible ToC Pill (<= 1180px)
+      if (jumpTocToggle && jumpNavWrapper) {
+        jumpTocToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const tocOpen = jumpNavWrapper.classList.toggle('is-toc-open');
+          jumpTocToggle.setAttribute('aria-expanded', tocOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!jumpNavWrapper.contains(e.target)) {
+            closeTocDropdown();
+          }
+        });
+      }
+
+      // Smooth-scroll click handler using real anchor elements
+      navItems.forEach((item) => {
+        item.addEventListener('click', (e) => {
+          const href = item.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+          const key = href.slice(1);
+          const targetEl = document.getElementById(navTargetLookup[key] || key);
+          if (!targetEl) return;
+
+          e.preventDefault();
+          closeTocDropdown();
+
+          const targetY = key === 'overview'
+            ? 0
+            : Math.max(0, getAnchorPageTop(targetEl) - 108);
+
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        });
+      });
+
+      // View Case hover badge on Other Projects cards (desktop fine pointer only)
+      if (window.gsap && window.matchMedia('(pointer: fine)').matches) {
+        document.querySelectorAll('.other-img-box').forEach((box) => {
+          const badge = box.querySelector('.work-hover-badge');
+          if (!badge) return;
+          gsap.set(badge, { xPercent: -50, yPercent: -50, scale: 0.75, opacity: 0 });
+          const xTo = gsap.quickTo(badge, 'x', { duration: 0.25, ease: 'power3.out' });
+          const yTo = gsap.quickTo(badge, 'y', { duration: 0.25, ease: 'power3.out' });
+
+          function getLocalPos(e) {
+            const rect = box.getBoundingClientRect();
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+          }
+
+          box.addEventListener('mouseenter', (e) => {
+            const pos = getLocalPos(e);
+            gsap.set(badge, { x: pos.x, y: pos.y });
+            gsap.to(badge, { opacity: 1, scale: 1, duration: 0.22, ease: 'power2.out', overwrite: 'auto' });
+          });
+          box.addEventListener('mousemove', (e) => {
+            const pos = getLocalPos(e);
+            xTo(pos.x);
+            yTo(pos.y);
+          });
+          box.addEventListener('mouseleave', () => {
+            gsap.to(badge, { opacity: 0, scale: 0.75, duration: 0.2, ease: 'power2.in', overwrite: 'auto' });
+          });
+        });
+      }
+
+      updateCanvasScaling();
+      initializeRackFormation();
+      runScrollFrame();
     });
+
+    window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1180) closeTocDropdown();
+      updateCanvasScaling();
+      initializeRackFormation();
+      lastActiveTabName = '';
+      lastOverFooter = null;
+      runScrollFrame();
+    }, { passive: true });
   </script>
 
 </body>

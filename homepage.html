@@ -506,7 +506,7 @@
     }
 
     /* =========================================================================
-       REST OF SITE: WORK -> ABOUT -> CONTACT
+       REST OF SITE: WORK -> PHOTO CURTAIN -> ABOUT -> CONTACT
        ========================================================================= */
     .site-sections {
       background: #F2E7D5;
@@ -519,6 +519,8 @@
     }
 
     .work-section {
+      position: relative;
+      z-index: 2;
       width: 100%;
       overflow: hidden;
       background: #F2E7D5;
@@ -683,9 +685,52 @@
     .card-aris .work-card-desc  { left: 967px; top: 1120px; width: 402px; }
 
     /* =========================================================================
+       PHOTO CURTAIN STRIP (1440 x 340 proportional, blur-to-sharp + sticky wipe)
+       ========================================================================= */
+    .photo-curtain-section {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      background: #F2E7D5;
+      /* 23.6111vw = exact 340px at 1440px; +52vh gives scroll room for the curtain wipe */
+      height: calc(23.6111vw + 52vh);
+    }
+
+    .photo-curtain-sticky {
+      position: sticky;
+      /* Vertically centers the strip in the viewport as #about slides up over it */
+      top: max(72px, calc(50vh - 11.8055vw));
+      width: 100%;
+      aspect-ratio: 1440 / 340;
+      overflow: hidden;
+      background: #F2E7D5;
+    }
+
+    .photo-curtain-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      filter: blur(var(--curtain-blur, 14px));
+      transform: scale(var(--curtain-scale, 1.06));
+      transform-origin: center center;
+      will-change: filter, transform;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .photo-curtain-img {
+        filter: none !important;
+        transform: none !important;
+      }
+    }
+
+    /* =========================================================================
        ABOUT SECTION (1440 x 720 canvas, bg #BB211F, exact Figma coordinates)
        ========================================================================= */
     .about-section {
+      position: relative;
+      z-index: 3;
       width: 100%;
       overflow: hidden;
       background: #BB211F;
@@ -960,6 +1005,8 @@
        CONTACT SECTION (LET'S CONNECT + 3 Apple Symbols no-fill pills + 36x16 chevron)
        ========================================================================= */
     .contact-section {
+      position: relative;
+      z-index: 3;
       background: #F2E7D5;
       border-top: 1px solid rgba(0, 0, 0, 0.08);
       padding: clamp(44px, 5.5vw, 76px) 0 clamp(36px, 4.5vw, 60px);
@@ -1202,6 +1249,10 @@
         line-height: 1.4;
       }
 
+      .photo-curtain-section {
+        height: calc(23.6111vw + 46vh);
+      }
+
       /* ABOUT: Responsive 2-column Tablet layout */
       .about-section {
         padding-top: 24px;
@@ -1423,6 +1474,10 @@
       .corner-piece--50 {
         width: 34px;
         height: 34px;
+      }
+
+      .photo-curtain-section {
+        height: calc(23.6111vw + 36vh);
       }
 
       /* ABOUT: 1-column Mobile stack */
@@ -1803,11 +1858,11 @@
       <div class="hero-statement" id="hero-statement" aria-live="polite">
         <div class="statement-roller" id="statement-roller">
           <div class="statement-beat">Most problems are<br />people problems first</div>
-          <div class="statement-beat">I build products around<br />what they actually do</div>
+          <div class="statement-beat">I design products around<br />what they do</div>
         </div>
       </div>
 
-      <!-- Beat 3 (BEE): Left-side credentials beside bigger right-aligned Bee -->
+      <!-- Beat 3 (BEE): Left-side credentials vertically centred beside bigger right-aligned Bee -->
       <div class="hero-creds" id="hero-creds" aria-live="polite">
         &middot; Previously Deloitte<br />
         &middot; ICoRD &rsquo;27 paper<br />
@@ -1868,7 +1923,7 @@
     />
   </svg>
 
-  <!-- 2. WORK -> 3. ABOUT -> 4. CONTACT -->
+  <!-- 2. WORK -> PHOTO CURTAIN -> 3. ABOUT -> 4. CONTACT -->
   <div class="site-sections" id="site-sections">
     <!-- 2. WORK -->
     <main id="work" class="work-section">
@@ -1959,6 +2014,19 @@
       </div>
     </main>
 
+    <!-- PHOTO CURTAIN STRIP (1440 x 340) -->
+    <section class="photo-curtain-section" id="photo-curtain" aria-label="Behind the scenes">
+      <div class="photo-curtain-sticky">
+        <img
+          class="photo-curtain-img"
+          id="photo-curtain-img"
+          src="src/pictures.png"
+          alt="Siddhi Malpe candid moments"
+          loading="lazy"
+        />
+      </div>
+    </section>
+
     <!-- 3. ABOUT (bg #BB211F, 1440 x 720 desktop / responsive tablet & mobile) -->
     <section id="about" class="about-section" aria-label="About">
       <div class="about-stage-wrap" id="about-stage-wrap">
@@ -1996,7 +2064,7 @@
           <div class="about-panel is-active" data-about-panel="1">
             <h3 class="about-payoff">
               Most problems are people problems first.<br />
-              I design around what they actually do.
+              I design around what they do.
             </h3>
             <p class="about-bio">
               People say “it’s fine” and “oh, it’s nothing” all day, and it’s almost never nothing. Everyone edits themselves, for friends and for whoever might be watching, and screens are one more place it happens: the message typed and deleted, the tab opened and closed. One edit is easy to ignore. The same edit made by a lot of people in the same place says something about the place. Thinking in systems is mostly noticing that very little of what anyone does stays where it started. I like following an action until it ends up somewhere that looks nothing like where it began.
@@ -2324,6 +2392,8 @@
       const workSectionEl = document.getElementById('work');
       const workStageWrapEl = document.getElementById('work-stage-wrap');
       const workCanvasEl = document.getElementById('work-canvas');
+      const photoCurtainEl = document.getElementById('photo-curtain');
+      const photoCurtainImgEl = document.getElementById('photo-curtain-img');
       const aboutSectionEl = document.getElementById('about');
       const aboutStageWrapEl = document.getElementById('about-stage-wrap');
       const aboutCanvasEl = document.getElementById('about-canvas');
@@ -2473,6 +2543,27 @@
         cornerMenuEl.classList.toggle('is-inverted', overAbout);
       }
 
+      function updatePhotoCurtain() {
+        if (!photoCurtainEl || !photoCurtainImgEl) return;
+        if (prefersReducedMotion.matches) {
+          photoCurtainImgEl.style.setProperty('--curtain-blur', '0px');
+          photoCurtainImgEl.style.setProperty('--curtain-scale', '1');
+          return;
+        }
+        const rect = photoCurtainEl.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        // 0 when strip enters bottom of viewport -> 1 when it reaches its resting centered spot
+        const startY = vh;
+        const endY = vh * 0.34;
+        const progress = Math.min(1, Math.max(0, (startY - rect.top) / (startY - endY)));
+        const eased = 1 - Math.pow(1 - progress, 2);
+        const blurPx = (1 - eased) * 14;
+        const scale = 1 + (1 - eased) * 0.06;
+
+        photoCurtainImgEl.style.setProperty('--curtain-blur', `${blurPx.toFixed(2)}px`);
+        photoCurtainImgEl.style.setProperty('--curtain-scale', scale.toFixed(4));
+      }
+
       function setCornerMenuVisible(visible, instant = false) {
         if (visible) {
           cornerMenuEl.classList.add('is-visible');
@@ -2555,9 +2646,11 @@
           onUpdate: () => {
             window.scrollTo(0, proxy.y);
             syncCornerMenuContrast();
+            updatePhotoCurtain();
           },
           onComplete: () => {
             syncCornerMenuContrast();
+            updatePhotoCurtain();
             armCooldown();
           }
         });
@@ -2635,6 +2728,7 @@
             onUpdate: () => {
               window.scrollTo(0, proxy.y);
               syncCornerMenuContrast();
+              updatePhotoCurtain();
             }
           });
         }
@@ -2903,6 +2997,7 @@
           renderRevealClip();
         }
         updateWorkCanvasScale();
+        updatePhotoCurtain();
       }
 
       function setupWorkImageHoverBadges() {
@@ -3032,6 +3127,7 @@
           document.body.classList.remove('scroll-locked');
           document.body.classList.add('sections-unlocked');
           updateWorkCanvasScale();
+          updatePhotoCurtain();
         } else {
           document.body.classList.add('scroll-locked');
           document.body.classList.remove('sections-unlocked');
@@ -3146,6 +3242,7 @@
             isTraveling = false;
             setCornerMenuVisible(true);
             syncCornerMenuContrast();
+            updatePhotoCurtain();
             armCooldown();
           }
         });
@@ -3172,7 +3269,10 @@
           y: destScrollY,
           duration: travelSec,
           ease: CONFIG.workTravelEase,
-          onUpdate: () => window.scrollTo(0, scrollProxy.y)
+          onUpdate: () => {
+            window.scrollTo(0, scrollProxy.y);
+            updatePhotoCurtain();
+          }
         }, unmergeSec);
 
         travelSpecs.forEach((spec) => {
@@ -3240,7 +3340,10 @@
           y: 0,
           duration: travelSec,
           ease: CONFIG.workTravelEase,
-          onUpdate: () => window.scrollTo(0, scrollProxy.y)
+          onUpdate: () => {
+            window.scrollTo(0, scrollProxy.y);
+            updatePhotoCurtain();
+          }
         }, 0);
 
         travelTl.add(() => {
@@ -3539,12 +3642,14 @@
 
         window.scrollTo(0, destY);
         syncCornerMenuContrast();
+        updatePhotoCurtain();
         clearLeaveFlag();
 
         requestAnimationFrame(() => {
           updateWorkCanvasScale();
           window.scrollTo(0, destY);
           syncCornerMenuContrast();
+          updatePhotoCurtain();
         });
       }
 
@@ -3577,41 +3682,75 @@
 
       function handleAboutWheelHijack(deltaY, now, isNewWheelGesture) {
         if (!hasEnteredWork || isTraveling || window.innerWidth < 768) return false;
+        const scrollY = window.scrollY;
+        const aboutTop = aboutSectionEl.offsetTop;
         const rect = aboutSectionEl.getBoundingClientRect();
-        const isAboutPinnedZone = rect.top <= 120 && rect.bottom >= window.innerHeight * 0.45;
-        if (!isAboutPinnedZone) {
+
+        // Clearly above #about in #work or #photo-curtain (and not about to enter)
+        if (scrollY < aboutTop - 4 && !(deltaY > 0.5 && (rect.top <= 90 || scrollY + deltaY >= aboutTop - 4))) {
           wasInAboutZone = false;
           return false;
         }
 
-        if (!wasInAboutZone) {
-          wasInAboutZone = true;
-          if (deltaY > 0.5 && rect.top > 35 && currentAboutTab === 1) {
+        // Below #about in #contact: allow native scrolling until scrolling UP reaches aboutTop
+        if (scrollY > aboutTop + 32) {
+          if (deltaY < -0.5 && scrollY + deltaY <= aboutTop + 32) {
+            if (currentAboutTab !== 3) setAboutTabInstant(3);
+            wasInAboutZone = true;
             aboutGestureLocked = true;
-            aboutCooldownUntil = now + 480;
+            aboutCooldownUntil = now + 520;
             const proxy = { y: window.scrollY };
             gsap.to(proxy, {
-              y: aboutSectionEl.offsetTop,
+              y: aboutTop,
               duration: 0.35,
               ease: 'power2.out',
               onUpdate: () => {
                 window.scrollTo(0, proxy.y);
                 syncCornerMenuContrast();
+                updatePhotoCurtain();
               }
             });
             return true;
           }
+          wasInAboutZone = false;
+          return false;
         }
 
+        // First entry from #photo-curtain into #about: always dock cleanly on Tab 1 first (no overshooting)
+        if (!wasInAboutZone && deltaY > 0.5) {
+          wasInAboutZone = true;
+          if (currentAboutTab !== 1) setAboutTabInstant(1);
+          aboutGestureLocked = true;
+          aboutCooldownUntil = now + 520;
+          const proxy = { y: window.scrollY };
+          gsap.to(proxy, {
+            y: aboutTop,
+            duration: 0.35,
+            ease: 'power2.out',
+            onUpdate: () => {
+              window.scrollTo(0, proxy.y);
+              syncCornerMenuContrast();
+              updatePhotoCurtain();
+            }
+          });
+          return true;
+        }
+
+        wasInAboutZone = true;
+
+        // Allow leaving #about smoothly when at Tab 3 scrolling down or Tab 1 scrolling up
         if (deltaY > 0.5 && currentAboutTab === 3) {
           if (aboutGestureLocked && (!isNewWheelGesture || now < aboutCooldownUntil)) return true;
+          wasInAboutZone = false;
           return false;
         }
         if (deltaY < -0.5 && currentAboutTab === 1) {
           if (aboutGestureLocked && (!isNewWheelGesture || now < aboutCooldownUntil)) return true;
+          wasInAboutZone = false;
           return false;
         }
 
+        // Prevent trackpad momentum from jumping multiple pages in one scroll
         if (aboutGestureLocked) {
           if (now >= aboutCooldownUntil && isNewWheelGesture) {
             aboutGestureLocked = false;
@@ -3625,7 +3764,7 @@
           switchAboutTab(currentAboutTab + 1, true);
           return true;
         }
-        if (deltaY < -0.5 && currentAboutTab > 1 && rect.top >= -120) {
+        if (deltaY < -0.5 && currentAboutTab > 1) {
           switchAboutTab(currentAboutTab - 1, true);
           return true;
         }
@@ -3636,7 +3775,7 @@
         const now = performance.now();
         const absDelta = Math.abs(event.deltaY);
         const gap = now - lastWheelTimestamp;
-        const isNewWheelGesture = gap > 120 || (absDelta > lastWheelAbsDelta + 16 && absDelta > 14);
+        const isNewWheelGesture = gap > 110 || (absDelta > lastWheelAbsDelta + 18 && absDelta > 16);
         lastWheelTimestamp = now;
         lastWheelAbsDelta = absDelta;
 
@@ -3670,6 +3809,7 @@
       }, { passive: false });
 
       window.addEventListener('scroll', () => {
+        updatePhotoCurtain();
         if (hasEnteredWork && !isTraveling) {
           syncCornerMenuContrast();
           if (window.scrollY < workSectionEl.offsetTop - 24) {
@@ -3750,6 +3890,7 @@
         if (event.persisted && hasEnteredWork) {
           closeCornerMenu(true);
           syncCornerMenuContrast();
+          updatePhotoCurtain();
           clearLeaveFlag();
         }
       });
@@ -3786,6 +3927,7 @@
               setPageScrollUnlocked(true);
               setCornerMenuVisible(true, true);
               syncCornerMenuContrast();
+              updatePhotoCurtain();
               gsap.set(navWorkEl, { opacity: 0 });
               setBeeWorkPiecesVisible(false);
               setCornerPiecesLanded(true);
@@ -3804,6 +3946,7 @@
       setupWorkImageHoverBadges();
       updateStageScale();
       buildTimeline();
+      updatePhotoCurtain();
 
       const restoredState = getRestoreState();
       if (restoredState) {
